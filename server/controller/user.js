@@ -7,7 +7,6 @@ const { upload } = require(`../multer`);
 // const upload = require(`../multer`).upload;
 const fs = require(`fs`);
 const uuid = require("uuid");
-const { fstat } = require("fs");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   console.log("Route handler is executing");

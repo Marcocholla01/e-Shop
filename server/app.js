@@ -10,6 +10,7 @@ app.get(`/`, (req, res) => {
   res.send(`Hello From the Backend Server`);
 });
 
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
@@ -23,6 +24,10 @@ const user = require(`./controller/user`);
 
 app.use(`/api/v2/user`, user);
 
+// not found route
+app.all('*', (req, res) => {
+  res.status(404).send('This Page is not found');
+});
 // For error handling
 app.use(ErrorHandler);
 

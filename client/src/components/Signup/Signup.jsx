@@ -8,7 +8,7 @@ import { RxAvatar } from 'react-icons/rx'
 import axios from 'axios'
 import { BASE_URL } from "../../config";
 
-function Login() {
+function Signup() {
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -33,6 +33,13 @@ function Login() {
         axios.post(`${BASE_URL}/user/create-user`, newForm, config).then((res) => {
             console.log(res)
             console.log("Request successful:", res);
+
+            // Clear form fields
+            setName("");
+            setEmail("");
+            setPassword("");
+            setAvatar(null);
+
         }).catch((err) => {
             console.log(err)
             console.log("Request failed:", err);
@@ -186,4 +193,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Signup;
