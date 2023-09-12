@@ -5,45 +5,60 @@ const User = require(`../models/user`);
 const ErrorHandler = require(`../middlewares/ErrorHandler`);
 const { upload } = require(`../multer`);
 // const upload = require(`../multer`).upload;
-//const fs = require(`fs`);
-const uuid = require('uuid');
+const fs = require(`fs`);
+const uuid = require("uuid");
+const { fstat } = require("fs");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
-   console.log("Route handler is executing");
+  console.log("Route handler is executing");
   const { name, email, password } = req.body;
   const userEmail = await User.findOne({ email });
-  console.log('User email:', userEmail);
+  console.log("User email:", userEmail);
 
   if (userEmail) {
-    return next(new ErrorHandler(`User already exists`, 400));
+    // User already exists
+    const filename = req.file.filename;
+    const filepath = `uploads/${filename}`;
+
+    // Delete the uploaded file
+    fs.unlink(filepath, (err) => {
+      if (err) {
+        console.log(err);
+        return next(err); // Pass the error to the error handler middleware
+      }
+
+      // Respond with an error message
+      return next(new ErrorHandler(`User already exists`, 400));
+    });
+  } else {
+    // User does not exist, create the user
+    const fileId = uuid.v4();
+    const protocol = req.protocol;
+    const host = req.get("host");
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
+    const user = {
+      name: name,
+      email: email,
+      avatar: {
+        public_id: fileId,
+        url: fileUrl,
+      },
+      password: password,
+    };
+
+    console.log(user);
+    const newUser = await User.create(user);
+
+    // Respond with success
+    res.status(201).json({
+      success: true,
+      newUser,
+    });
   }
-
-  const fileId = uuid.v4();
-  const protocol = req.protocol;
-  const host = req.get("host");
-  const filename = req.file.filename;
-  const fileUrl = `${protocol}://${host}/uploads/${filename}`;
-
-  const user = {
-    name: name,
-    email: email,
-    avatar: {
-            public_id: fileId,
-            url: fileUrl,
-          },
-          password: password,
-        };
-
-  console.log(user);
-  const newUser = await User.create(user);
-  res.status(201).json({
-    success: true,
-    newUser,
-  })
 });
 
 module.exports = router;
-
 
 //   if (userEmail) {
 //      const filename = req.file.filename;

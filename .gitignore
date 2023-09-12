@@ -16,7 +16,7 @@ dist-ssr
 server/uploads/*
 server/uploads/*.jpg
 server/uploads/*.png
-server/uploads/*.pdf
+server/uploads/*.jpeg
 
 # Editor directories and files
 .vscode/*
