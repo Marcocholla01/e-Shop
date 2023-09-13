@@ -69,6 +69,7 @@ function Signup() {
                                     id=""
                                     autoComplete="name"
                                     required
+                                    placeholder="Enter your full name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -89,6 +90,7 @@ function Signup() {
                                     id=""
                                     autoComplete="email"
                                     required
+                                    placeholder="Enter your email address"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -109,6 +111,7 @@ function Signup() {
                                     id=""
                                     autoComplete="current-password"
                                     required
+                                    placeholder="Enter you password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -137,7 +140,7 @@ function Signup() {
                                         {
                                             avatar ?
                                                 (
-                                                    <img src={URL.createObjectURL(avatar)} alt="avatar" className="h-full w-full object-cover rounded-full" />
+                                                    <img src={URL.createObjectURL(avatar)} alt="avatar" className="h-8 w-8 object-cover rounded-full" />
                                                 ) : (
                                                     <RxAvatar className="h-8 w-8" />
                                                 )
