@@ -1,5 +1,5 @@
 const express = require(`express`);
-const path = require(`path`);
+// const path = require(`path`);
 const router = express.Router();
 const User = require(`../models/user`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
@@ -8,7 +8,8 @@ const { upload } = require(`../multer`);
 const fs = require(`fs`);
 const uuid = require("uuid");
 const jwt = require(`jsonwebtoken`);
-const sendMail = require(`../utils/sendMail`)
+const sendMail = require(`../utils/sendMail`);
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   //console.log("Route handler is executing");
@@ -49,24 +50,24 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
 
     const activationToken = createActivationToken(user);
-    
+
     //http://localhost:1001/activationToken
-    const activationUrl = `${protocol}://${host}/activation/${activationToken}`
-    
+    const activationUrl = `${protocol}://${host}/activation/${activationToken}`;
+
     try {
       await sendMail({
         email: user.email,
         subject: "Activate Your Account",
         message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
-      })
+      });
       res.status(201).json({
         success: true,
-        message: `Please check your email :- ${user.email} to activate ypur account`
-      })
+        message: `Please check your email :- ${user.email} to activate ypur account`,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500))
+      return next(new ErrorHandler(error.message, 500));
     }
-     console.log(user);
+    console.log(user);
     // const newUser = await User.create(user);
 
     // // Respond with success
@@ -81,11 +82,37 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
 const createActivationToken = (user) => {
   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
     expiresIn: "5m",
-  }); 
+  });
 };
 
 //activate user
+router.post(
+  `/activation`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { activation_token } = req.body;
 
+      const newUser = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_SECRET
+      );
+      if (!newUser) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+      const { name, email, password, avatar } = newUser;
+      User.create({
+        name,
+        email,
+        password,
+        avatar,
+      });
+
+      sendToken(newUser, 201, res);
+    } catch (error) {
+      return next(new ErrorHandler(`Invalid Token`, 400));
+    }
+  })
+);
 
 module.exports = router;
 
