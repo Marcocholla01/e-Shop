@@ -10,6 +10,7 @@ const uuid = require("uuid");
 const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const sendToken = require("../utils/jwtToken");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   //console.log("Route handler is executing");
