@@ -3,17 +3,19 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BsFacebook, BsApple } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import styles from "../../styles/style";
-import { Link } from "react-router-dom";
+import { Link , Navigate, useNavigate } from "react-router-dom";
 import { RxAvatar } from 'react-icons/rx'
 import axios from 'axios'
 import { BASE_URL } from "../../config";
 
 function Signup() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [visible, setVisible] = useState(false);
     const [avatar, setAvatar] = useState(null);
+    
 
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
@@ -29,10 +31,13 @@ function Signup() {
         newForm.append("email", email);
         newForm.append("password", password);
 
-        console.log("Form is being submitted");
+        //console.log("Form is being submitted");
         axios.post(`${BASE_URL}/user/create-user`, newForm, config).then((res) => {
-            console.log(res)
-            console.log("Request successful:", res);
+            if (res.data.success === true) {
+                navigate("/")
+            }
+            //console.log(res)
+           // console.log("Request successful:", res);
 
             // Clear form fields
             setName("");
@@ -42,8 +47,18 @@ function Signup() {
 
         }).catch((err) => {
             console.log(err)
-            console.log("Request failed:", err);
+            // console.log("Request failed:", err);
         })
+    }
+
+    const handleFacebookClick = () => {
+        console.log(`facebook icon clicked`)
+    }
+    const handleGoogleClick = () => {
+        console.log(`Google icon clicked`)
+    }
+    const handleAppleClick = () => {
+        console.log(`Apple icon clicked`)
     }
     return (
         <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -66,7 +81,7 @@ function Signup() {
                                 <input
                                     type="text"
                                     name="text"
-                                    id=""
+                                    id="signup-name"
                                     autoComplete="name"
                                     required
                                     placeholder="Enter your full name"
@@ -87,7 +102,7 @@ function Signup() {
                                 <input
                                     type="email"
                                     name="email"
-                                    id=""
+                                    id="signup-email"
                                     autoComplete="email"
                                     required
                                     placeholder="Enter your email address"
@@ -108,7 +123,7 @@ function Signup() {
                                 <input
                                     type={visible ? "text" : "password"}
                                     name="password"
-                                    id=""
+                                    id="signup-password"
                                     autoComplete="current-password"
                                     required
                                     placeholder="Enter you password"
@@ -173,14 +188,14 @@ function Signup() {
                             <BsFacebook className="right-2 top-2 cursor-pointer"
                                 color="#039BE5"
                                 size={25}
-                                onClick={() => console.log(`Facebook`)} />
+                                onClick={handleFacebookClick} />
                             <FcGoogle className=" right-2 top-2 cursor-pointer"
                                 size={25}
-                                onClick={() => console.log(`Google`)} />
+                                onClick={handleGoogleClick} />
                             <BsApple className=" right-2 top-2 cursor-pointer"
                                 color=""
                                 size={25}
-                                onClick={() => console.log(`Apple`)} />
+                                onClick={handleAppleClick} />
                         </div>
                         <div className={`${styles.noramlFlex} w-full`}>
                             <h4 className='relative w-full h-[40] flex justify-center'>Alraedy have an account?

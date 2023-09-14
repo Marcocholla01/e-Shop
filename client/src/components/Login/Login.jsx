@@ -9,6 +9,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
+
+  const handleFacebookClick = () => {
+    console.log(`facebook icon clicked`)
+}
+const handleGoogleClick = () => {
+    console.log(`Google icon clicked`)
+}
+const handleAppleClick = () => {
+    console.log(`Apple icon clicked`)
+}
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -31,7 +41,7 @@ function Login() {
                                 <input
                                     type="email"
                                     name="email"
-                                    id=""
+                                    id="login-email"
                                     autoComplete="email"
                                     required
                                     placeholder="Enter your email address"
@@ -52,7 +62,7 @@ function Login() {
                                 <input
                                     type={visible ? "text" : "password"}
                                     name="password"
-                                    id=""
+                                    id="login-password"
                                     autoComplete="current-password"
                                     required
                                     placeholder="Enter you password"
@@ -114,14 +124,14 @@ function Login() {
               <BsFacebook className="right-2 top-2 cursor-pointer"
                 color="#039BE5"
                 size={25}
-                onClick={() => console.log(`Facebook`)} />
+                onClick={handleFacebookClick} />
               <FcGoogle className=" right-2 top-2 cursor-pointer"
                 size={25}
-                onClick={() => console.log(`Google`)} />
+                onClick={handleGoogleClick} />
               <BsApple className=" right-2 top-2 cursor-pointer"
               color =""
                 size={25}
-                onClick={() => console.log(`Apple`)} />
+                onClick={handleAppleClick} />
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
               <h4 className='relative w-full h-[40] flex justify-center'>Do not have any account?

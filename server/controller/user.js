@@ -2,17 +2,19 @@ const express = require(`express`);
 const path = require(`path`);
 const router = express.Router();
 const User = require(`../models/user`);
-const ErrorHandler = require(`../middlewares/ErrorHandler`);
+const ErrorHandler = require(`../utils/ErrorHandler`);
 const { upload } = require(`../multer`);
 // const upload = require(`../multer`).upload;
 const fs = require(`fs`);
 const uuid = require("uuid");
+const jwt = require(`jsonwebtoken`);
+const sendMail = require(`../utils/sendMail`)
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
-  console.log("Route handler is executing");
+  //console.log("Route handler is executing");
   const { name, email, password } = req.body;
   const userEmail = await User.findOne({ email });
-  console.log("User email:", userEmail);
+  //console.log("User email:", userEmail);
 
   if (userEmail) {
     // User already exists
@@ -22,7 +24,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     // Delete the uploaded file
     fs.unlink(filepath, (err) => {
       if (err) {
-        console.log(err);
+        //console.log(err);
         return next(err); // Pass the error to the error handler middleware
       }
 
@@ -46,16 +48,44 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       password: password,
     };
 
-    console.log(user);
-    const newUser = await User.create(user);
+    const activationToken = createActivationToken(user);
+    
+    //http://localhost:1001/activationToken
+    const activationUrl = `${protocol}://${host}/activation/${activationToken}`
+    
+    try {
+      await sendMail({
+        email: user.email,
+        subject: "Activate Your Account",
+        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+      })
+      res.status(201).json({
+        success: true,
+        message: `Please check your email :- ${user.email} to activate ypur account`
+      })
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500))
+    }
+     console.log(user);
+    // const newUser = await User.create(user);
 
-    // Respond with success
-    res.status(201).json({
-      success: true,
-      newUser,
-    });
+    // // Respond with success
+    // res.status(201).json({
+    //   success: true,
+    //   newUser,
+    //});
   }
 });
+
+//create Activation Token
+const createActivationToken = (user) => {
+  return jwt.sign(user, process.env.ACTIVATION_SECRET, {
+    expiresIn: "5m",
+  }); 
+};
+
+//activate user
+
 
 module.exports = router;
 
