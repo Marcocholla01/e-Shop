@@ -26,13 +26,12 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     // Delete the uploaded file
     fs.unlink(filepath, (err) => {
       if (err) {
-        //console.log(err);
-        return next(err); // Pass the error to the error handler middleware
+        console.log(err);
+        res.status(500).json({message:`Error deleting file`})
       }
-
-      // Respond with an error message
-      return next(new ErrorHandler(`User already exists`, 400));
     });
+    // Respond with an error message
+    return next(new ErrorHandler(`User already exists`, 400));
   } else {
     // User does not exist, create the user
     const fileId = uuid.v4();
@@ -110,7 +109,7 @@ router.post(
 
       sendToken(newUser, 201, res);
     } catch (error) {
-      return next(new ErrorHandler(`Invalid Token`, 400));
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
