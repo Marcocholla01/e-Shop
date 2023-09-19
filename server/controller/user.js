@@ -9,6 +9,7 @@ const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
+const { isAuthenticated } = require("../middlewares/auth");
 
 router.post(
   `/create-user`,
@@ -74,11 +75,22 @@ router.post(
       }
       const user = await User.findOne({ email }).select(`+password`);
       if (!user) {
-        return next(new ErrorHandler(`User doesn't exists!`));
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: "User not found. Please check your credentials.",
+          });
       }
       const isPasswordValid = await user.comparePassword(password);
       if (!isPasswordValid) {
-        return next(new ErrorHandler(`Please provide the correct information`));
+        return res
+          .status(401)
+          .json({
+            success: false,
+            message:
+              "Invalid credentials. Please provide the correct information.",
+          });
       }
 
       sendToken(user, 201, res);
@@ -87,6 +99,23 @@ router.post(
     }
   })
 );
+
+// load user
+router.get(`/load-user/:userId`, isAuthenticated, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(new ErrorHandler(`User doesn't exists!`));
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
 
 //   // Generate the activation token
 //   const activationToken = createActivationToken(user);
