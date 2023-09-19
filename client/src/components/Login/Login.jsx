@@ -3,22 +3,65 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BsFacebook, BsApple } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import styles from "../../styles/style";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    axios.post(`${BASE_URL}/user/login-user`, {
+      email,
+      password,
+    })
+    .then((res) => {
+      if (res.data.success === true) {
+        toast.success(res.data.message || "Login success!");
+        navigate("/");
+      } else {
+        toast.error(res.data.message || "Login failed. Please try again.");
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a non-2xx status code
+        if (error.response.status === 404) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 400) {
+            toast.error(error.response.data.message);
+        } else {
+          toast.error(`Server error: ${ error.response.data.message}`);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast.error("Network error. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an error
+        toast.error("Request failed. Please try again later.");
+      }
+    });
+    
+    
+  }
 
   const handleFacebookClick = () => {
     console.log(`facebook icon clicked`)
-}
-const handleGoogleClick = () => {
+  }
+  const handleGoogleClick = () => {
     console.log(`Google icon clicked`)
-}
-const handleAppleClick = () => {
+  }
+  const handleAppleClick = () => {
     console.log(`Apple icon clicked`)
-}
+  }
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -29,62 +72,62 @@ const handleAppleClick = () => {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm::px-10">
-          <form action="" className="space-y-6 ">
-          <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Email address
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="login-email"
-                                    autoComplete="email"
-                                    required
-                                    placeholder="Enter your email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Password
-                            </label>
-                            <div className="mt-1 relative">
-                                <input
-                                    type={visible ? "text" : "password"}
-                                    name="password"
-                                    id="login-password"
-                                    autoComplete="current-password"
-                                    required
-                                    placeholder="Enter you password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
-                                {visible ? (
-                                    <AiOutlineEye
-                                        className="absolute right-2 top-2 cursor-pointer"
-                                        size={25}
-                                        onClick={() => setVisible(false)}
-                                    />
-                                ) : (
-                                    <AiOutlineEyeInvisible
-                                        className="absolute right-2 top-2 cursor-pointer"
-                                        size={25}
-                                        onClick={() => setVisible(true)}
-                                    />
-                                )}
-                            </div>
-                        </div>
+          <form action="" className="space-y-6 " onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <div className="mt-1">
+                <input
+                  type="email"
+                  name="email"
+                  id="login-email"
+                  autoComplete="email"
+                  required
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  type={visible ? "text" : "password"}
+                  name="password"
+                  id="login-password"
+                  autoComplete="current-password"
+                  required
+                  placeholder="Enter you password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+                {visible ? (
+                  <AiOutlineEye
+                    className="absolute right-2 top-2 cursor-pointer"
+                    size={25}
+                    onClick={() => setVisible(false)}
+                  />
+                ) : (
+                  <AiOutlineEyeInvisible
+                    className="absolute right-2 top-2 cursor-pointer"
+                    size={25}
+                    onClick={() => setVisible(true)}
+                  />
+                )}
+              </div>
+            </div>
             <div className={`${styles.noramlFlex} justify-between`}>
               <div className={`${styles.noramlFlex}`}>
                 <input
@@ -118,7 +161,7 @@ const handleAppleClick = () => {
               </button>
             </div>
             <div className="  flex justify-center py-2 text-lg font-bold text-gray-700 ">
-             -- OR --
+              -- OR --
             </div>
             <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
               <BsFacebook className="right-2 top-2 cursor-pointer"
@@ -129,7 +172,7 @@ const handleAppleClick = () => {
                 size={25}
                 onClick={handleGoogleClick} />
               <BsApple className=" right-2 top-2 cursor-pointer"
-              color =""
+                color=""
                 size={25}
                 onClick={handleAppleClick} />
             </div>

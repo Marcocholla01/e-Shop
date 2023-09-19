@@ -3,10 +3,11 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BsFacebook, BsApple } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import styles from "../../styles/style";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
 
 function Signup() {
     const navigate = useNavigate();
@@ -32,26 +33,26 @@ function Signup() {
 
         console.log("Form is being submitted");
         axios
-            .post(`${BASE_URL}/user/create-user`, newForm, config)
-            .then((res) => {
-                alert(res.message);
-                //  if (res.data.success === true) {
-                //      navigate("/");
-                //  }
-                // //console.log(res)
-                 console.log("Request successful:", res);
+    .post(`${BASE_URL}/user/create-user`, newForm, config)
+    .then((response) => {
+      if (response.data.success === true) {
+        toast.success(response.data.message); // Display success toast
+        navigate("/login");
+      } else {
+        toast.error(response.data.message); // Display error toast
+      }
 
-                // // Clear form fields
-                 setName("");
-                 setEmail("");
-                 setPassword("");
-                 setAvatar(null);
-            })
-            .catch((err) => {
-                console.log(err);
-                // console.log("Request failed:", err);
-            });
-    };
+      // Clear form fields
+      setName("");
+      setEmail("");
+      setPassword("");
+      setAvatar(null);
+    })
+    .catch((error) => {
+      console.log("Request failed:", error);
+      toast.error("Request failed. Please try again."); // Display error toast for network issues or unexpected errors
+    });
+};
 
     const handleFacebookClick = () => {
         console.log(`facebook icon clicked`);
@@ -169,14 +170,15 @@ function Signup() {
                                         htmlFor="file-input"
                                         className="ml-5 flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                     >
-                                        <span>Upload an image</span>
+                                        <span className="cursor-pointer">Upload an image</span>
                                         <input
                                             type="file"
+                                            required
                                             name="avatar"
                                             id="file-input"
                                             accept=".jpg,.jpeg,.png"
                                             onChange={handleFileInputChange}
-                                            className="sr-only"
+                                            className="sr-only "
                                         />
                                     </label>
                                 </div>
