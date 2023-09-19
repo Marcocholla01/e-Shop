@@ -56,13 +56,10 @@ const userSchema = new mongoose.Schema({
       required: true,
     },
  },
- createdAt:{
-  type: Date,
-  default: Date.now(),
- },
  resetPasswordToken: String,
  resetPasswordTime: Date,
 });
+userSchema.set('timestamps', true);
 
 
 //  Hash password
