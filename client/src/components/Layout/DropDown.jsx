@@ -10,13 +10,13 @@ const DropDown = ({ categoriesData, setDropDown }) => {
     window.location.reload();
   };
   return (
-    <div className="pb-4 w-[260px] bg-white absolute z-30 rounded-b-md shadow-sm">
+    <div className="pb-4 w-[260px] bg-[#fff] absolute z-30 rounded-b-md shadow-sm">
       {categoriesData &&
         categoriesData.map((i, index) => (
           <div
             key={index}
-            className={`${styles.normalFlex} p-2`}
-            onclick={() => submitHandle(i)}
+            className={`${styles.normalFlex}`}
+            onClick={() => submitHandle(i)}
           >
             <img
               src={i.image_Url}
@@ -28,8 +28,9 @@ const DropDown = ({ categoriesData, setDropDown }) => {
                 userSelect: "none",
                 paddingRight: "10px",
               }}
+              alt=""
             />
-            <h3 className="cursor-pointer select-none">{i.title}</h3>
+            <h3 className="m-3 cursor-pointer select-none">{i.title}</h3>
           </div>
         ))}
     </div>
