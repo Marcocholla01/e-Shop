@@ -3,7 +3,6 @@ const nodemailer = require(`nodemailer`);
 const dotenv = require('dotenv');
 dotenv.config({ path: '../config/.env' });
 
-console.log('Before sendMail');
 const sendMail = async (options) => {
   
   const transpoter = nodemailer.createTransport({
@@ -25,7 +24,6 @@ const sendMail = async (options) => {
   };
 
   await transpoter.sendMail(mailOptions);
-  console.log('After sendMail');
 };
 
 module.exports = sendMail;

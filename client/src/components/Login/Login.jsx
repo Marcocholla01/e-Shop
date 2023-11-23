@@ -12,56 +12,56 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios.post(`${BASE_URL}/user/login-user`, {
-      email,
-      password,
-    })
-    .then((res) => {
-      if (res.data.success === true) {
-        toast.success(res.data.message || "Login success!");
-        navigate("/");
-      } else {
-        toast.error(res.data.message || "Login failed. Please try again.");
-      }
-    })
-    .catch((error) => {
-      if (error.response) {
-        // The request was made and the server responded with a non-2xx status code
-        if (error.response.status === 404) {
-          toast.error(error.response.data.message);
-        } else if (error.response.status === 401) {
-          toast.error(error.response.data.message);
-        } else if (error.response.status === 400) {
-            toast.error(error.response.data.message);
+    axios
+      .post(`${BASE_URL}/user/login-user`, {
+        email,
+        password,
+      })
+      .then((res) => {
+        console.log(`form submitted`);
+        if (res.data.success === true) {
+          toast.success(res.data.message || "Login success!");
+          navigate("/");
         } else {
-          toast.error(`Server error: ${ error.response.data.message}`);
+          toast.error(res.data.message || "Login failed. Please try again.");
         }
-      } else if (error.request) {
-        // The request was made but no response was received
-        toast.error("Network error. Please check your internet connection.");
-      } else {
-        // Something happened in setting up the request that triggered an error
-        toast.error("Request failed. Please try again later.");
-      }
-    });
-    
-    
-  }
+      })
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a non-2xx status code
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 401) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 400) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error(`Server error: ${error.response.data.message}`);
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          toast.error("Network error. Please check your internet connection.");
+        } else {
+          // Something happened in setting up the request that triggered an error
+          toast.error("Request failed. Please try again later.");
+        }
+      });
+  };
 
   const handleFacebookClick = () => {
-    console.log(`facebook icon clicked`)
-  }
+    console.log(`facebook icon clicked`);
+  };
   const handleGoogleClick = () => {
-    console.log(`Google icon clicked`)
-  }
+    console.log(`Google icon clicked`);
+  };
   const handleAppleClick = () => {
-    console.log(`Apple icon clicked`)
-  }
+    console.log(`Apple icon clicked`);
+  };
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -128,8 +128,8 @@ function Login() {
                 )}
               </div>
             </div>
-            <div className={`${styles.noramlFlex} justify-between`}>
-              <div className={`${styles.noramlFlex}`}>
+            <div className={`${styles.normalFlex} justify-between`}>
+              <div className={`${styles.normalFlex}`}>
                 <input
                   type="checkbox"
                   name="remember-me"
@@ -164,20 +164,27 @@ function Login() {
               -- OR --
             </div>
             <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
-              <BsFacebook className="right-2 top-2 cursor-pointer"
+              <BsFacebook
+                className="right-2 top-2 cursor-pointer"
                 color="#039BE5"
                 size={25}
-                onClick={handleFacebookClick} />
-              <FcGoogle className=" right-2 top-2 cursor-pointer"
+                onClick={handleFacebookClick}
+              />
+              <FcGoogle
+                className=" right-2 top-2 cursor-pointer"
                 size={25}
-                onClick={handleGoogleClick} />
-              <BsApple className=" right-2 top-2 cursor-pointer"
+                onClick={handleGoogleClick}
+              />
+              <BsApple
+                className=" right-2 top-2 cursor-pointer"
                 color=""
                 size={25}
-                onClick={handleAppleClick} />
+                onClick={handleAppleClick}
+              />
             </div>
-            <div className={`${styles.noramlFlex} w-full`}>
-              <h4 className='relative w-full h-[40] flex justify-center'>Do not have any account?
+            <div className={`${styles.normalFlex} w-full`}>
+              <h4 className="relative w-full h-[40] flex justify-center">
+                Do not have any account?
                 <Link to="/signup" className="text-blue-600 pl-2">
                   Register
                 </Link>

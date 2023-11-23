@@ -75,22 +75,18 @@ router.post(
       }
       const user = await User.findOne({ email }).select(`+password`);
       if (!user) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: "User not found. Please check your credentials.",
-          });
+        return res.status(404).json({
+          success: false,
+          message: "User not found. Please check your credentials.",
+        });
       }
       const isPasswordValid = await user.comparePassword(password);
       if (!isPasswordValid) {
-        return res
-          .status(401)
-          .json({
-            success: false,
-            message:
-              "Invalid credentials. Please provide the correct information.",
-          });
+        return res.status(401).json({
+          success: false,
+          message:
+            "Invalid credentials. Please provide the correct information.",
+        });
       }
 
       sendToken(user, 201, res);
