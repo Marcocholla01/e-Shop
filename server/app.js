@@ -10,10 +10,14 @@ app.get(`/`, (req, res) => {
   res.send(`Hello From the Backend Server`);
 });
 
-
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:1001",
+    credentials: true,
+  })
+);
 
 // Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -25,8 +29,8 @@ const user = require(`./controller/user`);
 app.use(`/api/v2/user`, user);
 
 // not found route
-app.all('*', (req, res) => {
-  res.status(404).send('This Page is not found');
+app.all("*", (req, res) => {
+  res.status(404).send("This Page is not found");
 });
 // For error handling
 app.use(ErrorHandler);
