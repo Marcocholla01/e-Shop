@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "../../styles/style";
 import { Link } from "react-router-dom";
+import Logo from "../../assets/images/svg/logo.svg";
 import { categoriesData, productData } from "../../static/data.jsx";
 import {
   AiOutlineSearch,
@@ -43,10 +44,7 @@ const Header = ({ activeHeading }) => {
         <div className="hidden sm:h-[50px] sm:my-[20px] sm:flex items-center justify-between">
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="Logo image"
-              />
+              <img src={Logo} alt="Logo image" />
             </Link>
           </div>
           {/* Serach box */}

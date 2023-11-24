@@ -1,19 +1,15 @@
 import React from "react";
+import banner from "../../../assets/images/banner-2.jpg";
 import styles from "../../../styles/style";
 import { Link } from "react-router-dom";
-import {
-  IoIosArrowDropleft,
-  IoIosArrowDropright,
-  IoIosArrowDroprightCircle,
-} from "react-icons/io";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 const Hero = () => {
   return (
     <div
-      className={`relative min-h-[70px] sm:min-h-[80vh] w-full bg-no-repeat ${styles.normalFlex} `}
+      className={`relative min-h-[70px] sm:min-h-[80vh] w-[100%] bg-cover bg-no-repeat object-fit: contain ${styles.normalFlex} `}
       style={{
-        backgroundImage:
-          "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
+        backgroundImage: `url(${banner})`,
       }}
     >
       <div className={`${styles.section} w-[90%] sm:w-[60%]`}>

@@ -12,6 +12,7 @@ import {
   ProductPage,
   BestSellingPage,
   EventsPage,
+  FAQPage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -34,6 +35,7 @@ function App() {
         <Route path="/products" element={<ProductPage />} />
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
+        <Route path="/faq" element={<FAQPage />} />
 
         <Route
           path="/activation/:activation_token"

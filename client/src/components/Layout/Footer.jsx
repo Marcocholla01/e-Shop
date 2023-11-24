@@ -11,6 +11,8 @@ import {
   footerSupportLinks,
   footercompanyLinks,
 } from "../../static/data";
+import payments from "../../assets/images/footer-payment.webp";
+import Footerlogo from "../../assets/images/svg/logo.svg";
 
 const Footer = () => {
   return (
@@ -39,7 +41,7 @@ const Footer = () => {
         <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center">
           <Link to={`/`}>
             <img
-              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+              src={Footerlogo}
               alt="Logo image"
               style={{ filter: "brightness(0) invert(1)", cursor: "pointer" }}
             />
@@ -113,10 +115,7 @@ const Footer = () => {
         <span>© 2023 Marcocholla. All rights reserved</span>
         <span>Terms . Privacy Policy</span>
         <div className="sm:block flex items-center justify-center w-full">
-          <img
-            src="https://hamart-shop.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffooter-payment.a37c49ac.png&w=640&q=75"
-            alt="payment methods"
-          />
+          <img src={payments} alt="payment methods" />
         </div>
       </div>
     </div>
