@@ -1,3 +1,18 @@
+import macLaptop from './images/mac-laptop.webp'
+import accessories from './images/accessories.avif'
+import cosmetic from './images/kosme1.png'
+import gift from './images/Gift-box-1.jpeg'
+import headPhone from './images/headphone.jpg'
+import iphone from './images/iphone.jpg'
+import phones from './images/phones.webp'
+import others from './images/Others-2.webp'
+import musicAndGamming from './images/music-and-gamming.webp'
+import shoe from './images/shoe-800x800.jpg'
+import shoes from './images/shoes-1.jpg'
+import watch from './images/watch.webp'
+import cloths from './images/clothing-apparel.webp'
+import pet from './images/pet-care.webp'
+
 // navigation Data
 export const navItems = [
   {
@@ -194,69 +209,69 @@ export const categoriesData = [
     title: "Computers and Laptops",
     subTitle: "",
     image_Url:
-      "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+      macLaptop,
   },
   {
     id: 2,
     title: "cosmetics and body care",
     subTitle: "",
     image_Url:
-      "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
+      cosmetic,
   },
   {
     id: 3,
     title: "Accesories",
     subTitle: "",
     image_Url:
-      "https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories_335657-2345.jpg?w=2000",
+      accessories,
   },
   {
     id: 4,
     title: "Cloths",
     subTitle: "",
     image_Url:
-      "https://www.shift4shop.com/2015/images/industries/clothing/clothing-apparel.png",
+      cloths,
   },
   {
     id: 5,
     title: "Shoes",
     subTitle: "",
     image_Url:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvBQPQMVNRd6TtDkGs2dCri0Y-rxKkFOiEWw&usqp=CAU",
+      shoes,
   },
   {
     id: 6,
     title: "Gifts",
     subTitle: "",
     image_Url:
-      "https://www.smartmums.in/wp-content/uploads/2017/12/Gift-box-1.jpeg",
+      gift,
   },
   {
     id: 7,
     title: "Pet Care",
     subTitle: "",
-    image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
+    image_Url: pet,
   },
   {
     id: 8,
     title: "Mobile and Tablets",
     subTitle: "",
     image_Url:
-      "https://st-troy.mncdn.com/mnresize/1500/1500/Content/media/ProductImg/original/mpwp3tua-apple-iphone-14-256gb-mavi-mpwp3tua-637986832343472449.jpg",
+      phones,
   },
   {
     id: 9,
     title: "Music and Gaming",
     subTitle: "",
     image_Url:
-      "https://static.vecteezy.com/system/resources/previews/011/996/555/original/3d-black-headphone-illustration-ecommerce-icon-png.png",
+      musicAndGamming,
   },
   {
     id: 10,
     title: "Others",
     subTitle: "",
     image_Url:
-      "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
+      others,
   },
 ];
 
@@ -271,11 +286,11 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+        url: macLaptop,
       },
       {
         public_id: "test",
-        url: "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+        url: macLaptop,
       },
     ],
     shop: {
@@ -301,18 +316,18 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "http://127.0.0.1:1000/uploads/study-yellow-1693551134801-512617110.png",
+        url: iphone,
       },
       {
         public_id: "test",
-        url: "http://127.0.0.1:1000/uploads/study-yellow-1693551134801-512617110.png",
+        url: iphone,
       },
     ],
     shop: {
       name: "Amazon Ltd",
       shop_avatar: {
         public_id: "test",
-        url: "http://127.0.0.1:1000/uploads/study-yellow-1693551134801-512617110.png",
+        url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
       },
       ratings: 4.2,
     },
@@ -331,11 +346,11 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+        url: macLaptop,
       },
       {
         public_id: "test",
-        url: "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+        url: macLaptop,
       },
     ],
     shop: {
@@ -362,11 +377,11 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+        url: watch,
       },
       {
         public_id: "test",
-        url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+        url: watch,
       },
     ],
     shop: {
@@ -393,11 +408,11 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://mirzacdns3.s3.ap-south-1.amazonaws.com/cache/catalog/RLV0015/2-800x800.jpg",
+        url: shoe,
       },
       {
         public_id: "test",
-        url: "https://mirzacdns3.s3.ap-south-1.amazonaws.com/cache/catalog/RLV0015/2-800x800.jpg",
+        url: shoe,
       },
     ],
     shop: {
@@ -423,7 +438,7 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://www.startech.com.bd/image/cache/catalog/headphone/havit/h763d/h763d-02-500x500.jpg",
+        url: headPhone,
       },
       {
         public_id: "test",
@@ -462,11 +477,11 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+        url: watch,
       },
       {
         public_id: "test",
-        url: "https://i0.wp.com/eccocibd.com/wp-content/uploads/2022/01/1802NL02_1.png?fit=550%2C550&ssl=1",
+        url: watch,
       },
     ],
     shop: {
@@ -491,7 +506,7 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://www.startech.com.bd/image/cache/catalog/headphone/havit/h763d/h763d-02-500x500.jpg",
+        url: headPhone,
       },
       {
         public_id: "test",
@@ -559,7 +574,7 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://www.startech.com.bd/image/cache/catalog/headphone/havit/h763d/h763d-02-500x500.jpg",
+        url: headPhone,
       },
       {
         public_id: "test",
