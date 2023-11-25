@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   LoginPage,
@@ -16,16 +16,23 @@ import {
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
+import Store from "./redux/store";
+import { loadUser } from "./redux/actions/user";
 
 function App() {
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/user/getuser`)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {});
-  });
+    // axios
+    //   .get(`${BASE_URL}/user/getuser`, { withCredentials: true })
+    //   .then((res) => {
+    //     toast.success(res.data.message);
+
+    // })
+    // .catch((error) => {
+    //   toast.error(error.response.data.message);
+    // });
+
+    Store.dispatch(loadUser());
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
