@@ -13,8 +13,11 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import DropDown from "./DropDown";
 import Navbar from "./Navbar";
+import { useSelector } from "react-redux";
+import { backend_url } from "../../config.js";
 
 const Header = ({ activeHeading }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -142,7 +145,7 @@ const Header = ({ activeHeading }) => {
               <div className="relative cursor-pointer mr-[15px]">
                 <AiOutlineShoppingCart
                   size={30}
-                  color="rgb(255 255 255 /83%)"
+                  color="rgb(255  255 255 /83%)"
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                   1
@@ -151,9 +154,15 @@ const Header = ({ activeHeading }) => {
             </div>
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <Link to="/login">
-                  <CgProfile size={30} color="rgb(255 255 255 /83%)" />
-                </Link>
+                {isAuthenticated ? (
+                  <Link to={`profile`}>
+                    <img src={`${backend_url}${user.avatar}`} alt="" />
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <CgProfile size={30} color="rgb(255 255 255 /83%)" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

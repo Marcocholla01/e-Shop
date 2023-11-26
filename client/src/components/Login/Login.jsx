@@ -32,6 +32,7 @@ function Login() {
         if (res.data.success === true) {
           toast.success(res.data.message || "Login success!");
           navigate("/");
+          window.location.reload();
         } else {
           toast.error(res.data.message || "Login failed. Please try again.");
         }
@@ -168,8 +169,6 @@ function Login() {
               <FacebookOauth />
               <GoogleOauth />
               <AppleOauth />
-              
-              
             </div>
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full h-[40] flex justify-center">
