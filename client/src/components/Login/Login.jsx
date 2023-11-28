@@ -177,18 +177,18 @@ function Login() {
               <BsFacebook
                 className="right-2 top-2 cursor-pointer"
                 color="#039BE5"
-                size={25}
+                size={30}
                 onClick={handleFacebookClick}
               />
               <FcGoogle
                 className=" right-2 top-2 cursor-pointer"
-                size={25}
+                size={30}
                 onClick={handleGoogleClick}
               />
               <BsApple
                 className=" right-2 top-2 cursor-pointer"
                 color=""
-                size={25}
+                size={30}
                 onClick={handleAppleClick}
               />
             </div>
