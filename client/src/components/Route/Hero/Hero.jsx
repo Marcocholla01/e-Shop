@@ -1,5 +1,5 @@
 import React from "react";
-import banner from "../../../assets/images/banner-2.jpg";
+import banner from "../../../assets/images/banner-1.jpg";
 import styles from "../../../styles/style";
 import { Link } from "react-router-dom";
 import { IoIosArrowDroprightCircle } from "react-icons/io";

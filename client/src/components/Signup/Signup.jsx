@@ -1,14 +1,15 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { BsFacebook, BsApple } from "react-icons/bs";
 import Logo from "../../assets/images/svg/logo.svg";
-import { FcGoogle } from "react-icons/fc";
 import styles from "../../styles/style";
 import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
+import FacebookOauth from "../Oauth/FacebookOauth";
+import GoogleOauth from "../Oauth/GoogleOauth";
+import AppleOauth from "../Oauth/AppleOauth";
 
 function Signup() {
   const navigate = useNavigate();
@@ -53,16 +54,6 @@ function Signup() {
         console.log("Request failed:", error);
         toast.error("Request failed. Please try again."); // Display error toast for network issues or unexpected errors
       });
-  };
-
-  const handleFacebookClick = () => {
-    console.log(`facebook icon clicked`);
-  };
-  const handleGoogleClick = () => {
-    console.log(`Google icon clicked`);
-  };
-  const handleAppleClick = () => {
-    console.log(`Apple icon clicked`);
   };
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -204,23 +195,9 @@ function Signup() {
               -- OR --
             </div>
             <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
-              <BsFacebook
-                className="right-2 top-2 cursor-pointer"
-                color="#039BE5"
-                size={30}
-                onClick={handleFacebookClick}
-              />
-              <FcGoogle
-                className=" right-2 top-2 cursor-pointer"
-                size={30}
-                onClick={handleGoogleClick}
-              />
-              <BsApple
-                className=" right-2 top-2 cursor-pointer"
-                color=""
-                size={30}
-                onClick={handleAppleClick}
-              />
+              <FacebookOauth />
+              <GoogleOauth />
+              <AppleOauth />
             </div>
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full h-[40] flex justify-center">

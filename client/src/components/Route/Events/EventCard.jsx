@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../../../styles/style";
 import CountDown from "./CountDown";
+import iphone from '../../../static/images/iphone.jpg'
 
 const EventCard = ({ active }) => {
   return (
@@ -11,7 +12,7 @@ const EventCard = ({ active }) => {
     >
       <div className="w-full lg:w-[50] m-auto">
         <img
-          src="http://127.0.0.1:1000/uploads/study-yellow-1693551134801-512617110.png"
+          src={iphone}
           alt=""
         />
       </div>

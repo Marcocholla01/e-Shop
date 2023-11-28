@@ -3,50 +3,50 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
-  name:{
+  name: {
     type: String,
     required: [true, "Please enter your name!"],
   },
-  email:{
+  email: {
     type: String,
     required: [true, "Please enter your email!"],
   },
-  password:{
+  password: {
     type: String,
     required: [true, "Please enter your password"],
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
-  phoneNumber:{
+  phoneNumber: {
     type: Number,
   },
-  addresses:[
+  addresses: [
     {
       country: {
         type: String,
       },
-      city:{
+      city: {
         type: String,
       },
-      address1:{
+      address1: {
         type: String,
       },
-      address2:{
+      address2: {
         type: String,
       },
-      zipCode:{
+      zipCode: {
         type: Number,
       },
-      addressType:{
+      addressType: {
         type: String,
       },
-    }
+    },
   ],
-  role:{
+  role: {
     type: String,
     default: "user",
   },
-  avatar:{
+  avatar: {
     public_id: {
       type: String,
       required: true,
@@ -55,16 +55,15 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
- },
- resetPasswordToken: String,
- resetPasswordTime: Date,
+  },
+  resetPasswordToken: String,
+  resetPasswordTime: Date,
 });
-userSchema.set('timestamps', true);
-
+userSchema.set("timestamps", true);
 
 //  Hash password
-userSchema.pre("save", async function (next){
-  if(!this.isModified("password")){
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     next();
   }
 
@@ -73,7 +72,7 @@ userSchema.pre("save", async function (next){
 
 // jwt token
 userSchema.methods.getJwtToken = function () {
-  return jwt.sign({ id: this._id}, process.env.JWT_SECRET_KEY,{
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };

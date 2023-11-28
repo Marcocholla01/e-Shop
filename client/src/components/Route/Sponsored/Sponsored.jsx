@@ -1,48 +1,62 @@
 import React from "react";
 import styles from "../../../styles/style";
+import Fujitsu from '../../../static/images/Fujitsu-Logo.png'
+import Sony from '../../../static/images/Sony-Logo.png'
+import Dell from '../../../static/images/Dell-Logo.png'
+import Lenovo from '../../../static/images/Lenovo-Logo.png'
+import Cisco from '../../../static/images/Cisco-Logo.png'
+import Apple from '../../../static/images/Apple-Logo.png'
 
 const Sponsored = () => {
   return (
     <div
-      className={`${styles.section} hidden sm:block bg-white py-10 px-5 cursor-pointer rounded-xl`}
+      className={`${styles.section} hidden sm:block bg-white py-10 px-5 rounded-xl`}
     >
-      <div className="flex justify-between w-full">
-        <div className="flex items-start">
+      <div className="flex justify-between w-full items-center">
+        <div className="cursor-pointer flex items-start">
           <img
-            src="https://logos-world.net/wp-content/uploads/2020/04/sony-Logo.png"
+            src={Sony}
+            alt=""
+            style={{ width: "150px", objectFit: "contain" }}
+          />
+        </div><div className="cursor-pointer flex items-start">
+          <img
+            src={Dell}
             alt=""
             style={{ width: "150px", objectFit: "contain" }}
           />
         </div>
-      </div>
-      <div className="flex items-start">
-        <img
-          src="https://logos-world.net/wp-content/uploads/2020/04/Dell-Logo-1989-2016.png"
-          alt=""
-          style={{ width: "150px", objectFit: "contain" }}
-        />
-      </div>
-      <div className="flex items-start">
-        <img
-          src="https://uploads.wikimedia.org/wikipidea/commons/thumb/b/bf/LG_log-_%282015%29.svg/2560px-LG_logo_%282015%29.svg.png"
-          alt=""
-          style={{ width: "150px", objectFit: "contain" }}
-        />
-        <div className="flex items-start">
+        <div className="cursor-pointer flex items-start">
           <img
-            src="http://127.0.0.1:1000/uploads/study-yellow-1693551134801-512617110.png"
+            src={Lenovo}
             alt=""
             style={{ width: "150px", objectFit: "contain" }}
           />
         </div>
-        <div className="flex items-start">
+        <div className="cursor-pointer flex items-start">
           <img
-            src="https://logos-world.net/wp-content/uploads/2020/04/Sony-Logo.png"
+            src={Cisco}
             alt=""
             style={{ width: "150px", objectFit: "contain" }}
           />
         </div>
+        <div className="cursor-pointer flex items-start">
+          <img
+            src={Fujitsu}
+            alt=""
+            style={{ width: "150px", objectFit: "contain" }}
+          />
+        </div>
+        <div className="cursor-pointer flex items-start">
+          <img
+            src={Apple}
+            alt=""
+            style={{ width: "150px", objectFit: "contain" }}
+          />
+        </div>
+
       </div>
+
     </div>
   );
 };
