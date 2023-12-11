@@ -32,7 +32,7 @@ function Login() {
         if (res.data.success === true) {
           toast.success(res.data.message || "Login success!");
           navigate("/");
-          window.location.reload();
+          window.location.reload(true);
         } else {
           toast.error(res.data.message || "Login failed. Please try again.");
         }

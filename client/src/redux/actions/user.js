@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../../config";
 
-// Load user
+// load user
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({

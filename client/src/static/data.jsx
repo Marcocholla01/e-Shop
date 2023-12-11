@@ -1,17 +1,17 @@
-import macLaptop from './images/mac-laptop.webp'
-import accessories from './images/accessories.avif'
-import cosmetic from './images/kosme1.png'
-import gift from './images/Gift-box-1.jpeg'
-import headPhone from './images/headphone.jpg'
-import iphone from './images/iphone.jpg'
-import phones from './images/phones.webp'
-import others from './images/Others-2.webp'
-import musicAndGamming from './images/music-and-gamming.webp'
-import shoe from './images/shoe-800x800.jpg'
-import shoes from './images/shoes-1.jpg'
-import watch from './images/watch.webp'
-import cloths from './images/clothing-apparel.webp'
-import pet from './images/pet-care.webp'
+import macLaptop from "./images/mac-laptop.webp";
+import accessories from "./images/accessories.avif";
+import cosmetic from "./images/kosme1.png";
+import gift from "./images/Gift-box-1.jpeg";
+import headPhone from "./images/headphone.jpg";
+import iphone from "./images/iphone.jpg";
+import phones from "./images/phones.webp";
+import others from "./images/Others-2.webp";
+import musicAndGamming from "./images/music-and-gamming.webp";
+import shoe from "./images/shoe-800x800.jpg";
+import shoes from "./images/shoes-1.jpg";
+import watch from "./images/watch.webp";
+import cloths from "./images/clothing-apparel.webp";
+import pet from "./images/pet-care.webp";
 
 // navigation Data
 export const navItems = [
@@ -208,43 +208,37 @@ export const categoriesData = [
     id: 1,
     title: "Computers and Laptops",
     subTitle: "",
-    image_Url:
-      macLaptop,
+    image_Url: macLaptop,
   },
   {
     id: 2,
     title: "cosmetics and body care",
     subTitle: "",
-    image_Url:
-      cosmetic,
+    image_Url: cosmetic,
   },
   {
     id: 3,
     title: "Accesories",
     subTitle: "",
-    image_Url:
-      accessories,
+    image_Url: accessories,
   },
   {
     id: 4,
     title: "Cloths",
     subTitle: "",
-    image_Url:
-      cloths,
+    image_Url: cloths,
   },
   {
     id: 5,
     title: "Shoes",
     subTitle: "",
-    image_Url:
-      shoes,
+    image_Url: shoes,
   },
   {
     id: 6,
     title: "Gifts",
     subTitle: "",
-    image_Url:
-      gift,
+    image_Url: gift,
   },
   {
     id: 7,
@@ -256,22 +250,19 @@ export const categoriesData = [
     id: 8,
     title: "Mobile and Tablets",
     subTitle: "",
-    image_Url:
-      phones,
+    image_Url: phones,
   },
   {
     id: 9,
     title: "Music and Gaming",
     subTitle: "",
-    image_Url:
-      musicAndGamming,
+    image_Url: musicAndGamming,
   },
   {
     id: 10,
     title: "Others",
     subTitle: "",
-    image_Url:
-      others,
+    image_Url: others,
   },
 ];
 
@@ -545,7 +536,7 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: "https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg",
+        url: iphone,
       },
       {
         public_id: "test",
