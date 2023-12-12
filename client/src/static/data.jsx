@@ -1,8 +1,10 @@
 import macLaptop from "./images/mac-laptop.webp";
+import macLaptop2 from "./images/laptop2.jpg";
 import accessories from "./images/accessories.avif";
 import cosmetic from "./images/kosme1.png";
 import gift from "./images/Gift-box-1.jpeg";
 import headPhone from "./images/headphone.jpg";
+import headPhone2 from "./images/headPhone2.webp";
 import iphone from "./images/iphone.jpg";
 import phones from "./images/phones.webp";
 import others from "./images/Others-2.webp";
@@ -10,6 +12,7 @@ import musicAndGamming from "./images/music-and-gamming.webp";
 import shoe from "./images/shoe-800x800.jpg";
 import shoes from "./images/shoes-1.jpg";
 import watch from "./images/watch.webp";
+import watch2 from "./images/watch2.jpg";
 import cloths from "./images/clothing-apparel.webp";
 import pet from "./images/pet-care.webp";
 
@@ -30,6 +33,10 @@ export const navItems = [
   {
     title: "Events",
     url: "/events",
+  },
+  {
+    title: "About Us",
+    url: "/about-us",
   },
   {
     title: "FAQ",
@@ -281,7 +288,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: macLaptop,
+        url: macLaptop2,
       },
     ],
     shop: {
@@ -307,7 +314,7 @@ export const productData = [
     image_Url: [
       {
         public_id: "test",
-        url: iphone,
+        url: phones,
       },
       {
         public_id: "test",
@@ -341,7 +348,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: macLaptop,
+        url: macLaptop2,
       },
     ],
     shop: {
@@ -372,7 +379,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: watch,
+        url: watch2,
       },
     ],
     shop: {
@@ -403,7 +410,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: shoe,
+        url: shoes,
       },
     ],
     shop: {
@@ -433,7 +440,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: "https://eratablet.com/wp-content/uploads/2022/08/H51ba6537405f4948972e293927673546u.jpg",
+        url: headPhone2,
       },
     ],
     shop: {
@@ -540,7 +547,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: "https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg",
+        url: phones,
       },
     ],
     shop: {
@@ -569,7 +576,7 @@ export const productData = [
       },
       {
         public_id: "test",
-        url: "https://eratablet.com/wp-content/uploads/2022/08/H51ba6537405f4948972e293927673546u.jpg",
+        url: headPhone2,
       },
     ],
     shop: {
