@@ -161,8 +161,6 @@ const ProfileContent = ({ active }) => {
           <MyAddress />
         </div>
       )}
-      {/* Order */}
-      {active === 8 && <div>Logout</div>}
     </div>
   );
 };

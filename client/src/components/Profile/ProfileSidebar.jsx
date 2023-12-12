@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import {
   AiOutlineCreditCard,
@@ -9,9 +10,25 @@ import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
 import { MdTrackChanges } from "react-icons/md";
 import { RxPerson } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
 
 const ProfileSidebar = ({ active, setActive }) => {
   const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    axios
+      .get(`${BASE_URL}/user/logout`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate(`/`);
+        window.location.reload(true);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  };
+
   return (
     <div className="w-full bg-white shadow-sm p-4 pt-10 rounded-[10px]">
       <div
@@ -79,7 +96,7 @@ const ProfileSidebar = ({ active, setActive }) => {
       </div>
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
-        onClick={() => setActive(8)}
+        onClick={() => setActive(8) || logoutHandler()}
       >
         <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
         <span className={`pl-3 ${active === 8 ? "text-[red]" : ""}`}>
