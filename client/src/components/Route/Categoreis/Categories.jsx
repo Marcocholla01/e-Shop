@@ -43,7 +43,11 @@ const Categories = () => {
                   <h5 className={`text-[18px] leading-[1.3] capitalize`}>
                     {i.title}
                   </h5>
-                  <img src={i.image_Url} className="w-[120px] object-cover" />
+                  <img
+                    src={i.image_Url}
+                    className="w-[120px] object-cover"
+                    style={{ strokeLinecap: "round", strokeWidth: "2px" }}
+                  />
                 </div>
               );
             })}
