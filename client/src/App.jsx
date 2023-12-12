@@ -10,16 +10,23 @@ import {
   ActivationPage,
   NotFoundPage,
   ProductPage,
+  ProductDetailsPage,
   BestSellingPage,
   EventsPage,
   FAQPage,
+  AboutUs,
+  CheckoutPage,
+  OrderSuccessPage,
+  ProfilePage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
 import Store from "./redux/store";
 import { loadUser } from "./redux/actions/user";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { loading } = useSelector((state) => state.user);
   useEffect(() => {
     // axios
     //   .get(`${BASE_URL}/user/getuser`, { withCredentials: true })
@@ -33,36 +40,45 @@ function App() {
     Store.dispatch(loadUser());
   }, []);
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/products" element={<ProductPage />} />
-        <Route path="/best-selling" element={<BestSellingPage />} />
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/faq" element={<FAQPage />} />
+    <>
+      {loading ? null : (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/products" element={<ProductPage />} />
+            <Route path="/products/:name" element={<ProductDetailsPage />} />
+            <Route path="/best-selling" element={<BestSellingPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
 
-        <Route
-          path="/activation/:activation_token"
-          element={<ActivationPage />}
-        />
+            <Route
+              path="/activation/:activation_token"
+              element={<ActivationPage />}
+            />
 
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-    </BrowserRouter>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
+        </BrowserRouter>
+      )}
+    </>
   );
 }
 
