@@ -8,10 +8,10 @@ const CountDown = () => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearTimeout();
+    return () => clearTimeout(timer);
   });
   function calculateTimeLeft() {
-    const diffrence = +new Date(`2023-11-30`) - +new Date();
+    const diffrence = +new Date(`2024-02-12`) - +new Date();
 
     let timeLeft = {};
 
