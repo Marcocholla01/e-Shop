@@ -113,6 +113,25 @@ router.get(`/getuser`, isAuthenticated, async (req, res, next) => {
   }
 });
 
+// Logout API
+router.get(
+  `/logout`,
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      res.cookie(`token`, null, {
+        expires: new (Date.now())(),
+        httpOnly: true,
+      });
+      res.status(200).json({
+        success: true,
+        message: "You have successfully loged out",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 //   // Generate the activation token
 //   const activationToken = createActivationToken(user);
 
