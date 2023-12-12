@@ -5,7 +5,7 @@ import {
   AiOutlineLogin,
   AiOutlineMessage,
 } from "react-icons/ai";
-import { FcAddressBook } from "react-icons/fc";
+import { TbAddressBook } from "react-icons/tb";
 import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
 import { MdTrackChanges } from "react-icons/md";
 import { RxPerson } from "react-icons/rx";
@@ -89,7 +89,7 @@ const ProfileSidebar = ({ active, setActive }) => {
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(7)}
       >
-        <FcAddressBook size={20} color={active === 7 ? "red" : ""} />
+        <TbAddressBook size={20} color={active === 7 ? "red" : ""} />
         <span className={`pl-3 ${active === 7 ? "text-[red]" : ""}`}>
           Address
         </span>
