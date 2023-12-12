@@ -24,9 +24,10 @@ import axios from "axios";
 import Store from "./redux/store";
 import { loadUser } from "./redux/actions/user";
 import { useSelector } from "react-redux";
+import ProtectedRoute from "./ProtectedRoutes";
 
 function App() {
-  const { loading } = useSelector((state) => state.user);
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
   useEffect(() => {
     // axios
     //   .get(`${BASE_URL}/user/getuser`, { withCredentials: true })
@@ -55,7 +56,14 @@ function App() {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order/success/:id" element={<OrderSuccessPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/activation/:activation_token"
