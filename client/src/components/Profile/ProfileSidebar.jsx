@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 const ProfileSidebar = ({ active, setActive }) => {
   const navigate = useNavigate();
   return (
-    <div className="w-full bg-white shadow-sm p-4 pt-8 rounded-[10px]">
+    <div className="w-full bg-white shadow-sm p-4 pt-10 rounded-[10px]">
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(1)}
