@@ -141,13 +141,13 @@ const ProfileContent = ({ active }) => {
         </>
       )}
 
-      {/* Order page */}
+      {/* Order*/}
       {active === 2 && <div>orders</div>}
-      {/* Order page */}
+      {/* Order  */}
       {active === 3 && <div>Refands</div>}
-      {/* Order page */}
+      {/* Order  */}
       {active === 4 && <div>{/* <AllOrders /> */}</div>}
-      {/* Order page */}
+      {/* Order  */}
       {active === 5 && <div>track order</div>}
       {/* Payment methods */}
       {active === 6 && (
@@ -155,9 +155,13 @@ const ProfileContent = ({ active }) => {
           <PaymentMethod />
         </div>
       )}
-      {/* Order page */}
-      {active === 7 && <div>Address</div>}
-      {/* Order page */}
+      {/* Address */}
+      {active === 7 && (
+        <div>
+          <MyAddress />
+        </div>
+      )}
+      {/* Order */}
       {active === 8 && <div>Logout</div>}
     </div>
   );
@@ -263,6 +267,33 @@ const PaymentMethod = () => {
         <div className="pl-8 flex items-center">
           <h6>1234 **** **** ****</h6>
           <h5 className="pl-6">08/2023</h5>
+        </div>
+        <div className="min-w-[10%] flex justify-between pl-8">
+          <AiOutlineDelete size={25} className="cursor-pointer" />
+        </div>
+      </div>
+    </div>
+  );
+};
+const MyAddress = () => {
+  return (
+    <div className="w-full px-5">
+      <div className="flex w-full items-center justify-between">
+        <h1 className="text-[25px] font-[600] text-[#000000ba]">My Address</h1>
+        <div className={`${styles.button} !rounded-md`}>
+          <span className="text-[#fff]">Add New</span>
+        </div>
+      </div>
+      <br />
+      <div className="w-full bg-[#fff] h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
+        <div className="flex items-center">
+          <h5 className="pl-5 font-[600]">Default Address</h5>
+        </div>
+        <div className="pl-8 flex items-center">
+          <h6>00100 Nairobi, Kenya , Africa</h6>
+        </div>
+        <div className="pl-8 flex items-center">
+          <h6>(+254) 742-275-513</h6>
         </div>
         <div className="min-w-[10%] flex justify-between pl-8">
           <AiOutlineDelete size={25} className="cursor-pointer" />
