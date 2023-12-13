@@ -54,7 +54,14 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <CheckoutPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/order/success/:id" element={<OrderSuccessPage />} />
             <Route
               path="/profile"

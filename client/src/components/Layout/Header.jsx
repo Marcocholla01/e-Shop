@@ -279,6 +279,46 @@ const Header = ({ activeHeading }) => {
                   })}
                 </div>
               )}
+              <Navbar active={activeHeading} />
+              <div className={`${styles.button} ml-4 !rounded-[4px]`}>
+                <Link to="/seller">
+                  <h1 className="text-[#fff] flex items-center">
+                    Become Seller
+                    <IoIosArrowForward className="ml-1" />
+                  </h1>
+                </Link>
+              </div>
+              <br />
+              <br />
+              <br />
+              <div className="flex w-full justify-center">
+                {!isAuthenticated ? (
+                  <>
+                    <Link
+                      to={`/login`}
+                      className="text-[18px] pr-[10px] font-bold text-[#000000b7] "
+                    >
+                      Login/
+                    </Link>
+                    <Link
+                      to={`/signup`}
+                      className="text-[18px] pr-[10px] font-bold text-[#000000b7] "
+                    >
+                      Sign up
+                    </Link>
+                  </>
+                ) : (
+                  <div>
+                    <Link to={`/profile`}>
+                      <img
+                        src={user.avatar.url}
+                        alt=""
+                        className="h-[60px] w-[60px] rounded-full border-[3px] border-[#3ad132]"
+                      />
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
