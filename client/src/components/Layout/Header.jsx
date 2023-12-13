@@ -26,6 +26,7 @@ const Header = ({ activeHeading }) => {
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishList] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // console.log(user);
 
@@ -188,6 +189,36 @@ const Header = ({ activeHeading }) => {
             {openWishlist ? (
               <WishList setOpenWishList={setOpenWishList} />
             ) : null}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Screen Header */}
+      <div className="w-full fixed h-[50px] bg-[#fff] z-50 top-0 left-0 shadow-sm sm:hidden">
+        <div className="w-full items-center flex justify-between">
+          <div>
+            <BiMenuAltLeft
+              size={40}
+              className="ml-4 cursor-pointer"
+              onClick={() => setOpen(true)}
+            />
+          </div>
+          <div>
+            <Link to="/">
+              <img
+                src={Logo}
+                alt="Logo image"
+                className="mt-3 cursor-pointer"
+              />
+            </Link>
+          </div>
+          <div>
+            <div className="relative mr-[20px]">
+              <AiOutlineShoppingCart size={30} />
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                1
+              </span>
+            </div>
           </div>
         </div>
       </div>
