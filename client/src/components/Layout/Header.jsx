@@ -8,6 +8,7 @@ import {
   AiOutlineHeart,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { RxCross1 } from "react-icons/rx";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -194,7 +195,11 @@ const Header = ({ activeHeading }) => {
       </div>
 
       {/* Mobile Screen Header */}
-      <div className="w-full fixed h-[50px] bg-[#fff] z-50 top-0 left-0 shadow-sm sm:hidden">
+      <div
+        className={`${
+          active === true ? "shadow-sm fixed top-0 left-0 z-[10]" : null
+        }"w-full  h-[50px] bg-[#fff] z-50 top-0 left-0 w-full shadow-sm sm:hidden "`}
+      >
         <div className="w-full items-center flex justify-between">
           <div>
             <BiMenuAltLeft
@@ -222,6 +227,62 @@ const Header = ({ activeHeading }) => {
           </div>
         </div>
       </div>
+
+      {/* Header sideBar  */}
+
+      {open && (
+        <div
+          className={`fixed w-full bg-[#0000005f] z-50 h-full top-0 left-0 sm:hidden`}
+        >
+          <div className="fixed overflow-y-scroll h-screen left-0 z-10 w-[60%] bg-[#fff] sm:hidden">
+            <div className="w-full justify-between flex pr-3">
+              <div>
+                <div className="relative mr-[15px]">
+                  <AiOutlineHeart size={30} className="mt-5 ml-3" />
+                  <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                    1
+                  </span>
+                </div>
+              </div>
+              <RxCross1
+                size={25}
+                className="cursor-pointer ml-4 mt-5"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <div className="my-8 m-auto w-[92%] h-[40%] relative">
+              <input
+                type="text"
+                name=""
+                placeholder="Search Product..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+              />
+              {searchData && (
+                <div className="absolute bg-[#fff] z-10 shadow w-full  left-0 p-3">
+                  {searchData.map((i) => {
+                    const d = i.name;
+                    const Product_name = d.replace(/\$+/g, "-");
+                    return (
+                      <Link to={`/products/${Product_name}`}>
+                        <div className="flex items-center">
+                          <img
+                            src={i.image_Url[0].url}
+                            alt=""
+                            className="w-[50px] mr-2"
+                          />
+                          <h5>{i.name}</h5>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
