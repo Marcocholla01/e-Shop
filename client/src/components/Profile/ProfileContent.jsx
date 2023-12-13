@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { MdTrackChanges } from "react-icons/md";
+import Visa from "../../assets/images/svg/Payment-Methods/Visa.svg";
 
 const ProfileContent = ({ active }) => {
   const { user } = useSelector((state) => state.user);
@@ -439,6 +440,123 @@ const TrackOrder = () => {
       totalPrice: 420,
       orderStatus: "Delivered",
     },
+    {
+      _id: "9hggx5645gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "7ertvjjhyg45gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "7turghdx45gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "mfgdbd45gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "989kg45gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "45gbgf745gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "4tg745gcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "745wqagcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
+    {
+      _id: "745dggcgdje749964535",
+      orderItems: [
+        {
+          name: "Iphone 14 pro max",
+        },
+        {
+          name: "mac book air",
+        },
+      ],
+      totalPrice: 420,
+      orderStatus: "Delivered",
+    },
   ];
 
   const columns = [
@@ -530,7 +648,7 @@ const PaymentMethod = () => {
       <br />
       <div className="w-full bg-[#fff] h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
         <div className="flex items-center">
-          <img src="" alt="Visa Method" />
+          <img src={Visa} alt="Visa Method" className="h-full w-10" />
           <h5 className="pl-5 font-[600]">Marcocholla Paul</h5>
         </div>
         <div className="pl-8 flex items-center">
