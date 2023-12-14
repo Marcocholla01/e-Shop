@@ -14,6 +14,7 @@ import PaymentPage from "../pages/PaymentPage";
 import OrderSuccessPage from "../pages/orderSuccessPage";
 import ProfilePage from "../pages/ProfilePage";
 import SellerRegisterPage from "../pages/seller/SellerRegisterPage";
+import SellerActivationPage from "../pages/seller/SellerActivationPage";
 
 export {
   LoginPage,
@@ -32,4 +33,5 @@ export {
   OrderSuccessPage,
   ProfilePage,
   SellerRegisterPage,
+  SellerActivationPage,
 };

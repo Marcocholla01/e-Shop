@@ -34,20 +34,21 @@ function SellerRegister() {
 
     newForm.append("file", avatar);
     newForm.append("name", name);
+    newForm.append("phoneNumber", phoneNumber);
     newForm.append("email", email);
+    newForm.append("address", address);
+    newForm.append("zipCode", zipCode);
     newForm.append("password", password);
-
-    console.log("Form is being submitted");
     axios
-      .post(`${BASE_URL}/user/create-user`, newForm, config)
+      .post(`${BASE_URL}/shop/create-shop`, newForm, config)
       .then((response) => {
         if (response.data.success === true) {
           toast.success(response.data.message); // Display success toast
-          navigate("/login");
+          navigate("/seller-login");
         } else {
           toast.error(response.data.message); // Display error toast
         }
-
+        console.log(newForm);
         // Clear form fields
         setName("");
         setEmail("");

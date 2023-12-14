@@ -19,6 +19,7 @@ import {
   OrderSuccessPage,
   ProfilePage,
   SellerRegisterPage,
+  SellerActivationPage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -81,7 +82,12 @@ function App() {
             {/* SHOP/SELLER ROUTES */}
 
             <Route path="/seller-register" element={<SellerRegisterPage />} />
+            <Route
+              path="/shop/shop-activation/:activation_token"
+              element={<SellerActivationPage />}
+            />
 
+            {/* NOT FPUND ROUTE */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer
