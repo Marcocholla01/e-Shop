@@ -68,7 +68,7 @@ router.post(
   })
 );
 
-//login seller
+//login seller // shop
 router.post(
   `/login-shop`,
   catchAsyncErrors(async (req, res, next) => {
@@ -99,6 +99,23 @@ router.post(
     }
   })
 );
+
+// load shop
+router.get(`/getshop`, isAuthenticated, async (req, res, next) => {
+  try {
+    const shop = await Shop.findById(req.shop.id);
+    if (!shop) {
+      return next(new ErrorHandler(`Shop doesn't exists!`));
+    }
+
+    res.status(200).json({
+      success: true,
+      shop,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
 
 module.exports = router;
 
