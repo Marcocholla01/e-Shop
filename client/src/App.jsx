@@ -20,6 +20,7 @@ import {
   ProfilePage,
   SellerRegisterPage,
   SellerActivationPage,
+  SellerLoginPage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -82,6 +83,7 @@ function App() {
             {/* SHOP/SELLER ROUTES */}
 
             <Route path="/seller-register" element={<SellerRegisterPage />} />
+            <Route path="/seller-login" element={<SellerLoginPage />} />
             <Route
               path="/shop/shop-activation/:activation_token"
               element={<SellerActivationPage />}

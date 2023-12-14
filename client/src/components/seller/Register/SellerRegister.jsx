@@ -270,7 +270,7 @@ function SellerRegister() {
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full h-[40] flex justify-center">
                 Alraedy have an account?
-                <Link to="/login" className="text-blue-600 pl-2">
+                <Link to="/seller-login" className="text-blue-600 pl-2">
                   Login
                 </Link>
               </h4>

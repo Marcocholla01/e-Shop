@@ -124,7 +124,7 @@ const ProfileContent = ({ active }) => {
                       type="address"
                       name=""
                       id=""
-                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
+                      className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
                       required
                       value={address2}
                       onChange={(e) => setAddress2(e.target.value)}
