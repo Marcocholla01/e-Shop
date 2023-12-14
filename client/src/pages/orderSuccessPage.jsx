@@ -1,18 +1,14 @@
 import React from "react";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
-import Lottie from "lottie-web";
-import animationData from "../Assests/animations/107043-success.json";
+import Lottie from "react-lottie";
+import animationData from "../assets/images/svg/animations/107043-success.json";
 
 const orderSuccessPage = () => {
   return (
     <div>
       <Header />
-      {/* <Success /> */}
-
-      <h5 className="text-center mb-14 text-[25px] text-[#000000a1]">
-        Your order is successful 😍
-      </h5>
+      <Success />
       <Footer />
     </div>
   );
@@ -23,7 +19,7 @@ const Success = () => {
     loop: false,
     autoplay: true,
     animationData: animationData,
-    renderSettings: {
+    rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
   };

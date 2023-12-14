@@ -6,7 +6,7 @@ import styles from "../styles/style";
 const FAQPage = () => {
   return (
     <div>
-      <Header activeHeading={5} />
+      <Header activeHeading={6} />
       <Faq />
       <Footer />
     </div>
