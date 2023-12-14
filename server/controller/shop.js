@@ -8,9 +8,10 @@ const uuid = require("uuid");
 const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const sendToken = require("../utils/jwtToken");
+const sendShopToken = require("../utils/shopToken");
 const { isAuthenticated } = require("../middlewares/auth");
 
+// create seller / shop account api
 router.post(
   `/create-shop`,
   upload.single("file"),
@@ -66,6 +67,40 @@ router.post(
     }
   })
 );
+
+//login seller
+router.post(
+  `/login-shop`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return next(new ErrorHandler(`Please provide all the fileds`, 400));
+      }
+      const shop = await Shop.findOne({ email }).select(`+password`);
+      if (!shop) {
+        return res.status(404).json({
+          success: false,
+          message: "Shop not found. Please check your credentials.",
+        });
+      }
+      const isPasswordValid = await shop.comparePassword(password);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Invalid credentials. Please provide the correct information.",
+        });
+      }
+
+      sendShopToken(shop, 201, res);
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+module.exports = router;
 
 // router.post(
 //   `/create-shop`,
@@ -202,6 +237,6 @@ router.post(
 //   })
 // );
 
-module.exports = router;
+// module.exports = router;
 
 //
