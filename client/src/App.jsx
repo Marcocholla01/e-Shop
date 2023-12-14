@@ -25,7 +25,7 @@ import {
 import { BASE_URL } from "./config";
 import axios from "axios";
 import Store from "./redux/store";
-import { loadUser } from "./redux/actions/user";
+import { loadSeller, loadUser } from "./redux/actions/user";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProtectedRoutes";
 
@@ -42,6 +42,7 @@ function App() {
     //   });
 
     Store.dispatch(loadUser());
+    Store.dispatch(loadSeller());
   }, []);
   return (
     <>
