@@ -9,7 +9,7 @@ const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendShopToken = require("../utils/shopToken");
-const { isAuthenticated } = require("../middlewares/auth");
+const { isSeller } = require("../middlewares/auth");
 
 // create seller / shop account api
 router.post(
@@ -101,7 +101,7 @@ router.post(
 );
 
 // load shop
-router.get(`/getshop`, isAuthenticated, async (req, res, next) => {
+router.get(`/getshop`, isSeller, async (req, res, next) => {
   try {
     const shop = await Shop.findById(req.shop.id);
     if (!shop) {
