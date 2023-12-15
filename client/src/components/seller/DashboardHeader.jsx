@@ -11,7 +11,7 @@ const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
   return (
     <div
-      className={`w-full h-[80px] bg-white sticky top-0 left-0 flex items-center justify-between px4
+      className={`w-full h-[80px] bg-white sticky top-0 left-0 flex items-center justify-between px-4
       `}
     >
       <div>
@@ -21,31 +21,31 @@ const DashboardHeader = () => {
       </div>
       <div className={`flex items-center`}>
         <div className={`flex items-center mr-4`}>
-          <Link to={`/dashboard/cupouns`}>
+          <Link to={`/dashboard/cupouns`} className={`sm:block hidden`}>
             <AiOutlineGift
               color="#555"
               size={30}
-              className="mx-5 cursor-pointer"
+              className="mx-5 cursor-pointer "
             />
           </Link>
-          <Link to={`/dashboard/all-events`}>
+          <Link to={`/dashboard/all-events`} className={`sm:block hidden`}>
             <MdOutlineLocalOffer
               color="#555"
               size={30}
               className="mx-5 cursor-pointer"
             />
           </Link>
-          <Link to={`/dashboard-orders`}>
+          <Link to={`/dashboard-orders`} className={`sm:block hidden`}>
             <FiShoppingBag
               color="#555"
               size={30}
               className="mx-5 cursor-pointer"
             />
           </Link>
-          <Link to={`/dashboard-products`}>
+          <Link to={`/dashboard-products`} className={`sm:block hidden`}>
             <FiPackage color="#555" size={30} className="mx-5 cursor-pointer" />
           </Link>
-          <Link to={`/dashboard-messages`}>
+          <Link to={`/dashboard-messages`} className={`sm:block hidden`}>
             <BiMessageSquareDetail
               color="#555"
               size={30}

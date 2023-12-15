@@ -18,7 +18,11 @@ const DashboardSideBar = ({ active }) => {
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard`} className="w-full flex items-center">
           <RxDashboard size={30} color={active === 1 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 1 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 1 ? "text-[red]" : ""
+            } sm:block hidden`}
+          >
             Dashboard
           </h5>
         </Link>
@@ -26,7 +30,11 @@ const DashboardSideBar = ({ active }) => {
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard-orders`} className="w-full flex items-center">
           <FiShoppingBag size={30} color={active === 2 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 2 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 2 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             All Orders
           </h5>
         </Link>
@@ -34,7 +42,11 @@ const DashboardSideBar = ({ active }) => {
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard-products`} className="w-full flex items-center">
           <FiPackage size={30} color={active === 3 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 3 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 3 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             All Products
           </h5>
         </Link>
@@ -45,7 +57,11 @@ const DashboardSideBar = ({ active }) => {
           className="w-full flex items-center"
         >
           <AiOutlineFolderAdd size={30} color={active === 4 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 4 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 4 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Create Product
           </h5>
         </Link>
@@ -56,7 +72,11 @@ const DashboardSideBar = ({ active }) => {
             size={30}
             color={active === 5 ? "red" : "#555"}
           />
-          <h5 className={`pl-3 ${active === 5 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 5 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             All Events
           </h5>
         </Link>
@@ -67,7 +87,11 @@ const DashboardSideBar = ({ active }) => {
           className="w-full flex items-center"
         >
           <VscNewFile size={30} color={active === 6 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 6 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 6 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Create Event
           </h5>
         </Link>
@@ -78,7 +102,11 @@ const DashboardSideBar = ({ active }) => {
           className="w-full flex items-center"
         >
           <CiMoneyBill size={30} color={active === 7 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 7 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 7 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Withdraw Money
           </h5>
         </Link>
@@ -89,7 +117,11 @@ const DashboardSideBar = ({ active }) => {
             size={30}
             color={active === 8 ? "red" : "#555"}
           />
-          <h5 className={`pl-3 ${active === 8 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 8 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Shop Inbox
           </h5>
         </Link>
@@ -97,7 +129,11 @@ const DashboardSideBar = ({ active }) => {
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard/cupouns`} className="w-full flex items-center">
           <AiOutlineGift size={30} color={active === 9 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 9 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 9 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Discount Codes
           </h5>
         </Link>
@@ -108,7 +144,11 @@ const DashboardSideBar = ({ active }) => {
             size={30}
             color={active === 10 ? "red" : "#555"}
           />
-          <h5 className={`pl-3 ${active === 10 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 10 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Refunds
           </h5>
         </Link>
@@ -116,7 +156,11 @@ const DashboardSideBar = ({ active }) => {
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard-settings`} className="w-full flex items-center">
           <CiSettings size={30} color={active === 10 ? "red" : "#555"} />
-          <h5 className={`pl-3 ${active === 10 ? "text-[red]" : ""}`}>
+          <h5
+            className={`pl-3 ${
+              active === 10 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
             Settings
           </h5>
         </Link>
