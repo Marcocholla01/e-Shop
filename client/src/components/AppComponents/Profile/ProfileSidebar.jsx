@@ -10,8 +10,8 @@ import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
 import { MdTrackChanges } from "react-icons/md";
 import { RxPerson } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../../config";
 
 const ProfileSidebar = ({ active, setActive }) => {
   const navigate = useNavigate();

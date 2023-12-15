@@ -1,5 +1,4 @@
 import React from "react";
-import ProductCard from "../../ProductCard/ProductCard";
 import styles from "../../../styles/style";
 import EventCard from "./EventCard";
 

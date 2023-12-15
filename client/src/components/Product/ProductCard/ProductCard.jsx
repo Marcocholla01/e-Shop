@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "../../styles/style";
 import {
   AiFillHeart,
   AiFillStar,
@@ -9,7 +8,8 @@ import {
   AiOutlineShoppingCart,
   AiOutlineStar,
 } from "react-icons/ai";
-import ProductDetailscard from "../ProductDetailscard/ProductDetailscard.jsx";
+import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
+import styles from "../../../styles/style.jsx";
 
 const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);

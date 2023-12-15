@@ -1,5 +1,5 @@
 import React from "react";
-import SellerRegister from "../../components/seller/Authentication/Register/SellerRegister";
+import SellerRegister from "../../components/seller/sellerAuth/Register/SellerRegister";
 
 const SellerRegisterPage = () => {
   return (

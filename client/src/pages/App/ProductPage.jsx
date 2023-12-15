@@ -3,8 +3,9 @@ import Header from "../../components/Layout/Header";
 import styles from "../../styles/style";
 import { useSearchParams } from "react-router-dom";
 import { productData } from "../../static/data";
-import ProductCard from "../../components/ProductCard/ProductCard";
+
 import Footer from "../../components/Layout/Footer";
+import ProductCard from "../../components/Product/ProductCard/ProductCard";
 
 const ProductPage = () => {
   const [searchParams] = useSearchParams();

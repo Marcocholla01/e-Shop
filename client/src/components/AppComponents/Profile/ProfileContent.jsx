@@ -5,12 +5,13 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import styles from "../../styles/style";
+
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { MdTrackChanges } from "react-icons/md";
-import Visa from "../../assets/images/svg/Payment-Methods/Visa.svg";
+import Visa from "../../../assets/images/svg/Payment-Methods/Visa.svg";
+import styles from "../../../styles/style";
 
 const ProfileContent = ({ active }) => {
   const { user } = useSelector((state) => state.user);

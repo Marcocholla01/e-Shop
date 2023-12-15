@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import SellerLogin from "../../components/seller/Authentication/Login/SellerLogin";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import SellerLogin from "../../components/seller/sellerAuth/Login/SellerLogin";
 const SellerLoginPage = () => {
   const { isSeller, seller } = useSelector((state) => state.seller);
   const navigate = useNavigate();

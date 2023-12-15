@@ -1,16 +1,15 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import Logo from "../../../assets/images/svg/logo.svg";
+import Logo from "../../../../assets/images/svg/logo.svg";
 
 import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../../config";
-import styles from "../../../../styles/style";
-import FacebookOauth from "../../../Oauth/FacebookOauth";
-import GoogleOauth from "../../../Oauth/GoogleOauth";
-import AppleOauth from "../../../Oauth/AppleOauth";
+import FacebookOauth from "../../../Authentication/Oauth/FacebookOauth";
+import GoogleOauth from "../../../Authentication/Oauth/GoogleOauth";
+import AppleOauth from "../../../Authentication/Oauth/AppleOauth";
 
 function SellerRegister() {
   const navigate = useNavigate();

@@ -16,7 +16,7 @@ import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
 import { backend_url } from "../../config.js";
-import Cart from "../cart/Cart.jsx";
+import Cart from "../AppComponents/cart/Cart.jsx";
 import WishList from "../wishlist/WishList.jsx";
 
 const Header = ({ activeHeading }) => {

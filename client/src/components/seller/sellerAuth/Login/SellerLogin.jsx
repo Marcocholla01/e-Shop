@@ -1,14 +1,15 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import Logo from "../../../assets/images/svg/logo.svg";
+import Logo from "../../../../assets/images/svg/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import styles from "../../../../styles/style";
-import AppleOauth from "../../../Oauth/AppleOauth";
-import GoogleOauth from "../../../Oauth/GoogleOauth";
-import FacebookOauth from "../../../Oauth/FacebookOauth";
+
 import { BASE_URL } from "../../../../config";
+import styles from "../../../../styles/style";
+import FacebookOauth from "../../../Authentication/Oauth/FacebookOauth";
+import GoogleOauth from "../../../Authentication/Oauth/GoogleOauth";
+import AppleOauth from "../../../Authentication/Oauth/AppleOauth";
 
 function Login() {
   const [email, setEmail] = useState("");

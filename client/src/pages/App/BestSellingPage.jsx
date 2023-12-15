@@ -3,7 +3,7 @@ import Header from "../../components/Layout/Header";
 import styles from "../../styles/style";
 import { useSearchParams } from "react-router-dom";
 import { productData } from "../../static/data";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import ProductCard from "../../components/Product/ProductCard/ProductCard";
 import Footer from "../../components/Layout/Footer";
 
 const BestSellingPage = () => {

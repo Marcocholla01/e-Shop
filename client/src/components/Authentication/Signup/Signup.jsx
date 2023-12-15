@@ -1,11 +1,11 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import Logo from "../../assets/images/svg/logo.svg";
-import styles from "../../styles/style";
+import Logo from "../../../assets/images/svg/logo.svg";
+import styles from "../../../styles/style";
 import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
-import { BASE_URL } from "../../config";
+import { BASE_URL } from "../../../config";
 import { toast } from "react-toastify";
 import FacebookOauth from "../Oauth/FacebookOauth";
 import GoogleOauth from "../Oauth/GoogleOauth";
