@@ -4,11 +4,11 @@ import Logo from "../../../assets/images/svg/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import styles from "../../../styles/style";
-import AppleOauth from "../../Oauth/AppleOauth";
-import GoogleOauth from "../../Oauth/GoogleOauth";
-import FacebookOauth from "../../Oauth/FacebookOauth";
-import { BASE_URL } from "../../../config";
+import styles from "../../../../styles/style";
+import AppleOauth from "../../../Oauth/AppleOauth";
+import GoogleOauth from "../../../Oauth/GoogleOauth";
+import FacebookOauth from "../../../Oauth/FacebookOauth";
+import { BASE_URL } from "../../../../config";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ function Login() {
       .then((res) => {
         if (res.data.success === true) {
           toast.success(res.data.message || "Login success!");
-          navigate("/shop");
+          navigate("/dashboard");
           window.location.reload(true);
         } else {
           toast.error(res.data.message || "Login failed. Please try again.");

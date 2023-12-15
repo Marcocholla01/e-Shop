@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../components/Layout/Header";
-import Footer from "../components/Layout/Footer";
-import EventCard from "../components/Route/Events/EventCard";
+import Header from "../../components/Layout/Header";
+import Footer from "../../components/Layout/Footer";
+import EventCard from "../../components/Route/Events/EventCard";
 
 const EventsPage = () => {
   return (

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Layout/Header";
-import styles from "../styles/style";
+import Header from "../../components/Layout/Header";
+import styles from "../../styles/style";
 import { useSearchParams } from "react-router-dom";
-import { productData } from "../static/data";
-import ProductCard from "../components/ProductCard/ProductCard";
-import Footer from "../components/Layout/Footer";
+import { productData } from "../../static/data";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import Footer from "../../components/Layout/Footer";
 
 const BestSellingPage = () => {
   const [data, setData] = useState([]);

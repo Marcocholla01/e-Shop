@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { BASE_URL } from "../config";
+import { BASE_URL } from "../../config";
 import axios from "axios";
 
 const ActivationPage = () => {

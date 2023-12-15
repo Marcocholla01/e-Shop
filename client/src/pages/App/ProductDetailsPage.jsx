@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Layout/Header";
-import Footer from "../components/Layout/Footer";
-import ProductDetails from "../components/ProductDetails/ProductDetails";
+import Header from "../../components/Layout/Header";
+import Footer from "../../components/Layout/Footer";
+import ProductDetails from "../../components/ProductDetails/ProductDetails";
 import { useParams } from "react-router-dom";
-import { productData } from "../static/data";
-import SuggestedProducts from "../components/Product/SuggestedProducts";
+import { productData } from "../../static/data";
+import SuggestedProducts from "../../components/Product/SuggestedProducts/SuggestedProducts";
 
 const ProductDetailsPage = () => {
   const { name } = useParams();

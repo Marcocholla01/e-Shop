@@ -6,11 +6,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../../../config";
-import styles from "../../../styles/style";
-import FacebookOauth from "../../Oauth/FacebookOauth";
-import GoogleOauth from "../../Oauth/GoogleOauth";
-import AppleOauth from "../../Oauth/AppleOauth";
+import { BASE_URL } from "../../../../config";
+import styles from "../../../../styles/style";
+import FacebookOauth from "../../../Oauth/FacebookOauth";
+import GoogleOauth from "../../../Oauth/GoogleOauth";
+import AppleOauth from "../../../Oauth/AppleOauth";
 
 function SellerRegister() {
   const navigate = useNavigate();
