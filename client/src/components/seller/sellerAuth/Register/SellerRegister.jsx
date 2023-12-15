@@ -10,6 +10,7 @@ import { BASE_URL } from "../../../../config";
 import FacebookOauth from "../../../Authentication/Oauth/FacebookOauth";
 import GoogleOauth from "../../../Authentication/Oauth/GoogleOauth";
 import AppleOauth from "../../../Authentication/Oauth/AppleOauth";
+import styles from "../../../../styles/style";
 
 function SellerRegister() {
   const navigate = useNavigate();

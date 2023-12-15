@@ -28,6 +28,7 @@ import {
   SellerActivationPage,
   SellerLoginPage,
   ShopHomePage,
+  ShopDashboardPage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -71,75 +72,81 @@ function App() {
   // );
   return (
     <>
-      {loading || isLoading ? null : (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/products" element={<ProductPage />} />
-            <Route path="/products/:name" element={<ProductDetailsPage />} />
-            <Route path="/best-selling" element={<BestSellingPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <CheckoutPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/order/success/:id" element={<OrderSuccessPage />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <ProfilePage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/activation/:activation_token"
-              element={<ActivationPage />}
-            />
-
-            {/* SHOP/SELLER ROUTES */}
-
-            <Route path="/seller-register" element={<SellerRegisterPage />} />
-            <Route path="/seller-login" element={<SellerLoginPage />} />
-            <Route
-              path="/shop/:id"
-              element={
-                <SellerProtectedRoute isSeller={isSeller}>
-                  <ShopHomePage />
-                </SellerProtectedRoute>
-              }
-            />
-            <Route
-              path="/shop/shop-activation/:activation_token"
-              element={<SellerActivationPage />}
-            />
-
-            {/* NOT FPUND ROUTE */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          <ToastContainer
-            position="bottom-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/products" element={<ProductPage />} />
+          <Route path="/products/:name" element={<ProductDetailsPage />} />
+          <Route path="/best-selling" element={<BestSellingPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
           />
-        </BrowserRouter>
-      )}
+          <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/activation/:activation_token"
+            element={<ActivationPage />}
+          />
+
+          {/* SHOP/SELLER ROUTES */}
+
+          <Route path="/seller-register" element={<SellerRegisterPage />} />
+          <Route path="/seller-login" element={<SellerLoginPage />} />
+          <Route
+            path="/shop/:id"
+            element={
+              <SellerProtectedRoute>
+                <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <SellerProtectedRoute>
+                <ShopDashboardPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/shop/shop-activation/:activation_token"
+            element={<SellerActivationPage />}
+          />
+
+          {/* NOT FPUND ROUTE */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </BrowserRouter>
     </>
   );
 }

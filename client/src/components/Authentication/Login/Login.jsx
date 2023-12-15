@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
+import FacebookOauth from "../Oauth/FacebookOauth";
+import GoogleOauth from "../Oauth/GoogleOauth";
+import AppleOauth from "../Oauth/AppleOauth";
 
 function Login() {
   const [email, setEmail] = useState("");
