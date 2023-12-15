@@ -7,8 +7,8 @@ const SellerLoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("isSeller:", isSeller);
-    console.log("seller:", seller);
+    // console.log("isSeller:", isSeller);
+    // console.log("seller:", seller);
     if (isSeller === true && seller && seller._id) {
       navigate(`/shop/${seller._id}`);
     }
