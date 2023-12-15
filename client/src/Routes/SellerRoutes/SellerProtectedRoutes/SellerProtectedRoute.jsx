@@ -7,7 +7,7 @@ const SellerProtectedRoute = ({ children }) => {
     // return <Loader />;
   } else {
     if (!isSeller) {
-      return <Navigate to={`/`} replace />;
+      return <Navigate to={`/seller-login`} replace />;
     }
     return children;
   }
