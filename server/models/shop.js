@@ -25,9 +25,7 @@ const shopSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  phoneNumber: {
-    type: Number,
-  },
+  phoneNumber: [{ type: Number }],
   //   addresses: [
   //     {
   //       country: {
@@ -66,6 +64,7 @@ const shopSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    default: "shop description has not been updated",
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,
