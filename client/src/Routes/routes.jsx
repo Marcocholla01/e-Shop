@@ -18,6 +18,7 @@ import SellerActivationPage from "../pages/Seller/SellerActivationPage";
 import SellerLoginPage from "../pages/Seller/SellerLoginPage";
 import ShopHomePage from "../pages/Seller/ShopHomePage";
 import ShopDashboardPage from "../pages/Seller/Layout/ShopDashboardPage";
+import ShopCreateProduct from "../pages/Seller/ShopCreateProduct";
 
 export {
   LoginPage,
@@ -40,4 +41,5 @@ export {
   SellerLoginPage,
   ShopHomePage,
   ShopDashboardPage,
+  ShopCreateProduct,
 };
