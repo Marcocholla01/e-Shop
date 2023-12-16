@@ -5,6 +5,7 @@ const Shop = require("../models/shop");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../multer");
+const uuid = require("uuid");
 
 // create product Api
 
@@ -19,13 +20,37 @@ router.post(
       if (!shopId) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
       } else {
-        const files = req.files;
-        const imageUrls = files.map((file) => `${file.fileName}`);
-        const prodactData = req.body;
-        prodactData.images = imageUrls;
-        prodactData.shop = shop;
+        // const files = req.files;
+        // const imageUrls = files.map((file) => `${file.filename}`);
+        // const prodactData = req.body;
+        // prodactData.images = imageUrls;
+        // prodactData.shop = shop;
 
-        const product = await Product.create(prodactData);
+        // const product = await Product.create(prodactData);
+        // res.status(201).json({
+        //   success: true,
+        //   product,
+        // });
+
+        const files = req.files;
+        const imageUrls = files.map((file) => {
+          const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
+          const protocol = req.protocol;
+          const host = req.get("host");
+          const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
+
+          return {
+            public_id: fileId,
+            url: fileUrl,
+          };
+        });
+
+        const productData = req.body;
+        productData.images = imageUrls;
+        productData.shop = shop;
+
+        const product = await Product.create(productData);
+
         res.status(201).json({
           success: true,
           product,

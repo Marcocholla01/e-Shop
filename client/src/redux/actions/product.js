@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 
 // create product
-export const createPrduct = (newForm) => async (dispatch) => {
+export const createProduct = (newForm) => async (dispatch) => {
   try {
     dispatch({
       type: "createPrductRequest",
@@ -28,3 +28,10 @@ export const createPrduct = (newForm) => async (dispatch) => {
     });
   }
 };
+
+// Action to clear product creation state
+// export const clearProductState = () => (dispatch) => {
+//   dispatch({
+//     type: "clearProductState",
+//   });
+// };
