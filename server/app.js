@@ -26,9 +26,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Importing routes
 const user = require(`./controller/user`);
 const shop = require(`./controller/shop`);
+const product = require(`./controller/product`);
 
 app.use(`/api/v2/user`, user);
 app.use(`/api/v2/shop`, shop);
+app.use(`/api/v2/product`, product);
 
 // not found route
 app.all("*", (req, res) => {
