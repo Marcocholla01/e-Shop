@@ -30,6 +30,7 @@ import {
   ShopHomePage,
   ShopDashboardPage,
   ShopCreateProduct,
+  ShopAllProducts,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -132,6 +133,14 @@ function App() {
             element={
               <SellerProtectedRoute>
                 <ShopCreateProduct />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="dashboard-products"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllProducts />
               </SellerProtectedRoute>
             }
           />
