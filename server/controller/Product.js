@@ -6,6 +6,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../multer");
 const uuid = require("uuid");
+const { isSeller } = require("../middlewares/auth");
 
 // create product Api
 
@@ -72,6 +73,29 @@ router.get(
       res.status(200).json({
         success: true,
         products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// Delete product of a shop
+router.delete(
+  `/delete-shop-product/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
+
+      const product = await Product.findByIdAndDelete(productId);
+
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this id", 400));
+      }
+      res.status(200).json({
+        success: true,
+        product,
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
