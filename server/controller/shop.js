@@ -117,6 +117,28 @@ router.get(`/getshop`, isSeller, async (req, res, next) => {
   }
 });
 
+// Logout API
+router.get(
+  `/logout-seller`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      res.cookie(`shop_token`, null, {
+        xpires: new Date(Date.now()),
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
+      res.status(200).json({
+        success: true,
+        message: "You have successfully loged out",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 module.exports = router;
 
 // router.post(
