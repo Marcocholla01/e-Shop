@@ -1,9 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styles from "../../styles/style";
+import { BASE_URL } from "../../config";
+import axios from "axios";
 
 const ShopInfo = ({ isOwner }) => {
-  const logoutHandler = () => {};
+  const logoutHandler = () => {
+    axios.get(`${BASE_URL}/shop/logout-seller`, { withCredentials: true });
+    window.location.reload(true);
+  };
 
   const { isLoading, seller } = useSelector((state) => state.seller);
   return (
