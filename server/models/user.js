@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const defaultAvatarUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:1000/uploads/default-avatar.png"
+    : "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -53,6 +58,7 @@ const userSchema = new mongoose.Schema({
     },
     url: {
       type: String,
+      default: defaultAvatarUrl,
       required: true,
     },
   },

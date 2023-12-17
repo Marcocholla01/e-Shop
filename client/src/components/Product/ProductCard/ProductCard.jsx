@@ -20,7 +20,7 @@ const ProductCard = ({ data }) => {
   return (
     <div className="w-[98%] h-[370px] bg-white rounded-lg shadow-sm p-3 relative   items-center">
       <div className="justify-between">
-        <Link to={`/products/${product_name}`}>
+        <Link to={`/product/${product_name}`}>
           <img
             src={data.image_Url[0].url}
             alt=""

@@ -265,7 +265,7 @@ const Header = ({ activeHeading }) => {
                     const d = i.name;
                     const Product_name = d.replace(/\$+/g, "-");
                     return (
-                      <Link to={`/products/${Product_name}`}>
+                      <Link to={`/product/${Product_name}`}>
                         <div className="flex items-center">
                           <img
                             src={i.image_Url[0].url}
