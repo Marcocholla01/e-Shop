@@ -28,10 +28,16 @@ const productSchema = new mongoose.Schema({
     type: Number,
     // required: [true, "Please enter your product stock price!"],
   },
+  // images: [
+  //   {
+  //     public_id: String,
+  //     url: String,
+  //   },
+  // ],
+
   images: [
     {
-      public_id: String,
-      url: String,
+      type: String,
     },
   ],
   shopId: {

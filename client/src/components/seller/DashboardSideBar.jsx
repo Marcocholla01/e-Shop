@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 const DashboardSideBar = ({ active }) => {
   return (
     <div
-      className={`w-full h-[80vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10`}
+      className={`w-full h-[80vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-8`}
     >
       {/* Single Items */}
       <div className={`w-full flex items-center p-4`}>
