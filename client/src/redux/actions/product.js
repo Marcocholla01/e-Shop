@@ -53,6 +53,30 @@ export const getAllProductsShop = (id) => async (dispatch) => {
     });
   }
 };
+// delete Products of a shop
+export const deleteShopProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "deleteShopProductRequest",
+    });
+
+    const { data } = await axios.delete(
+      `${BASE_URL}/product/delete-shop-product/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch({
+      type: "deleteShopProductSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "deleteShopProductFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
 
 // Action to clear product creation state
 // export const clearProductState = () => (dispatch) => {
