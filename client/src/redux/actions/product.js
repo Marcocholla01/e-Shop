@@ -29,6 +29,31 @@ export const createProduct = (newForm) => async (dispatch) => {
   }
 };
 
+// get All Products of a shop
+export const getAllProductsShop = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAllProductsShopRequest",
+    });
+
+    const { data } = await axios.get(
+      `${BASE_URL}/product/all-products-shop/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch({
+      type: "getAllProductsShopSuccess",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllProductsShopFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Action to clear product creation state
 // export const clearProductState = () => (dispatch) => {
 //   dispatch({
