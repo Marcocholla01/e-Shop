@@ -1,14 +1,16 @@
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProductsShop } from "../../redux/actions/product";
-import ProductCard from "../Product/ProductCard/ProductCard";
-import { productData } from "../../static/data";
+import {
+  deleteShopProduct,
+  getAllProductsShop,
+} from "../../redux/actions/product";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { DataGrid } from "@material-ui/data-grid";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import Loader from "../Layout/Loader";
+import { toast } from "react-toastify";
 
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.product);
@@ -19,7 +21,15 @@ const AllProducts = () => {
   useEffect(() => {
     dispatch(getAllProductsShop(seller._id));
   }, [dispatch]);
-  console.log(products && products);
+  // console.log(products && products);
+
+  const handledelete = (id) => {
+    // console.log(id);
+    dispatch(deleteShopProduct(id));
+    // dispatch(clearProductState())
+    toast.success("Product deleted successfully");
+    window.location.reload(true);
+  };
 
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
@@ -62,7 +72,7 @@ const AllProducts = () => {
         const product_name = d.replace(/\$+/g, "-");
         return (
           <>
-            <Link to={`/products/${product_name}`}>
+            <Link to={`/product/${product_name}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>
@@ -81,7 +91,7 @@ const AllProducts = () => {
       renderCell: (params) => {
         return (
           <>
-            <Button>
+            <Button onClick={() => handledelete(params.id)}>
               <AiOutlineDelete size={20} />
             </Button>
           </>
