@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import styles from "../../styles/style";
 import { BASE_URL } from "../../config";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const ShopInfo = ({ isOwner }) => {
   const logoutHandler = () => {
     axios.get(`${BASE_URL}/shop/logout-seller`, { withCredentials: true });
+    toast.success("You have successfully logout");
     window.location.reload(true);
   };
 
