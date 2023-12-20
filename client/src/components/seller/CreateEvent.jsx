@@ -5,11 +5,11 @@ import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import styles from "../../styles/style";
 import { toast } from "react-toastify";
-import { createProduct } from "../../redux/actions/product";
+import { createEvent } from "../../redux/actions/event";
 
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
-  const { isLoading, isProduct, error } = useSelector((state) => state.product);
+  const { isLoading, isEvent, error } = useSelector((state) => state.event);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,8 +18,6 @@ const CreateEvent = () => {
   const [description, setDescrtiption] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
-  const [originalPrice, setOriginalPrice] = useState(null);
-  const [discountPrice, setDiscountPrice] = useState(null);
   const [stock, setStock] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -50,15 +48,15 @@ const CreateEvent = () => {
     if (error) {
       toast.error(error);
     }
-    if (isProduct) {
-      toast.success(`Product created successfully!`);
-      // dispatch(clearProductState()); // Reset isProduct state
+    if (isEvent) {
+      toast.success(`Event created successfully!`);
+      // dispatch(clearEventState()); // Reset isEvent state
       navigate(`/dashboard`); // Make sure this line is only executed on successful event creation
       window.location.reload(true);
     }
 
-    // console.log(isProduct);
-  }, [dispatch, error, isProduct]);
+    // console.log(isEvent);
+  }, [dispatch, error, isEvent]);
 
   const handleImageChange = (e) => {
     e.preventDefault();
@@ -83,18 +81,8 @@ const CreateEvent = () => {
       return;
     }
     if (!stock) {
-      toast.error("Please enter how many products stock you have!");
+      toast.error("Please enter how many events stock you have!");
       return;
-    }
-    if (!discountPrice) {
-      toast.error("Please enter products Price (With Discount)!");
-      return;
-    }
-
-    // Check if "Price (With Discount)" is less than "Price"
-    if (discountPrice < originalPrice) {
-      toast.error("Price must be less than Price (With Discount)");
-      return; // Do not proceed with form submission
     }
 
     // Check if images are less than 3
@@ -112,12 +100,12 @@ const CreateEvent = () => {
     newForm.append("description", description);
     newForm.append("category", category);
     newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
+    newForm.append("start_date", startDate);
+    newForm.append("finish_date", endDate);
 
-    dispatch(createProduct(newForm));
+    dispatch(createEvent(newForm));
   };
   return (
     <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[70vh] rounded-[4px]">
@@ -180,7 +168,7 @@ const CreateEvent = () => {
           <br />
           <div>
             <label className="pb-2">
-              Product Stock <span className="text-red-500">*</span>
+              Event Stock <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -232,7 +220,7 @@ const CreateEvent = () => {
           </label>
           <input
             type="file"
-            name="productImages"
+            name="eventImages"
             id="upload"
             multiple
             className="hidden"
