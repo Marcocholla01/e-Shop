@@ -28,7 +28,7 @@ const DashboardHeader = () => {
               className="mx-5 cursor-pointer "
             />
           </Link>
-          <Link to={`/dashboard/all-events`} className={`sm:block hidden`}>
+          <Link to={`/dashboard-all-events`} className={`sm:block hidden`}>
             <MdOutlineLocalOffer
               color="#555"
               size={30}
