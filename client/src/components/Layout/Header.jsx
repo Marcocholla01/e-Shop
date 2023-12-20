@@ -28,6 +28,12 @@ const Header = ({ activeHeading }) => {
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishList] = useState(false);
   const [open, setOpen] = useState(false);
+  // const userCreatedAt = new Date(user.createdAt.slice);
+  // const currentDate = new Date();
+
+  // const daysSinceJoined = Math.floor(
+  //   (currentDate - userCreatedAt) / (1000 * 60 * 60 * 24)
+  // );
 
   // console.log(user);
 
@@ -73,7 +79,7 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
               onClick={handleSearchChange}
             />
-            {searchData && searchData.Length !== 0 ? (
+            {searchData && searchData.length !== 0 ? (
               <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
@@ -289,8 +295,6 @@ const Header = ({ activeHeading }) => {
                 </Link>
               </div>
               <br />
-              <br />
-              <br />
               <div className="flex w-full justify-center">
                 {!isAuthenticated ? (
                   <>
@@ -308,14 +312,38 @@ const Header = ({ activeHeading }) => {
                     </Link>
                   </>
                 ) : (
-                  <div>
-                    <Link to={`/profile`}>
-                      <img
-                        src={user.avatar.url}
-                        alt=""
-                        className="h-[60px] w-[60px] rounded-full border-[3px] border-[#3ad132]"
-                      />
-                    </Link>
+                  <div className="flex items-center justify-between flex-col">
+                    <h3 className="pb-3 font-[700] ">ACOUNT DETAILS</h3>
+                    <div className="pb-2">
+                      <Link to={`/profile`}>
+                        <img
+                          src={user.avatar.url}
+                          alt=""
+                          className="h-[80px] w-[80px] object-cover rounded-full border-[3px] border-[#3ad132]"
+                        />
+                      </Link>
+                    </div>
+                    {/* TODO ADD Toggle for hidding or showing accoun info */}
+                    <div className="pb-5">
+                      <h4 className="font-[600]  pb-2">Account Name:</h4>
+                      <h5>{user.name}</h5>
+                      <h4 className="font-[600]  pb-2">Account Email:</h4>
+                      <h5>{user.email}</h5>
+                      <h4 className="font-[600]  pb-2">Account Type:</h4>
+                      <h5>{user.role}</h5>
+                      <h4 className="font-[600]  pb-2">Joined On:</h4>
+                      <h5>{user.createdAt.slice(0, 10)} </h5>
+                      <h4 className="font-[600]  pb-2">Time Joined:</h4>
+                      <h5>{user.createdAt.slice(11, 19)}</h5>
+                      <h4 className="font-[600]  pb-2">Last Account Update:</h4>
+                      <h5>{user.updatedAt.slice(0, 10)}</h5>
+                      <h4 className="font-[600]  pb-2"> Updated At:</h4>
+                      <h5>{user.updatedAt.slice(11, 19)} </h5>
+                      {/* <h4 className="font-[600]  pb-2">
+                        Number of Days since joined:
+                      </h4>
+                      <h5>{daysSinceJoined} Days</h5> */}
+                    </div>
                   </div>
                 )}
               </div>
