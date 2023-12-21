@@ -23,6 +23,7 @@ import ShopAllProducts from "../pages/Seller/ShopAllProducts";
 import ShopCreateEvent from "../pages/Seller/ShopCreateEvent";
 import ShopAllEvents from "../pages/Seller/ShopAllEvents";
 import ShopAllDisountCodes from "../pages/Seller/ShopAllDisountCodes";
+import ShopAllOrders from "../pages/Seller/ShopAllOrders";
 
 export {
   LoginPage,
@@ -50,4 +51,5 @@ export {
   ShopCreateEvent,
   ShopAllEvents,
   ShopAllDisountCodes,
+  ShopAllOrders,
 };
