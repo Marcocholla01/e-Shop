@@ -33,6 +33,7 @@ import {
   ShopAllProducts,
   ShopCreateEvent,
   ShopAllEvents,
+  ShopAllDisountCodes,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -160,6 +161,14 @@ function App() {
             element={
               <SellerProtectedRoute>
                 <ShopAllEvents />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="dashboard-all-discount-codes"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllDisountCodes />
               </SellerProtectedRoute>
             }
           />
