@@ -4,6 +4,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { upload } = require("../multer");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
+const { isSeller } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -56,6 +57,46 @@ router.post(
         //   event,
         // });
       }
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// Get all Products of a shop
+router.get(
+  `/all-events-shop/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const events = await Event.find({ shopId: req.params.id });
+
+      res.status(200).json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// Delete event of a shop
+router.delete(
+  `/delete-shop-event/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
+
+      const event = await Event.findByIdAndDelete(productId);
+
+      if (!event) {
+        return next(new ErrorHandler("Event not found with this id", 400));
+      }
+      res.status(200).json({
+        success: true,
+        message: "Event deleted successfully",
+      });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
