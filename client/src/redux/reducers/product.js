@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
-  products: [],
+  product: [],
 };
 
 export const productReducer = createReducer(initialState, {

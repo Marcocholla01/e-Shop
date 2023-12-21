@@ -192,7 +192,7 @@ const CreateEvent = () => {
               name="stock"
               id="start-date"
               value={startDate ? startDate.toISOString().slice(0, 10) : ""}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none block cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               onChange={handleStartDateChange}
               min={today}
             />
@@ -207,7 +207,7 @@ const CreateEvent = () => {
               id="end-date"
               placeholder="Enter your event stock..."
               value={endDate ? endDate.toISOString().slice(0, 10) : ""}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none cursor-pointer block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               onChange={handleEndDateChange}
               min={minEndDate}
             />
