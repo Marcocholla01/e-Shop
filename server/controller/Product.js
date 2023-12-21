@@ -7,6 +7,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../multer");
 const uuid = require("uuid");
 const { isSeller } = require("../middlewares/auth");
+const fs = require(`fs`);
 
 // create product Api
 
@@ -87,6 +88,29 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const productId = req.params.id;
+
+      const productData = await Product.findById(productId);
+
+      // Delete local images
+      // productData.images.forEach(async (image) => {
+      //   try {
+      //     const filePath = `uploads/${image.url}`;
+      //     await fs.unlink(filePath);
+      //   } catch (err) {
+      //     console.error("Error deleting local image:", err);
+      //   }
+      // });
+
+      productData.images.forEach((imageUrls) => {
+        const filename = imageUrls;
+        const filePath = `uploads/${filename}`;
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err.message);
+          }
+        });
+      });
 
       const product = await Product.findByIdAndDelete(productId);
 

@@ -5,6 +5,7 @@ const { upload } = require("../multer");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller } = require("../middlewares/auth");
+const fs = require(`fs`);
 
 const router = express.Router();
 
@@ -86,9 +87,32 @@ router.delete(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const productId = req.params.id;
+      const eventId = req.params.id;
 
-      const event = await Event.findByIdAndDelete(productId);
+      const eventData = await Event.findById(eventId);
+
+      // Delete local images
+      // eventData.images.forEach(async (image) => {
+      //   try {
+      //     const filePath = `uploads/${image.url}`;
+      //     await fs.unlink(filePath);
+      //   } catch (err) {
+      //     console.error("Error deleting local image:", err);
+      //   }
+      // });
+
+      eventData.images.forEach((imageUrls) => {
+        const filename = imageUrls;
+        const filePath = `uploads/${filename}`;
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err.message);
+          }
+        });
+      });
+
+      const event = await Event.findByIdAndDelete(eventId);
 
       if (!event) {
         return next(new ErrorHandler("Event not found with this id", 400));
