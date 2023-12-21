@@ -36,9 +36,12 @@ export const getAllEventsShop = (id) => async (dispatch) => {
       type: "getAllEventsShopRequest",
     });
 
-    const { data } = await axios.get(`/events/all-events-shop/${id}`, {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(
+      `${BASE_URL}/event/all-events-shop/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch({
       type: "getAllEventsShopSuccess",
       payload: data.events,
@@ -57,9 +60,12 @@ export const deleteShopEvent = (id) => async (dispatch) => {
       type: "deleteShopEventRequest",
     });
 
-    const { data } = await axios.delete(`/event/delete-shop-event/${id}`, {
-      withCredentials: true,
-    });
+    const { data } = await axios.delete(
+      `${BASE_URL}/event/delete-shop-event/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch({
       type: "deleteShopEventSuccess",
       payload: data.message,
