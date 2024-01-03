@@ -7,6 +7,7 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const ProductDetailscard = ({ setOpen, data }) => {
   const [count, setCount] = useState(1);
@@ -38,19 +39,25 @@ const ProductDetailscard = ({ setOpen, data }) => {
               />
               <div className="block w-full sm:flex p-4">
                 <div className="w-full sm:w-50%">
-                  <img src={data.image_Url[0].url} alt="" />
+                  <img src={data?.images[0]?.url} alt="" />
                   <div className="flex mt-3">
-                    <img
-                      src={data.shop.shop_avatar.url}
-                      alt=""
-                      className="w-[50px] h-[50px] rounded-full mr-2"
-                    />
+                    <Link to={`/shop/${data.shop._id}`}>
+                      <img
+                        src={data?.shop?.avatar?.url}
+                        alt=""
+                        className="w-[50px] h-[50px] rounded-full mr-2"
+                      />
+                    </Link>
+
                     <div>
-                      <h3 className={`${styles.shop_name}`}>
-                        {data.shop.name}
-                      </h3>
+                      <Link to={`/shop/${data.shop._id}`}>
+                        <h3 className={`${styles.shop_name}`}>
+                          {data.shop.name}
+                        </h3>
+                      </Link>
+
                       <h5 className="pb-3 text-[15px]">
-                        ({data.shop.ratings}) Ratings
+                        ({data.shop.ratings} 10) Ratings
                       </h5>
                     </div>
                   </div>

@@ -6,17 +6,33 @@ import { useParams } from "react-router-dom";
 import { productData } from "../../static/data";
 import SuggestedProducts from "../../components/Product/SuggestedProducts/SuggestedProducts";
 import ProductDetails from "../../components/Product/ProductDetails/ProductDetails";
+import { getAllProducts } from "../../redux/actions/product";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
 
 const ProductDetailsPage = () => {
-  const { name } = useParams();
+  const { id } = useParams();
   const [data, setData] = useState(null);
-  const productName = name.replace(/-/g, " ");
+  const dispatch = useDispatch();
+
+  const { allProducts } = useSelector((state) => state.product);
+  // const productName = name.replace(/-/g, " ");
   // console.log("product Name :", productName);
 
   useEffect(() => {
-    const data = productData.find((i) => i.name === productName);
-    setData(data);
-  }, []);
+    axios
+      .get(`${BASE_URL}/product/${id}`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  }, [id]);
+
+  // console.log(id);
 
   return (
     <div>

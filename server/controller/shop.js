@@ -139,6 +139,22 @@ router.get(
   })
 );
 
+// get Shop Info
+router.get(
+  `/get-shop-info/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const shop = await Shop.findById(req.params.id);
+      res.status(200).json({
+        success: true,
+        shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 module.exports = router;
 
 // router.post(

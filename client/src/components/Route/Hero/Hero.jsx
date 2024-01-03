@@ -7,10 +7,15 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 const Hero = () => {
   return (
     <div
-      className={`relative min-h-[70px] sm:min-h-[80vh] w-[100%] bg-cover bg-no-repeat object-fit: contain ${styles.normalFlex} `}
+      className={`relative min-h-[70vh] sm:min-h-[80vh] w-full bg-no-repeat ${styles.normalFlex}`}
       style={{
         backgroundImage: `url(${banner})`,
       }}
+
+      // style={{
+      //   backgroundImage:
+      //     "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
+      // }}
     >
       <div className={`${styles.section} w-[90%] sm:w-[60%]`}>
         <h1 className="text-[35px] leading-[1.2] sm:text-[60px] text-[#3d3a3a] font-[600] capitalize">

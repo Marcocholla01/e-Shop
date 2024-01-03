@@ -46,6 +46,19 @@ export const eventReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
+  // get all events
+  getAlleventsRequest: (state) => {
+    state.isLoading = true;
+  },
+  getAlleventsSuccess: (state, action) => {
+    state.isLoading = false;
+    state.allEvents = action.payload;
+  },
+  getAlleventsFailed: (state, action) => {
+    state.isLoading = false;
+    state.error = action.payload;
+  },
+
   // clearEventState: (state) => {
   //   // Add any necessary state clearing logic here
   //   state.event = null;

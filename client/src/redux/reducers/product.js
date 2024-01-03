@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
-  product: [],
+  allProducts: [],
 };
 
 export const productReducer = createReducer(initialState, {
@@ -42,6 +42,20 @@ export const productReducer = createReducer(initialState, {
     state.message = action.payload;
   },
   deleteShopProductFailed: (state, action) => {
+    state.isLoading = false;
+    state.error = action.payload;
+  },
+
+  // get all products
+  getAllProductsRequest: (state) => {
+    state.isLoading = true;
+  },
+  getAllProductsSuccess: (state, action) => {
+    // console.log("Payload received:", action.payload);
+    state.isLoading = false;
+    state.allProducts = action.payload;
+  },
+  getAllProductsFailed: (state, action) => {
     state.isLoading = false;
     state.error = action.payload;
   },

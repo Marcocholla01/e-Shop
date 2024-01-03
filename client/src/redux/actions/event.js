@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../../config";
 
-// create product
+// create Event
 export const createEvent = (newForm) => async (dispatch) => {
   try {
     dispatch({
@@ -29,7 +29,7 @@ export const createEvent = (newForm) => async (dispatch) => {
   }
 };
 
-// get All Products of a shop
+// get All Events of a shop
 export const getAllEventsShop = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -53,7 +53,7 @@ export const getAllEventsShop = (id) => async (dispatch) => {
     });
   }
 };
-// delete Products of a shop
+// delete Events of a shop
 export const deleteShopEvent = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -73,6 +73,26 @@ export const deleteShopEvent = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "deleteShopEventFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get all events
+export const getAllEvents = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAlleventsRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/event/get-all-events`);
+    dispatch({
+      type: "getAlleventsSuccess",
+      payload: data.events,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAlleventsFailed",
       payload: error.response.data.message,
     });
   }
