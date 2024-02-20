@@ -7,13 +7,15 @@ import {
 } from "react-icons/ai";
 import { TbAddressBook } from "react-icons/tb";
 import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
-import { MdTrackChanges } from "react-icons/md";
+import { MdOutlineAdminPanelSettings, MdTrackChanges } from "react-icons/md";
 import { RxPerson } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
+import { useSelector } from "react-redux";
 
 const ProfileSidebar = ({ active, setActive }) => {
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const logoutHandler = () => {
@@ -108,13 +110,35 @@ const ProfileSidebar = ({ active, setActive }) => {
           Address
         </span>
       </div>
+
+      {user && user?.role === "Admin" && (
+        <Link to="/admin-dashboard">
+          <div
+            className="flex bg-white cursor-pointer items-center w-full mb-8"
+            onClick={() => setActive(8)}
+          >
+            <MdOutlineAdminPanelSettings
+              size={20}
+              color={active === 8 ? "red" : ""}
+            />
+            <span
+              className={`pl-3 ${
+                active === 8 ? "text-[red]" : ""
+              } sm:block hidden`}
+            >
+              Admin Dashboard
+            </span>
+          </div>
+        </Link>
+      )}
+
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(8) || logoutHandler()}
       >
-        <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
+        <AiOutlineLogin size={20} color={active === 9 ? "red" : ""} />
         <span
-          className={`pl-3 ${active === 8 ? "text-[red]" : ""} sm:block hidden`}
+          className={`pl-3 ${active === 9 ? "text-[red]" : ""} sm:block hidden`}
         >
           Log out
         </span>

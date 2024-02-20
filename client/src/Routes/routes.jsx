@@ -24,6 +24,7 @@ import ShopCreateEvent from "../pages/Seller/ShopCreateEvent";
 import ShopAllEvents from "../pages/Seller/ShopAllEvents";
 import ShopAllDisountCodes from "../pages/Seller/ShopAllDisountCodes";
 import ShopAllOrders from "../pages/Seller/ShopAllOrders";
+import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
 
 export {
   LoginPage,
@@ -52,4 +53,5 @@ export {
   ShopAllEvents,
   ShopAllDisountCodes,
   ShopAllOrders,
+  AdminDashboardpage,
 };

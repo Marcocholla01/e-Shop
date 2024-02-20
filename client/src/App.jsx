@@ -35,6 +35,7 @@ import {
   ShopAllEvents,
   ShopAllDisountCodes,
   ShopAllOrders,
+  AdminDashboardpage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -44,6 +45,8 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./Routes/AppRoutes/AppProtectedRoutes/ProtectedRoutes";
 import SellerProtectedRoute from "./Routes/SellerRoutes/SellerProtectedRoutes/SellerProtectedRoute";
 import Loader from "./components/Layout/Loader";
+import AdminProtectedRoute from "./Routes/AdminRoutes/AdminProtectedRoutes";
+import { getAllProducts } from "./redux/actions/product";
 
 function App() {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
@@ -62,6 +65,7 @@ function App() {
 
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
+    Store.dispatch(getAllProducts());
 
     //
     // if (isSeller === true) {
@@ -103,7 +107,7 @@ function App() {
             />
             <Route path="/order/success/:id" element={<OrderSuccessPage />} />
             <Route
-              path="/profile"
+              path="/user/:id"
               element={
                 <ProtectedRoute>
                   <ProfilePage />
@@ -188,6 +192,15 @@ function App() {
             <Route
               path="/shop/shop-activation/:activation_token"
               element={<SellerActivationPage />}
+            />
+
+            <Route
+              path="/admin-dashboard"
+              element={
+                <AdminProtectedRoute>
+                  <AdminDashboardpage />
+                </AdminProtectedRoute>
+              }
             />
 
             {/* NOT FPUND ROUTE */}

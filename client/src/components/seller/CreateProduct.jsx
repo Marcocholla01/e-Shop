@@ -74,8 +74,13 @@ const CreateProduct = () => {
     }
 
     // Check if images are less than 3
-    if (images.length < 3) {
-      toast.error("Please select at least 3 images");
+    if (images.length < 2) {
+      toast.error("Please select at least 2 images");
+      return;
+    }
+    // Check if images are less than 3
+    if (images.length > 4) {
+      toast.error("You can only upload 4 images");
       return;
     }
 
@@ -88,8 +93,8 @@ const CreateProduct = () => {
     newForm.append("description", description);
     newForm.append("category", category);
     newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
+    newForm.append("originalPrice", discountPrice);
+    newForm.append("discountPrice", originalPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
 

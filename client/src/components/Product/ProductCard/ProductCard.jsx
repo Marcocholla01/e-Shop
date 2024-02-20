@@ -24,7 +24,7 @@ const ProductCard = ({ data }) => {
           <img
             src={`${data?.images && data?.images[0]?.url}`}
             alt=""
-            className="w-100% h-[170px] object-contain"
+            className=" h-[135px] object-contain rounded-md self-center"
           />
         </Link>
         <Link to={`/shop/${data?.shop._id}`}>

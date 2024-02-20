@@ -15,7 +15,7 @@ const FeaturedProducts = () => {
     const allProductsData = allProducts ? [...allProducts] : [];
     const firstFive = allProductsData && allProductsData.slice(0, 5);
     setData(firstFive);
-  }, [allProducts]);
+  }, [dispatch]);
 
   // console.log(allProducts);
   return (

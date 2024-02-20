@@ -45,37 +45,37 @@ const ShopInfo = ({ isOwner }) => {
               className={`w-[150px] h-[150px] object-cover rounded-full`}
             />
           </div>
-          <h3 className="py-2 text-center text-[20px] font-[600]">
+          <h5 className="py-2 text-center text-[20px] font-[600]">
             {data?.name}
-          </h3>
+          </h5>
           <p className="text-[16px] text-[#000000a6] p-[10px] flex items-center">
             {data?.description}
           </p>
         </div>
         <div className="p-3">
-          <h5 className="font-[600]">Address</h5>
-          <h4 className="text-[#000000a6]">{data?.address}</h4>
+          <h4 className="font-[600]">Address</h4>
+          <h5 className="text-[#000000a6]">{data?.address}</h5>
         </div>
         <div className="p-3">
           <h5 className="font-[600]">Phone Numbers</h5>
-          <h4 className="text-[#000000a6] flex flex-col">
-            <h4 className="font-[600]">Main Number: </h4>
+          <div className="text-[#000000a6] flex flex-col">
+            <h5 className="font-[600]">Main Number: </h5>
             <p>{data?.phoneNumber?.[0]}</p>
-            <h4 className="font-[600]">Other Number:</h4>
+            <h5 className="font-[600]">Other Number:</h5>
             <p>{data?.phoneNumber?.[1]}</p>
-          </h4>
+          </div>
         </div>
         <div className="p-3">
-          <h5 className="font-[600]">Total Products</h5>
-          <h4 className="text-[#000000a6]">{data?.total_products || 10}</h4>
+          <h4 className="font-[600]">Total Products</h4>
+          <h5 className="text-[#000000a6]">{data?.total_products || 10}</h5>
         </div>
         <div className="p-3">
-          <h5 className="font-[600]">Shop Ratings</h5>
-          <h4 className="text-[#000000a6]">{data?.ratings || 4}</h4>
+          <h4 className="font-[600]">Shop Ratings</h4>
+          <h5 className="text-[#000000a6]">{data?.ratings || 4}</h5>
         </div>
         <div className="p-3">
-          <h5 className="font-[600]">Joined On</h5>
-          <h4 className="text-[#000000a6]">{data?.createdAt?.slice(0, 10)}</h4>
+          <h4 className="font-[600]">Joined On</h4>
+          <h5 className="text-[#000000a6]">{data?.createdAt?.slice(0, 10)}</h5>
         </div>
         <div className="px-4">
           <Link

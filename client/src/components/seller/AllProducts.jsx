@@ -7,7 +7,7 @@ import {
 } from "../../redux/actions/product";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { DataGrid } from "@material-ui/data-grid";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import Loader from "../Layout/Loader";
 import { toast } from "react-toastify";
@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.product);
   const { seller } = useSelector((state) => state.seller);
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
@@ -68,11 +69,9 @@ const AllProducts = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.name;
-        const product_name = d.replace(/\$+/g, "-");
         return (
           <>
-            <Link to={`/product/${product_name}`}>
+            <Link to={`/products/${products._id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>

@@ -30,7 +30,7 @@ const ProductDetailsPage = () => {
       .catch((error) => {
         toast.error(error);
       });
-  }, [id]);
+  }, []);
 
   // console.log(id);
 
