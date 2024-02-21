@@ -8,7 +8,10 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import { getAllProducts } from "../../../redux/actions/product";
+import {
+  getAllProducts,
+  getAllProductsShop,
+} from "../../../redux/actions/product";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
@@ -20,6 +23,7 @@ const ProductDetails = ({ data }) => {
 
   useEffect(() => {
     dispatch(getAllProducts(id));
+    // dispatch(getAllProductsShop(id));
   }, []);
 
   const handleMessageSubmit = () => {
@@ -41,7 +45,7 @@ const ProductDetails = ({ data }) => {
         <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
           <div className="w-full py-5">
             <div className="block w-full sm:flex">
-              <div className="w-full sm:w-[50%]">
+              <div className="w-full 800px:w-[50%]">
                 <img
                   src={data?.product?.images[select]?.url}
                   alt=""
@@ -183,7 +187,7 @@ const ProductDetails = ({ data }) => {
                     </span>
                   </div>
                   <div className="flex items-center pt-8 gap-2">
-                    <Link to={`/shop/${data.product.shop._id}`}>
+                    <Link to={`/shop/preview/${data.product.shop._id}`}>
                       <img
                         src={data?.product?.shop?.avatar?.url}
                         alt=""
@@ -192,7 +196,7 @@ const ProductDetails = ({ data }) => {
                     </Link>
 
                     <div>
-                      <Link to={`/shop/${data.product.shop._id}`}>
+                      <Link to={`/shop/preview/${data.product.shop._id}`}>
                         <h3 className={`${styles.shop_name} pb-1 pt-1 mr-8`}>
                           {data?.product?.shop?.name}
                         </h3>
@@ -226,6 +230,7 @@ const ProductDetails = ({ data }) => {
 };
 
 const ProductDetailsInfo = ({ data }) => {
+  // console.log(data);
   const [active, setActive] = useState(1);
   return (
     <div className=" bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
@@ -286,7 +291,7 @@ const ProductDetailsInfo = ({ data }) => {
         <div className="w-full block sm:flex p-5">
           <div className="w-full sm:w-[50%]">
             <div className="flex items-center">
-              <Link to={`/shop/${data.product.shop._id}`}>
+              <Link to={`/shop/preview/${data.product.shop._id}`}>
                 <img
                   src={data?.product?.shop?.avatar?.url}
                   alt=""
@@ -321,7 +326,7 @@ const ProductDetailsInfo = ({ data }) => {
                 Total Reviews: <span className="font-[500]">131</span>
               </h5>
               <Link
-                to={`/shop/${data.product.shop._id}`}
+                to={`/shop/preview/${data.product.shop._id}`}
                 className="inline-block"
               >
                 <div

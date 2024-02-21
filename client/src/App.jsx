@@ -28,6 +28,7 @@ import {
   SellerActivationPage,
   SellerLoginPage,
   ShopHomePage,
+  ShopPreviewPage,
   ShopDashboardPage,
   ShopCreateProduct,
   ShopAllProducts,
@@ -47,6 +48,7 @@ import SellerProtectedRoute from "./Routes/SellerRoutes/SellerProtectedRoutes/Se
 import Loader from "./components/Layout/Loader";
 import AdminProtectedRoute from "./Routes/AdminRoutes/AdminProtectedRoutes";
 import { getAllProducts } from "./redux/actions/product";
+import { getAllEvents } from "./redux/actions/event";
 
 function App() {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
@@ -66,6 +68,7 @@ function App() {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
+    Store.dispatch(getAllEvents());
 
     //
     // if (isSeller === true) {
@@ -124,6 +127,7 @@ function App() {
 
             <Route path="/seller-register" element={<SellerRegisterPage />} />
             <Route path="/seller-login" element={<SellerLoginPage />} />
+
             <Route
               path="/shop/:id"
               element={
@@ -132,6 +136,7 @@ function App() {
                 </SellerProtectedRoute>
               }
             />
+            <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
             <Route
               path="dashboard"
               element={

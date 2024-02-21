@@ -70,7 +70,7 @@ const shopSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    default: "shop description has not been updated",
+    // default: "shop description has not been updated",
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,

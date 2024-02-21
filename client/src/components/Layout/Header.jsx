@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/style";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Logo from "../../assets/images/svg/logo.svg";
 import { categoriesData, productData } from "../../static/data.jsx";
 import {
@@ -21,6 +21,7 @@ import WishList from "../wishlist/WishList.jsx";
 
 const Header = ({ activeHeading }) => {
   const { allProducts } = useSelector((state) => state.product);
+  const { id } = useParams();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller, seller } = useSelector((state) => state.seller);
   const [searchTerm, setSearchTerm] = useState("");
@@ -86,15 +87,15 @@ const Header = ({ activeHeading }) => {
               <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
-                    const d = i.name;
+                    const d = i._id;
                     const Product_name = d.replace(/\$+/g, "-");
                     return (
-                      <Link to={`/product/:id}`}>
-                        <div className="w-full flex items-start-py-3">
+                      <Link to={`/product/${d}`}>
+                        <div className="w-full flex items-start-py-5 gap-3 mt-4">
                           <img
                             src={i.images[0].url}
                             alt=""
-                            className="w-[40px] h-[40px] mr-[10px]"
+                            className="w-[40px] h-[40px] mr-[10px] rounded-md"
                           />
                           <h1>{i.name}</h1>
                         </div>

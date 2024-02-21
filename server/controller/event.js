@@ -64,7 +64,7 @@ router.post(
   })
 );
 
-// Get all Products of a shop
+// Get all events of a shop
 router.get(
   `/all-events-shop/:id`,
   catchAsyncErrors(async (req, res, next) => {

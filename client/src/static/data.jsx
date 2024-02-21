@@ -42,6 +42,10 @@ export const navItems = [
     title: "FAQ",
     url: "/faq",
   },
+  {
+    title: "Contact",
+    url: "/contact",
+  },
 ];
 
 // branding data
@@ -623,31 +627,38 @@ export const footerProductLinks = [
 
 export const footercompanyLinks = [
   {
-    name: "Game & Video",
+    name: "Music & Gaming",
+    link: "/products?category=Music%20and%20Gaming",
   },
   {
     name: "Phone &Tablets",
+    link: "/products?category=Mobile%20and%20Tablets",
   },
   {
     name: "Computers & Laptop",
+    link: "/products?category=Computers%20and%20Laptops",
   },
   {
-    name: "Sport Watches",
+    name: "Accesories",
+    link: "/products?category=Accesories",
   },
   {
     name: "Events",
+    link: "/events",
   },
 ];
 
 export const footerSupportLinks = [
   {
     name: "FAQ",
+    link: "/faq",
   },
   {
     name: "Reviews",
   },
   {
     name: "Contact Us",
+    link: "/contact",
   },
   {
     name: "Shipping",

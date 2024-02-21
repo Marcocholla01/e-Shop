@@ -57,7 +57,7 @@ const ProductDetailscard = ({ setOpen, data }) => {
                       </Link>
 
                       <h5 className="pb-3 text-[15px]">
-                        ({data.shop.ratings} 10) Ratings
+                        ({data.shop.ratings}10) Ratings
                       </h5>
                     </div>
                   </div>
@@ -70,7 +70,7 @@ const ProductDetailscard = ({ setOpen, data }) => {
                     </span>
                   </div>
                   <h5 className="text-[16px] text-[red] mt-5">
-                    ({data.total_sell}) Sold Out
+                    ({data.total_sell}200) Sold Out
                   </h5>
                 </div>
                 <div className="w-full sm:w-[50%] pt-5 pl-[5px] pr-5[px]">

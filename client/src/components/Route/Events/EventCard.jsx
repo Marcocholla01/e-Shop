@@ -1,9 +1,11 @@
 import React from "react";
 import styles from "../../../styles/style";
 import CountDown from "./CountDown";
-import iphone from '../../../static/images/iphone.jpg'
+import iphone from "../../../static/images/iphone.jpg";
+import { backend_url } from "../../../config";
 
-const EventCard = ({ active }) => {
+const EventCard = ({ active, data }) => {
+  // console.log(data);
   return (
     <div
       className={`w-full block bg-white rounded-lg ${
@@ -11,25 +13,11 @@ const EventCard = ({ active }) => {
       } lg:flex p-2`}
     >
       <div className="w-full lg:w-[50] m-auto">
-        <img
-          src={iphone}
-          alt=""
-        />
+        <img src={`${backend_url}/uploads/${data?.images[0]}`} alt="" />
       </div>
       <div className="w-full lg:[w-50] flex flex-col justify-center">
-        <h2 className={`${styles.productTitle}`}>Iphone 14pro max 8/256gb</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-          porta mauris id ante laoreet porttitor. Praesent varius convallis dui.
-          Sed lacus ligula, efficitur in neque quis, tempus sodales urna.
-          Vestibulum dictum, odio id elementum ornare, orci leo porta ipsum,
-          rutrum iaculis lacus massa nec ipsum. Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit. Vestibulum porta mauris id ante laoreet
-          porttitor. Praesent varius convallis dui. Sed lacus ligula, efficitur
-          in neque quis, tempus sodales urna. Vestibulum dictum, odio id
-          elementum ornare, orci leo porta ipsum, rutrum iaculis lacus massa nec
-          ipsum.
-        </p>
+        <h2 className={`${styles.productTitle}`}>{data?.name}</h2>
+        <p>{data?.description}</p>
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="pr-3 font-bold text-[18px] text-[#333] font-Roboto ">
@@ -44,7 +32,7 @@ const EventCard = ({ active }) => {
             120 sold
           </span>
         </div>
-        <CountDown />
+        <CountDown data={data} />
       </div>
     </div>
   );

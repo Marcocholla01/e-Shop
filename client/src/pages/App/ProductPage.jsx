@@ -18,7 +18,7 @@ const ProductPage = () => {
   const { allProducts, isLoading } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(getAllProducts());
+    // dispatch(getAllProducts());
     if (categoryData === null) {
       const d =
         allProducts &&
@@ -30,7 +30,7 @@ const ProductPage = () => {
       setData(d);
     }
     // window.scrollTo(0, 0);
-  }, []);
+  }, [allProducts]);
 
   return (
     <div>
