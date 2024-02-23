@@ -33,13 +33,13 @@ function Signup() {
     newForm.append("email", email);
     newForm.append("password", password);
 
-    console.log("Form is being submitted");
     axios
       .post(`${BASE_URL}/user/create-user`, newForm, config)
       .then((response) => {
         if (response.data.success === true) {
+          // console.log(response);
           toast.success(response.data.message); // Display success toast
-          navigate("/login");
+          navigate("/verify-user");
         } else {
           toast.error(response.data.message); // Display error toast
         }

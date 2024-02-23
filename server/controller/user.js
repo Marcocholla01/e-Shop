@@ -10,6 +10,10 @@ const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated } = require("../middlewares/auth");
+const crypto = require("crypto");
+const VerificationToken = require("../models/activationToken");
+const { generateOTP, generateEmailtemplate } = require("../utils/otp");
+const { isValidObjectId } = require("mongoose");
 
 router.post(
   `/create-user`,
@@ -41,7 +45,7 @@ router.post(
       const host = req.get("host");
       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
 
-      const newUser = await User.create({
+      const newUser = await User({
         name,
         email,
         avatar: {
@@ -50,20 +54,161 @@ router.post(
         },
         password,
       });
-      console.log(newUser);
 
-      // You can send a response or do any other necessary actions here.
+      const OTP = generateOTP();
+      const verificationToken = new VerificationToken({
+        owner: newUser._id,
+        token: OTP,
+      });
+
+      await verificationToken.save();
+
+      await sendMail({
+        from: "accounts@shop0.com",
+        email: newUser.email,
+        subject: "Activate Your Account",
+        html: generateEmailtemplate(OTP, newUser._id),
+      });
+
+      await newUser.save();
       res.status(201).json({
         success: true,
-        message: `Account created successfully`,
+        message: `An Email sent to your account please verify`,
         user: newUser,
       });
+      // console.log(newUser);
+
+      // const activationToken = await ActivationToken.create({
+      //   userId: newUser._id,
+      //   activationToken: crypto.randomBytes(32).toString("hex"),
+      // });
+
+      // // Construct the activation URL
+      // const activationUrl = `http://localhost:1001/user/${newUser._id}/verify/${activationToken.activationToken}`;
+
+      // try {
+      //   await sendMail({
+      //     from: "accounts@shop0.com",
+      //     email: newUser.email,
+      //     subject: "Activate Your Account",
+      //     message: `Hello ${newUser.name}, please click on the link to activate your account: ${activationUrl}`,
+      //   });
+      //   // console.log(message);
+      //   // res.status(201).json({
+      //   //   success: true,
+      //   //   message: `Please check your email: ${newUser.email} to activate your account`,
+      //   // });
+      // } catch (error) {
+      //   return next(new ErrorHandler(error.message, 500));
+      // }
+      // // You can send a response or do any other necessary actions here.
+      // res.status(201).json({
+      //   success: true,
+      //   message: `An Email sent to your account please verify`,
+      //   // user: newUser,
+      // });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
 
+router.post(
+  "/verify-user",
+  catchAsyncErrors(async (req, res) => {
+    try {
+      const { userId, otp } = req.body;
+      if (!userId || !otp.trim())
+        return res.status(400).json({
+          success: false,
+          message: "otp field are empty",
+        });
+      if (!userId)
+        return res.status(400).json({
+          success: false,
+          message: "Kindly enter the secret key",
+        });
+
+      if (!isValidObjectId(userId))
+        return res.status(400).json({
+          success: false,
+          message: "Invalid secret key",
+        });
+
+      const user = await User.findById(userId);
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          message: "sorry, user not found",
+        });
+
+      if (user.isVerified)
+        return res.status(200).json({
+          success: true,
+          message: "Account already verified!, Kindly login",
+        });
+
+      const token = await VerificationToken.findOne({ owner: user._id });
+      if (!token)
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Token",
+        });
+
+      user.isVerified = true;
+      await VerificationToken.findByIdAndDelete(token._id);
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Account verified succesfully",
+      });
+      sendToken(user, 201, res);
+    } catch (error) {
+      res.status(400).json({
+        succes: false,
+        message: "Internal Server Error",
+      });
+    }
+  })
+);
+
+// // verify user
+// router.post(
+//   "/verify/:id",
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const user = await User.findOne({ _id: req.params.id });
+
+//       if (!user)
+//         return res.status(400).json({
+//           succes: false,
+//           message: "Invalid link",
+//         });
+
+//       const activationToken = await ActivationToken.findOne({
+//         userId: user._id,
+//         activationToken: req.params.activationToken,
+//       });
+
+//       if (!activationToken)
+//         return res.status(400).json({
+//           succes: false,
+//           message: "Invalid link",
+//         });
+
+//       await User.updateOne({ _id: user._id, isVerified: true });
+//       await activationToken.remove();
+
+//       res.status(200).json({
+//         succes: true,
+//         message: "Email verified succesfully",
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 // Login user
 router.post(
   `/login-user`,
@@ -85,13 +230,61 @@ router.post(
         return res.status(401).json({
           success: false,
           message:
-            "Invalid credentials. Please provide the correct information.",
+            "Invalid credentials. Please provide the correct information!!!",
+        });
+      }
+      if (!user.isVerified) {
+        const OTP = generateOTP();
+        const verificationToken = new VerificationToken({
+          owner: newUser._id,
+          token: OTP,
+        });
+
+        await verificationToken.save();
+
+        await sendMail({
+          from: "accounts@shop0.com",
+          email: newUser.email,
+          subject: "Activate Your Account",
+          html: generateEmailtemplate(OTP),
+        });
+
+        // await verificationToken.save();
+
+        // await sendMail({
+        //   from: "accounts@shop0.com",
+        //   email: req.body.email,
+        //   subject: "Activate Your Account",
+        //   html: generateEmailtemplate(OTP),
+        // });
+
+        // try {
+        //   await sendMail({
+        //     email: user.email,
+        //     subject: "Activate Your Account",
+        //     message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        //   });
+        //   // console.log(message);
+        //   // res.status(201).json({
+        //   //   success: true,
+        //   //   message: `Please check your email: ${newUser.email} to activate your account`,
+        //   // });
+        // } catch (error) {
+        //   return next(new ErrorHandler(error.message, 500));
+        // }
+        return res.status(404).json({
+          success: false,
+          message: "Account not verified please check you email to verify.",
         });
       }
 
       sendToken(user, 201, res);
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      return res.status(404).json({
+        success: false,
+        message: "server error",
+        error,
+      });
     }
   })
 );
@@ -203,44 +396,3 @@ router.get(
 //);
 
 module.exports = router;
-
-//   if (userEmail) {
-//      const filename = req.file.filename;
-//      const filePath = `uploads/${filename}`;
-//     // fs.unlink(filePath, (err) => {
-//     //   if (err) {
-//     //     console.log(err);
-//     //     res.status(500).json({message:`Error deleting file`})
-//     //   } else {
-//     //     res.json({message:`File deleted successfully`})
-//     //   }
-//     // })
-
-//     return next(new ErrorHandler(`User already exists`, 400));
-//   }
-
-//   const uuid = require('uuid'); // Import the UUID library
-
-// // Generate a unique identifier for the file
-//  const fileId = uuid.v4(); // Use UUID v4 for random identifiers
-//   //const filename = req.file.filename;
-//   const protocol = req.protocol; // Get the protocol (http or https)
-//   const host = req.get("host"); // Get the domain and port
-//  //const fileUrl = path.join(filename);
-//   const fileUrl = `${protocol}://${host}/uploads/${filename}`;
-//   const user = {
-//     name: name,
-//     email: email,
-//     avatar: {
-//       public_id: fileId,
-//       url: fileUrl,
-//     },
-//     password: password,
-//   };
-//   // const newUser = await User.create(user);
-//   // res.status(201).json({
-//   //   success: true,
-//   //   newUser,
-//   // });
-//   console.log(user);
-// });

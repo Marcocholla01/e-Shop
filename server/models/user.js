@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   phoneNumber: {
     type: Number,
   },
@@ -54,12 +58,12 @@ const userSchema = new mongoose.Schema({
   avatar: {
     public_id: {
       type: String,
-      required: true,
+      // required: true,
     },
     url: {
       type: String,
       default: defaultAvatarUrl,
-      required: true,
+      // required: true,
     },
   },
   resetPasswordToken: String,

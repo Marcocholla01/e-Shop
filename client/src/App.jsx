@@ -37,6 +37,7 @@ import {
   ShopAllDisountCodes,
   ShopAllOrders,
   AdminDashboardpage,
+  OtpPage,
 } from "./Routes/routes";
 import { BASE_URL } from "./config";
 import axios from "axios";
@@ -100,6 +101,7 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/verify-user" element={<OtpPage />} />
             <Route
               path="/checkout"
               element={
@@ -118,8 +120,12 @@ function App() {
               }
             />
 
-            <Route
+            {/* <Route
               path="/activation/:activation_token"
+              element={<ActivationPage />}
+            /> */}
+            <Route
+              path="/user/:id/verify/:token"
               element={<ActivationPage />}
             />
 

@@ -189,7 +189,7 @@ const AllDiscountCodes = () => {
         const couponCode_name = d.replace(/\$+/g, "-");
         return (
           <>
-            <Link to={`/couponCode/${couponCode_name}`}>
+            <Link to={`/couponCode/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>

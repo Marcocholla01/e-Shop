@@ -30,11 +30,11 @@ function Login() {
       )
       .then((res) => {
         if (res.data.success === true) {
-          toast.success(res.data.message || "Login success!");
           navigate("/");
+          toast.success(res.data.message);
           window.location.reload(true);
         } else {
-          toast.error(res.data.message || "Login failed. Please try again.");
+          toast.error(res.data.message);
         }
       })
       .catch((error) => {

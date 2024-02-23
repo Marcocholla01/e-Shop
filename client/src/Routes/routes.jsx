@@ -26,6 +26,7 @@ import ShopAllEvents from "../pages/Seller/ShopAllEvents";
 import ShopAllDisountCodes from "../pages/Seller/ShopAllDisountCodes";
 import ShopAllOrders from "../pages/Seller/ShopAllOrders";
 import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
+import OtpPage from "../pages/App/OtpPage";
 
 export {
   LoginPage,
@@ -56,4 +57,5 @@ export {
   ShopAllDisountCodes,
   ShopAllOrders,
   AdminDashboardpage,
+  OtpPage,
 };
