@@ -9,7 +9,7 @@ const initialState = {
 export const cartReducer = createReducer(initialState, {
   addToCart: (state, action) => {
     const item = action.payload;
-    const isItemExist = state.cart.find((i = i._id === item._id));
+    const isItemExist = state.cart.find((i) => i._id === item._id);
     if (isItemExist) {
       return {
         ...state,

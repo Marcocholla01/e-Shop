@@ -62,14 +62,14 @@ const CreateProduct = () => {
       toast.error("Please enter how many products stock you have!");
       return;
     }
-    if (!discountPrice) {
-      toast.error("Please enter products Price (With Discount)!");
+    if (!originalPrice) {
+      toast.error("Please enter products original price!");
       return;
     }
 
     // Check if "Price (With Discount)" is less than "Price"
-    if (discountPrice < originalPrice) {
-      toast.error("Price must be less than Price (With Discount)");
+    if (discountPrice > originalPrice) {
+      toast.error("Price must be more than Price (After Discount)");
       return; // Do not proceed with form submission
     }
 
@@ -93,8 +93,8 @@ const CreateProduct = () => {
     newForm.append("description", description);
     newForm.append("category", category);
     newForm.append("tags", tags);
-    newForm.append("originalPrice", discountPrice);
-    newForm.append("discountPrice", originalPrice);
+    newForm.append("originalPrice", originalPrice);
+    newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
 
@@ -190,7 +190,9 @@ const CreateProduct = () => {
         <br />
         <div className="block sm:flex items-center justify-between">
           <div>
-            <label className="pb-2">Price</label>
+            <label className="pb-2">
+              Original Price <span className="text-red-500">*</span>
+            </label>
             <input
               type="number"
               // type="tel"
@@ -205,10 +207,7 @@ const CreateProduct = () => {
           </div>
           <br />
           <div>
-            <label className="pb-2">
-              Price (With Discount)
-              <span className="text-red-500">*</span>
-            </label>
+            <label className="pb-2">Price (After Discount)</label>
             <input
               type="number"
               name="discountPrice"
