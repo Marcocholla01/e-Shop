@@ -16,7 +16,7 @@ const sendMail = async (options) => {
   });
 
   const mailOptions = {
-    from: options.from,
+    from: process.env.SMTP_MAIL,
     reply: options.reply,
     to: options.email,
     subject: options.subject,

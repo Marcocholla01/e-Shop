@@ -17,8 +17,54 @@ function Login() {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
+  // Regular expression for email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex =
+    /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])(?=.*[a-z])(?!.*(.)\1{7})(?!.*12345678)(?=.*\d).{8,24}$/;
+  // Create an array of items for the list
+  const items = [
+    "Should have atleast 8 -24 characters",
+    "Should have atleast 1 special letter @!>",
+    "Should have atleast 1 uppercase letter",
+    "Should have atleast 1 lowercase letter",
+  ];
+  // Generate the list markup
+  const CustomToast = ({ items }) => (
+    <div className=" p-4 rounded shadow-md w-[100%]">
+      <ol className="list-disc pl-4">
+        {items.map((item, index) => (
+          <li key={index} className="mb-2">
+            {item}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check if email is empty or doesn't match the expected format
+    if (!email) {
+      return toast.error(`Please input your email`);
+    } else if (!emailRegex.test(email)) {
+      return toast.error(`Please input a valid email address`);
+    }
+    if (!password) {
+      return toast.error(`Please input your password`);
+    }
+    if (!passwordRegex.test(password)) {
+      setTimeout(() => {
+        // Render the custom toast component inside the toast
+        return toast.info(<CustomToast items={items} />, {
+          autoClose: 6000, // Keep the toast open indefinitely or set autoClose to a duration in milliseconds
+          closeOnClick: true, // Close the toast when clicked
+          closeButton: true, // Show a close button
+          draggable: true, // Allow the toast to be draggable
+        });
+      }, 1000);
+      // Password does not meet the requirements
+      return toast.error("Password does not meet the requirements");
+    }
 
     axios
       .post(
@@ -89,7 +135,6 @@ function Login() {
                   name="email"
                   id="login-email"
                   autoComplete="email"
-                  required
                   placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -110,7 +155,6 @@ function Login() {
                   name="password"
                   id="login-password"
                   autoComplete="current-password"
-                  required
                   placeholder="Enter you password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -169,13 +213,20 @@ function Login() {
             <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
               <FacebookOauth />
               <GoogleOauth />
-              <AppleOauth />
+              {/* <AppleOauth /> */}
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4 className="relative w-full h-[40] flex justify-center">
-                Do not have any account?
-                <Link to="/seller-register" className="text-blue-600 pl-2">
-                  Register
+              <h4 className="relative w-full flex justify-center">
+                Do not have an account? Register as
+              </h4>
+            </div>
+            <div className={`${styles.normalFlex} w-full`}>
+              <h4 className="relative w-full h-[10] flex justify-center">
+                <Link to="/register" className="text-blue-600 pr-4">
+                  1. Customer
+                </Link>
+                <Link to="/seller-register" className="text-blue-600 pl-4">
+                  2. Seller
                 </Link>
               </h4>
             </div>

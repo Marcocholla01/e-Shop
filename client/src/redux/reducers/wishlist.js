@@ -13,12 +13,12 @@ export const wishListReducer = createReducer(initialState, {
     if (isItemExist) {
       return {
         ...state,
-        cart: state.wishList.map((i) => (i._id == isItemExist._id ? item : i)),
+        wishList: state.wishList.map((i) => (i._id == isItemExist._id ? item : i)),
       };
     } else {
       return {
         ...state,
-        cart: [...state.wishList, item],
+        wishList: [...state.wishList, item],
       };
     }
   },
@@ -26,7 +26,7 @@ export const wishListReducer = createReducer(initialState, {
   removeFromWishList: (state, action) => {
     return {
       ...state,
-      cart: state.wishList.filter((i) => i._id !== action.payload),
+      wishList: state.wishList.filter((i) => i._id !== action.payload),
     };
   },
 });

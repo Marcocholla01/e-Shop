@@ -22,10 +22,10 @@ const EventCard = ({ active, data }) => {
           <div className="flex">
             <h5 className="pr-3 font-bold text-[18px] text-[#333] font-Roboto ">
               {" "}
-              999$
+              999 KSH
             </h5>
             <h5 className="font-[500] text-[16px] text-[#d55b45] pl-3 mt-[-4px] line-through">
-              1099$
+              1099 KSHS
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">

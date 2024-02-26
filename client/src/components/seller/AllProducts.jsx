@@ -106,7 +106,7 @@ const AllProducts = () => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "US$ " + item.discountPrice,
+        price: "KSHS " + item.discountPrice,
         Stock: item.stock,
         sold: item?.sold_out,
       });

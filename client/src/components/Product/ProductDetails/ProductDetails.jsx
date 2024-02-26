@@ -133,11 +133,11 @@ const ProductDetails = ({ data }) => {
                   <p>{data?.product?.description}</p>
                   <div className="flex pt-3">
                     <h4 className={`${styles.productDiscountPrice}`}>
-                      {data?.product?.discountPrice}$
+                      {data?.product?.discountPrice} KSHS
                     </h4>
                     <h3 className={`${styles.price}`}>
                       {data?.product?.originalPrice
-                        ? data?.product?.originalPrice + "$"
+                        ? data?.product?.originalPrice + "KSHS"
                         : null}
                     </h3>
                   </div>

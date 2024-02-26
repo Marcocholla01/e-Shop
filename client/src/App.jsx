@@ -94,7 +94,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/register" element={<SignupPage />} />
             <Route path="/products" element={<ProductPage />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/best-selling" element={<BestSellingPage />} />

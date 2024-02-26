@@ -13,6 +13,7 @@ import EmptyCart from "../../../assets/images/empty-cart.jpg";
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  // console.log(cart);
 
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
@@ -44,7 +45,6 @@ const Cart = ({ setOpenCart }) => {
               <img
                 src={EmptyCart}
                 alt=""
-                srcset=""
                 className="w-full h-min p-2 mb-2 object-cover"
               />
               <h5 className="font-semibold">Your cart is empty</h5>
@@ -88,7 +88,7 @@ const Cart = ({ setOpenCart }) => {
           {/* Check Out Button */}
           <Link to={`/checkout`}>
             <div className="h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]">
-              <h1 className="text-[#fff] text-[18px] font-[600]">
+              <h1 className="text-[#fff] text-[15px] font-[600]">
                 Checkout Now (USD ${totalPrice})
               </h1>
             </div>
