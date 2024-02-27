@@ -15,6 +15,8 @@ import {
   addToWishList,
   removeFromWishList,
 } from "../../../redux/actions/wishList";
+import { addToCart } from "../../../redux/actions/cart";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -23,6 +25,7 @@ const ProductCard = ({ data }) => {
 
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
+  const [count, setCount] = useState("1");
 
   useEffect(() => {
     if (wishList && wishList.find((i) => i._id === data._id)) {
@@ -35,11 +38,28 @@ const ProductCard = ({ data }) => {
   const removeFromWishListHandler = (data) => {
     setClick(!click);
     dispatch(removeFromWishList(data));
+    toast.info(`Product removed from wishList items`);
   };
 
   const addToWishListHandler = (data) => {
     setClick(!click);
     dispatch(addToWishList(data));
+    toast.info(`Product added to wishList items`);
+  };
+
+  const addToCartHandler = (id) => {
+    const isItemExist = cart && cart.find((i) => i._id === id);
+    if (isItemExist) {
+      toast.error(`Item already exists`);
+    } else {
+      if (data.stock < count) {
+        toast.error(`Product Stock limited`);
+        return;
+      }
+      const cartData = { ...data, qty: count };
+      dispatch(addToCart(cartData));
+      toast.success(`Item added to cart successfully`);
+    }
   };
 
   // Calculate discount percentage
@@ -168,7 +188,7 @@ const ProductCard = ({ data }) => {
             <AiOutlineShoppingCart
               size={25}
               className="cursor-pointer absolute right-2 top-24"
-              onClick={() => setOpen(!open)}
+              onClick={() => addToCartHandler(data._id)}
               color="#444"
               title="Add to cart"
             />

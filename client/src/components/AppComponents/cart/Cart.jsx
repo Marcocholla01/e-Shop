@@ -17,6 +17,7 @@ const Cart = ({ setOpenCart }) => {
 
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
+    toast.info(`Product removed form cart items`);
   };
 
   const totalPrice = cart.reduce(
@@ -89,7 +90,7 @@ const Cart = ({ setOpenCart }) => {
           <Link to={`/checkout`}>
             <div className="h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]">
               <h1 className="text-[#fff] text-[15px] font-[600]">
-                Checkout Now (USD ${totalPrice})
+                Checkout Now (KSHS {totalPrice})
               </h1>
             </div>
           </Link>
@@ -136,22 +137,23 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          src={data.images[0].url}
+          src={data?.images[0].url}
           alt=""
           className="w-[100px] h-min mr-2 rounded-[5px] object-cover ml-2"
         />
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-            ${data.discountPrice}*{value}
+            KSHS {data.discountPrice}*{value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-            US ${totalPrice}
+            KSHS {totalPrice}
           </h4>
         </div>
         <RxCross1
-          className="cursor-pointer"
+          className="cursor-pointer w-[10%]"
           onClick={() => removeFromCartHandler(data)}
+          size={30}
         />
       </div>
     </div>
