@@ -1,20 +1,21 @@
 import React from "react";
 import Header from "../../components/Layout/Header";
 import Footer from "../../components/Layout/Footer";
+import Error404 from "../../assets/images/404-error-with-a-tired-person-bro.png";
 
 function NotFoundPage() {
   return (
     <div>
       <Header />
-      <div className="w-full h-full flex items-center flex-col m-3 p-3">
-        <br />
-        <br />
-        <h1 className="text-[red] font-900 font-bold text-[110px] font-Roboto m-4 p-4">
-          404
+      <div className="text-center items-center  justify-center flex flex-col">
+        <img
+          src={Error404}
+          alt=""
+          className="w-[35%] h-min p-2 mb-2 object-cover"
+        />
+        <h1 className="font-bold text-[#263238] sm:text-3xl md:text-5xl text-md uppercase">
+          Sorry!! Page Not Found
         </h1>
-        <span className="text-[red]  font-bold text-[80px] font-Roboto m-4 p-4">
-          NOT FOUND
-        </span>
       </div>
       <Footer />
     </div>

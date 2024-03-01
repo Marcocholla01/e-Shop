@@ -2,7 +2,7 @@ const express = require("express");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller } = require("../middlewares/auth");
+const { isSeller, isAuthenticated } = require("../middlewares/auth");
 const CouponCode = require("../models/couponCode");
 
 const router = express.Router();
@@ -79,9 +79,28 @@ router.delete(
       res.status(200).json({
         success: true,
         message: "CouponCode deleted successfully",
+        couponCode,
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// get coupon cade value by its name
+router.get(
+  `/get-coupon-value/:name`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const couponCode = await CouponCode.findOne({ name: req.params.name });
+
+      res.status(200).json({
+        success: true,
+        message: `coupon code applied successfully`,
+        couponCode,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   })
 );

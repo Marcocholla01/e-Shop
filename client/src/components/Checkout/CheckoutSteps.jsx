@@ -2,10 +2,10 @@ import React from "react";
 import styles from "../../styles/style";
 
 const CheckoutSteps = ({ active }) => {
-  console.log(active);
+  // console.log(active);
   return (
     <div className="w-full flex justify-center">
-      <div className="w-[90%] 800px:w-[50%] flex items-center flex-wrap">
+      <div className="w-[90%] sm:w-[50%] flex items-center flex-wrap">
         <div className={`${styles.normalFlex}`}>
           <div className={`${styles.cart_button}`}>
             <span className={`${styles.cart_button_text}`}>1.Shipping</span>
@@ -13,8 +13,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 1
-                ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#f63b60]"
-                : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#FDE1E6]"
+                ? "w-[30px] sm:w-[70px] h-[4px] !bg-[#f63b60]"
+                : "w-[30px] sm:w-[70px] h-[4px] !bg-[#FDE1E6]"
             }`}
           />
         </div>
@@ -43,8 +43,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 3
-                ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#f63b60]"
-                : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#FDE1E6]"
+                ? "w-[30px] sm:w-[70px] h-[4px] !bg-[#f63b60]"
+                : "w-[30px] sm:w-[70px] h-[4px] !bg-[#FDE1E6]"
             }`}
           />
           <div

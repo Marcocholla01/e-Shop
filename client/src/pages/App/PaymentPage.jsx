@@ -10,7 +10,7 @@ const PaymentPage = () => {
       <Header />
       <br />
       <br />
-      <CheckoutSteps />
+      <CheckoutSteps active={2}/>
       <Payment />
       <br />
       <br />
