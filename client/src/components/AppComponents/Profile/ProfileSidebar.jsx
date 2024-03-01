@@ -7,7 +7,11 @@ import {
 } from "react-icons/ai";
 import { TbAddressBook } from "react-icons/tb";
 import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
-import { MdOutlineAdminPanelSettings, MdTrackChanges } from "react-icons/md";
+import {
+  MdOutlineAdminPanelSettings,
+  MdTrackChanges,
+  MdOutlineLockPerson,
+} from "react-icons/md";
 import { RxPerson } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -103,9 +107,20 @@ const ProfileSidebar = ({ active, setActive }) => {
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(7)}
       >
-        <TbAddressBook size={20} color={active === 7 ? "red" : ""} />
+        <MdOutlineLockPerson size={20} color={active === 7 ? "red" : ""} />
         <span
           className={`pl-3 ${active === 7 ? "text-[red]" : ""} sm:block hidden`}
+        >
+          Change Password
+        </span>
+      </div>
+      <div
+        className="flex bg-white cursor-pointer items-center w-full mb-8"
+        onClick={() => setActive(8)}
+      >
+        <TbAddressBook size={20} color={active === 8 ? "red" : ""} />
+        <span
+          className={`pl-3 ${active === 8 ? "text-[red]" : ""} sm:block hidden`}
         >
           Address
         </span>
@@ -119,11 +134,11 @@ const ProfileSidebar = ({ active, setActive }) => {
           >
             <MdOutlineAdminPanelSettings
               size={20}
-              color={active === 8 ? "red" : ""}
+              color={active === 9 ? "red" : ""}
             />
             <span
               className={`pl-3 ${
-                active === 8 ? "text-[red]" : ""
+                active === 9 ? "text-[red]" : ""
               } sm:block hidden`}
             >
               Admin Dashboard

@@ -65,6 +65,9 @@ const userSchema = new mongoose.Schema({
       default: defaultAvatarUrl,
       // required: true,
     },
+    filename: {
+      type: String,
+    },
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,

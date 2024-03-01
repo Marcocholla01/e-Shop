@@ -77,7 +77,7 @@ function Login() {
       .then((res) => {
         if (res.data.success === true) {
           navigate("/");
-          toast.success(res.data.message);
+          toast.success(`Login success`);
           window.location.reload(true);
         } else {
           toast.error(res.data.message);

@@ -31,7 +31,6 @@ const ProductDetailscard = ({ setOpen, data }) => {
       setCount(count - 1);
     }
   };
-
   const incrementCount = () => {
     setCount(count + 1);
   };
@@ -81,9 +80,13 @@ const ProductDetailscard = ({ setOpen, data }) => {
               />
               <div className="block w-full sm:flex p-4">
                 <div className="w-full sm:w-50%">
-                  <img src={data?.images[0]?.url} alt="" />
-                  <div className="flex mt-3">
-                    <Link to={`/shop/${data.shop._id}`}>
+                  <img
+                    src={data?.images[0]?.url}
+                    alt=""
+                    className="w-auto h-[450px]"
+                  />
+                  <div className="flex mt-3 items-center">
+                    <Link to={`/shop/preview/${data.shop._id}`}>
                       <img
                         src={data?.shop?.avatar?.url}
                         alt=""
@@ -92,14 +95,13 @@ const ProductDetailscard = ({ setOpen, data }) => {
                     </Link>
 
                     <div>
-                      <Link to={`/shop/${data.shop._id}`}>
+                      <Link to={`/shop/preview/${data.shop._id}`}>
                         <h3 className={`${styles.shop_name}`}>
                           {data.shop.name}
                         </h3>
                       </Link>
-
                       <h5 className="pb-3 text-[15px]">
-                        ({data.shop.ratings}10) Ratings
+                        ({data.shop.ratings}4/5) Ratings
                       </h5>
                     </div>
                   </div>
@@ -107,8 +109,8 @@ const ProductDetailscard = ({ setOpen, data }) => {
                     className={`${styles.button} bg-[#000] mt-4 rounded-[4px] h-11`}
                     onClick={handleMessageSubmit}
                   >
-                    <span className="text-[#fff] flex items-center">
-                      Send Message <AiOutlineMessage />
+                    <span className="text-[#fff] flex items-center mr-2">
+                      Send Message <AiOutlineMessage className="ml-2" />
                     </span>
                   </div>
                   <h5 className="text-[16px] text-[red] mt-5">
@@ -119,19 +121,25 @@ const ProductDetailscard = ({ setOpen, data }) => {
                   <h1 className={`${styles.productTitle} text-[20px]`}>
                     {data.name}
                   </h1>
-                  <p>{data.description}</p>
+                  <p>
+                    {data.description.length > 500
+                      ? data.description.slice(0, 500) + "..."
+                      : data.description}
+                  </p>
                   <div className="flex pt-3">
-                    <h4 className={`${styles.productDiscountPrice}`}>
+                    <h4
+                      className={`${styles.productDiscountPrice} text-[21px]`}
+                    >
                       {data.discountPrice} KSHS
                     </h4>
-                    <h3 className={`${styles.price}`}>
+                    <h3 className={`${styles.price} text-[18px]`}>
                       {data.originalPrice ? data.originalPrice + "KSHS" : null}
                     </h3>
                   </div>
                   <div className="flex items-center mt-12 justify-between pr-3">
                     <div>
                       <button
-                        className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                        className={`bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
                         onClick={decrementCount}
                       >
                         -
@@ -140,8 +148,12 @@ const ProductDetailscard = ({ setOpen, data }) => {
                         {count}
                       </span>
                       <button
-                        className="bg-gradient-to-l from-teal-500 to-teal-400 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                        onClick={incrementCount}
+                        className={
+                          data.stock < count
+                            ? `bg-gradient-to-l from-teal-500 to-teal-400 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out`
+                            : `bg-gradient-to-l from-teal-500 to-teal-400 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out`
+                        }
+                        onClick={() => incrementCount(data)}
                       >
                         +
                       </button>
@@ -171,7 +183,7 @@ const ProductDetailscard = ({ setOpen, data }) => {
                     onClick={() => addToCartHandler(data._id)}
                   >
                     <span className="text-[#fff] flex items-center">
-                      Add to cart <AiOutlineShoppingCart className="ml-1" />
+                      Add to cart <AiOutlineShoppingCart className="ml-2" />
                     </span>
                   </div>
                 </div>

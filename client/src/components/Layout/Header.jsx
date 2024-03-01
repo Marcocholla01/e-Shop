@@ -239,9 +239,9 @@ const Header = ({ activeHeading }) => {
       <div
         className={`${
           active === true ? "shadow-sm fixed top-0 left-0 z-[10]" : null
-        }"w-full  h-[50px] bg-[#fff] z-50 top-0 left-0 w-full shadow-sm sm:hidden "`}
+        }"w-full  h-[90px] bg-[#fff] z-50 top-0 left-0 w-full shadow-sm sm:hidden "`}
       >
-        <div className="w-full items-center flex justify-between">
+        <div className="w-full pt-4 flex justify-between">
           <div>
             <BiMenuAltLeft
               size={40}
@@ -260,7 +260,10 @@ const Header = ({ activeHeading }) => {
           </div>
           <div>
             <div className="relative mr-[20px]">
-              <AiOutlineShoppingCart size={30} />
+              <AiOutlineShoppingCart
+                size={35}
+                className="mt-3 cursor-pointer"
+              />
               <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                 {cart && cart.length}
               </span>
@@ -281,7 +284,7 @@ const Header = ({ activeHeading }) => {
                 <div className="relative mr-[15px]">
                   <AiOutlineHeart size={30} className="mt-5 ml-3" />
                   <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                    1
+                    {wishList && wishList.length}
                   </span>
                 </div>
               </div>
@@ -321,13 +324,35 @@ const Header = ({ activeHeading }) => {
                 </div>
               )}
               <Navbar active={activeHeading} />
-              <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to="/seller-register">
-                  <h1 className="text-[#fff] flex items-center">
-                    Become Seller
-                    <IoIosArrowForward className="ml-1" />
-                  </h1>
-                </Link>
+              {user && user.role === "Admin" && (
+                <div
+                  className={`${styles.button} ml-4 w-[200px] !rounded-[4px]`}
+                >
+                  <Link to={`/admin-dashboard`}>
+                    <h1 className="text-[#fff] flex items-center">
+                      Admin Dashboard
+                      <IoIosArrowForward className="ml-1" />
+                    </h1>
+                  </Link>
+                </div>
+              )}
+
+              <div className={`${styles.button} ml-4 w-[200px] !rounded-[4px]`}>
+                {isSeller ? (
+                  <Link to={`/dashboard`}>
+                    <h1 className="text-[#fff] flex items-center">
+                      Go Dashboard
+                      <IoIosArrowForward className="ml-1" />
+                    </h1>
+                  </Link>
+                ) : (
+                  <Link to="/seller-register">
+                    <h1 className="text-[#fff] flex items-center">
+                      Become Seller
+                      <IoIosArrowForward className="ml-1" />
+                    </h1>
+                  </Link>
+                )}
               </div>
               <br />
               <div className="flex w-full justify-center">
@@ -350,7 +375,7 @@ const Header = ({ activeHeading }) => {
                   <div className="flex items-center justify-between flex-col">
                     <h3 className="pb-3 font-[700] ">ACOUNT DETAILS</h3>
                     <div className="pb-2">
-                      <Link to={`/profile`}>
+                      <Link to={`/user/${user._id}`}>
                         <img
                           src={user.avatar.url}
                           alt=""

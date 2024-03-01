@@ -94,6 +94,7 @@ const ProductCard = ({ data }) => {
         )}
         <div className="justify-between">
           <Link to={`/product/${data?._id}`}>
+            {/* window.location.reload(true); */}
             <img
               src={`${data?.images && data?.images[0]?.url}`}
               alt=""
@@ -105,9 +106,7 @@ const ProductCard = ({ data }) => {
           </Link>
           <Link to={`/product/${data?._id}`}>
             <h4 className="pb-3 font-[500]">
-              {data.name.length > 40
-                ? data.name.slice(0, 15) + "..."
-                : data.name}
+              {data.name.length > 50 ? data.name.slice(0,50) + "..." : data.name}
             </h4>
 
             <div className="flex">

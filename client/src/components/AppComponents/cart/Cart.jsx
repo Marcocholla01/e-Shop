@@ -118,6 +118,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
     const updatecartData = { ...data, qty: value === 1 ? 1 : value - 1 };
     quantityChangeHandler(updatecartData);
   };
+
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center">
@@ -137,7 +138,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          src={data?.images[0].url}
+          src={data?.images[0]?.url}
           alt=""
           className="w-[100px] h-min mr-2 rounded-[5px] object-cover ml-2"
         />
@@ -151,9 +152,9 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </h4>
         </div>
         <RxCross1
-          className="cursor-pointer w-[10%]"
+          className="cursor-pointer w-[20%]"
           onClick={() => removeFromCartHandler(data)}
-          size={30}
+          size={25}
         />
       </div>
     </div>
