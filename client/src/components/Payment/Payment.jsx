@@ -133,7 +133,7 @@ const Payment = () => {
         config
       );
 
-      console.log(data);
+      // console.log(data);
       const client_secret = data.client_secret;
       if (!stripe || !elements) return;
 
@@ -195,8 +195,49 @@ const Payment = () => {
     }
   };
 
-  const cashOnDelivery = async (e) => {
-    console.log(`cashondelivery`);
+  const cashOnDeliveryHandler = async (e) => {
+    e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    order.paymentInfo = {
+      method: `Cash On Delivery`,
+    };
+
+    await axios
+      .post(`${BASE_URL}/order/create-order`, order, config)
+      .then((res) => {
+        setOpen(false);
+        navigate(`/order/success`);
+        toast.success(res.data.message);
+        localStorage.setItem(`CartItems`, JSON.stringify([]));
+        localStorage.setItem(`latestOrder`, JSON.stringify([]));
+        // window.location.reload(true);
+      })
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a non-2xx status code
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 401) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 400) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error(`Server error: ${error.response.data.message}`);
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          toast.error("Network error. Please check your internet connection.");
+        } else {
+          // Something happened in setting up the request that triggered an error
+          toast.error("Request failed. Please try again later.");
+        }
+      });
   };
 
   return (
@@ -210,7 +251,7 @@ const Payment = () => {
             onApprove={onApprove}
             createOrder={createOrder}
             paymentHandler={paymentHandler}
-            cashOnDelivery={cashOnDelivery}
+            cashOnDeliveryHandler={cashOnDeliveryHandler}
           />
         </div>
         <div className="w-full sm:w-[35%] sm:mt-0 mt-8">
@@ -228,7 +269,7 @@ const PaymentInfo = ({
   onApprove,
   createOrder,
   paymentHandler,
-  cashOnDelivery,
+  cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(1);
 
@@ -418,7 +459,7 @@ const PaymentInfo = ({
 
         {/* cash on delivery */}
         {select === 3 ? (
-          <div className="w-full flex">
+          <div className="w-full flex" onSubmit={cashOnDeliveryHandler}>
             <form className="w-full ">
               <input
                 type="submit"
