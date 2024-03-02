@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import {
   BrowserRouter,
@@ -40,7 +40,7 @@ import {
   OtpPage,
   PaymentPage,
 } from "./Routes/routes";
-import { BASE_URL } from "./config";
+import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
 import Store from "./redux/store";
 import { loadSeller, loadUser } from "./redux/actions/user";
@@ -51,10 +51,25 @@ import Loader from "./components/Layout/Loader";
 import AdminProtectedRoute from "./Routes/AdminRoutes/AdminProtectedRoutes";
 import { getAllProducts } from "./redux/actions/product";
 import { getAllEvents } from "./redux/actions/event";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 function App() {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
   const { isLoading, isSeller, seller } = useSelector((state) => state.seller);
+
+  const [stripeApiKey, setStripeApiKey] = useState(``);
+
+  async function getStripeApiKey() {
+    try {
+      const response = await axios.get(`${BASE_URL}/payment/stripeapikey`);
+      const { data } = response;
+      setStripeApiKey(data.stripeApiKey);
+    } catch (error) {
+      // Handle error appropriately, e.g., logging or showing an error message.
+      console.error("Error fetching Stripe API key:", error);
+    }
+  }
 
   // const navigate = useNavigate();
   useEffect(() => {
@@ -71,12 +86,15 @@ function App() {
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvents());
+    getStripeApiKey();
 
     //
     // if (isSeller === true) {
     //   <Navigate to={`/shop`} replace />;
     // }
   }, []);
+
+  // console.log(stripeApiKey);
 
   // console.log(
   //   "isLoading:",
@@ -87,12 +105,25 @@ function App() {
   //   seller
   // );
   return (
-    <>
-      {isLoading || loading ? (
-        <Loader />
-      ) : (
-        <BrowserRouter>
+    // <>
+    //   {isLoading || loading ? (
+    //     <Loader />
+    //   ) : (
+    <BrowserRouter>
+      {stripeApiKey && (
+        <Elements stripe={loadStripe(stripeApiKey)}>
           <Routes>
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Define other routes here */}
+
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<SignupPage />} />
@@ -112,14 +143,16 @@ function App() {
               }
             />
             <Route
-              path="/payment"
+              path="/order/success"
               element={
                 <ProtectedRoute>
-                  <PaymentPage />
+                  <OrderSuccessPage />
                 </ProtectedRoute>
               }
             />
-            <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+
+            {/* <Route path="/order/success" element={<OrderSuccessPage />} /> */}
+
             <Route
               path="/user/:id"
               element={
@@ -223,24 +256,27 @@ function App() {
               }
             />
 
-            {/* NOT FPUND ROUTE */}
+            {/* NotFound route */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          <ToastContainer
-            position="bottom-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
-        </BrowserRouter>
+        </Elements>
       )}
-    </>
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    </BrowserRouter>
+    // )}
+    //   </>
   );
 }
 

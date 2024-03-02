@@ -3,12 +3,19 @@ import Footer from "../../components/Layout/Footer";
 import Header from "../../components/Layout/Header";
 import Lottie from "react-lottie";
 import animationData from "../../assets/images/svg/animations/107043-success.json";
+import CheckoutSteps from "../../components/Checkout/CheckoutSteps";
 
 const orderSuccessPage = () => {
   return (
-    <div>
+    <div className="w-full min-h-screen bg-[#f6f9fc]">
       <Header />
+      <br />
+      <br />
+
+      {/* <CheckoutSteps /> */}
       <Success />
+      <br />
+      <br />
       <Footer />
     </div>
   );
@@ -16,7 +23,7 @@ const orderSuccessPage = () => {
 
 const Success = () => {
   const defaultOptions = {
-    loop: false,
+    loop: true,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
