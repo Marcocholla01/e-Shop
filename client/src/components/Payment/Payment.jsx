@@ -9,6 +9,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
@@ -30,15 +31,81 @@ const Payment = () => {
   }, []);
 
   const createOrder = async (data, actions) => {
-    console.log(`create Order`);
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            description: `Sunflower`,
+            amount: {
+              currency_code: `USD`,
+              value: Math.ceil(orderData.totalPrice / 130), //dividing by 130 is convert to USD & Math.ceil() round up
+            },
+          },
+        ],
+        application_context: {
+          shipping_preference: `NO_SHIPPING`,
+        },
+      })
+      .then((orderId) => {
+        return orderId;
+      });
   };
 
   const onApprove = async (data, actions) => {
-    console.log(`onApprove`);
+    return actions.order.capture().then(function (details) {
+      const { payer } = details;
+
+      let paymentInfo = payer;
+
+      if (paymentInfo !== undefined) {
+        payPalPaymentHandler(paymentInfo);
+      }
+    });
   };
 
   const payPalPaymentHandler = async (paymentInfo) => {
-    console.log(`payment Handler Paypal`);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    order.paymentInfo = {
+      id: paymentInfo.payer_id,
+      status: `succeeded`,
+      method: `Paypal`,
+    };
+
+    await axios
+      .post(`${BASE_URL}/order/create-order`, order, config)
+      .then((res) => {
+        setOpen(false);
+        navigate(`/order/success`);
+        toast.success(res.data.message);
+        localStorage.setItem(`CartItems`, JSON.stringify([]));
+        localStorage.setItem(`latestOrder`, JSON.stringify([]));
+        window.location.reload(true);
+      })
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a non-2xx status code
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 401) {
+            toast.error(error.response.data.message);
+          } else if (error.response.status === 400) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error(`Server error: ${error.response.data.message}`);
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          toast.error("Network error. Please check your internet connection.");
+        } else {
+          // Something happened in setting up the request that triggered an error
+          toast.error("Request failed. Please try again later.");
+        }
+      });
   };
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
@@ -86,7 +153,7 @@ const Payment = () => {
           order.paymentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
-            type: `Credit Card`,
+            method: `Credit Card`,
           };
 
           await axios
@@ -134,7 +201,7 @@ const Payment = () => {
 
   return (
     <div className="w-full flex flex-col items-center py-8">
-      <div className="w-[90%] 1000px:w-[70%] block sm:flex">
+      <div className="w-[90%] sm:w-[70%] block sm:flex">
         <div className="w-full sm:w-[65%]">
           <PaymentInfo
             user={user}
@@ -299,13 +366,13 @@ const PaymentInfo = ({
           <div className="w-full flex border-b">
             <div
               className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
-              // onClick={() => setOpen(true)}
+              onClick={() => setOpen(true)}
             >
               Pay Now
             </div>
             {open && (
               <div className="w-full fixed top-0 left-0 bg-[#00000039] h-screen flex items-center justify-center z-[99999]">
-                <div className="w-full sm:w-[40%] h-screen sm:h-[80vh] bg-white rounded-[5px] shadow flex flex-col justify-center p-8 relative overflow-y-scroll">
+                <div className="w-[100%] sm:w-[40%] h-screen sm:h-[80vh] bg-white rounded-[5px] shadow flex flex-col justify-center p-8 relative overflow-y-scroll">
                   <div className="w-full flex justify-end p-3">
                     <RxCross1
                       size={30}
@@ -313,18 +380,18 @@ const PaymentInfo = ({
                       onClick={() => setOpen(false)}
                     />
                   </div>
-                  {/* <PayPalScriptProvider
-                      options={{
-                        "client-id":
-                          "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
-                      }}
-                    >
-                      <PayPalButtons
-                        style={{ layout: "vertical" }}
-                        onApprove={onApprove}
-                        createOrder={createOrder}
-                      />
-                    </PayPalScriptProvider> */}
+                  <PayPalScriptProvider
+                    options={{
+                      "client-id":
+                        "AQ1tK8kfYvhM6c6PNFCXN-YJcv3UfIENGkDfnpeyLHz-m-p_xYj2Gi_bUMU9bq1O28HIwUtAKSdth_1y",
+                    }}
+                  >
+                    <PayPalButtons
+                      style={{ layout: "vertical" }}
+                      onApprove={onApprove}
+                      createOrder={createOrder}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               </div>
             )}
@@ -352,7 +419,7 @@ const PaymentInfo = ({
         {/* cash on delivery */}
         {select === 3 ? (
           <div className="w-full flex">
-            <form className="w-full">
+            <form className="w-full ">
               <input
                 type="submit"
                 value="Confirm"
@@ -367,6 +434,8 @@ const PaymentInfo = ({
 };
 
 const CartData = ({ orderData }) => {
+  const shipping = orderData?.shipping?.toFixed(2);
+
   // console.log(orderData);
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -379,13 +448,13 @@ const CartData = ({ orderData }) => {
       <br />
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">Kshs: {orderData?.shipping}</h5>
+        <h5 className="text-[18px] font-[600]">Kshs: {shipping}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
         <h5 className="text-[18px] font-[600]">
-          {orderData?.discountPrice ? `kshs: ` + orderData.discountPrice : null}
+          {orderData?.discountPrice ? `kshs: ` + orderData.discountPrice : `-`}
         </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
