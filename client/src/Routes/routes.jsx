@@ -9,6 +9,7 @@ import EventsPage from "../pages/App/EventsPage";
 import FAQPage from "../pages/App/FAQPage";
 import AboutUs from "../pages/App/AboutUs";
 import ProductDetailsPage from "../pages/App/ProductDetailsPage";
+import EventDetailsPage from "../pages/App/EventDetailsPage";
 import CheckoutPage from "../pages/App/CheckoutPage";
 import PaymentPage from "../pages/App/PaymentPage";
 import OrderSuccessPage from "../pages/App/orderSuccessPage";
@@ -40,6 +41,7 @@ export {
   FAQPage,
   AboutUs,
   ProductDetailsPage,
+  EventDetailsPage,
   CheckoutPage,
   PaymentPage,
   OrderSuccessPage,

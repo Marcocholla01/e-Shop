@@ -8,19 +8,16 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllProducts,
-  getAllProductsShop,
-} from "../../../redux/actions/product";
+import { getAllEvents, getAllEventsShop } from "../../../redux/actions/event";
 import {
   addToWishList,
   removeFromWishList,
 } from "../../../redux/actions/wishList";
 import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
-import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
+import ProductDetailscard from "../../Product/ProductDetailscard/ProductDetailscard";
 
-const ProductDetails = ({ data }) => {
+const EventDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { wishList } = useSelector((state) => state.wishList);
 
@@ -33,7 +30,7 @@ const ProductDetails = ({ data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProducts(id));
+    dispatch(getAllEvents(id));
     // dispatch(getAllProductsShop(id));
   }, []);
 
@@ -92,12 +89,12 @@ const ProductDetails = ({ data }) => {
             <div className="block w-full sm:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data?.product?.images[select]?.url}
+                  src={data?.event?.images[select]?.url}
                   alt=""
                   className="w-[80%] h-[450px] object-contain overflow-hidden rounded-md m-5"
                 />
                 <div className="w-full flex">
-                  {/* {data?.product?.images?.url?.map((i, index) => (
+                  {/* {data?.event?.images?.url?.map((i, index) => (
                     <div
                       key={index}
                       className={`${
@@ -120,7 +117,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[0]?.url}
+                      src={data?.event?.images[0]?.url}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(0)}
@@ -134,7 +131,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[1]?.url}
+                      src={data?.event?.images[1]?.url}
                       alt=""
                       className=" h-[200px] overflow-hidden  rounded-md"
                       onClick={() => setSelect(1)}
@@ -148,7 +145,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[2]?.url}
+                      src={data?.event?.images[2]?.url}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(2)}
@@ -162,7 +159,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[3]?.url}
+                      src={data?.event?.images[3]?.url}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(3)}
@@ -173,18 +170,18 @@ const ProductDetails = ({ data }) => {
               <div className="w-full 800px:w-[50%] }">
                 <div className="w-full  800px:w-[50%] pt-5">
                   <h1 className={`${styles.productTitle}`}>
-                    {data?.product?.name}
+                    {data?.event?.name}
                   </h1>
-                  <p>{data?.product?.description}</p>
+                  <p>{data?.event?.description}</p>
                   <div className="flex pt-3">
                     <h4
                       className={`${styles.productDiscountPrice} text-[23px]`}
                     >
-                      {data?.product?.discountPrice} KSHS
+                      {data?.event?.discountPrice} KSHS
                     </h4>
                     <h3 className={`${styles.price} text-[18px]`}>
-                      {data?.product?.originalPrice
-                        ? data?.product?.originalPrice + "KSHS"
+                      {data?.event?.originalPrice
+                        ? data?.event?.originalPrice + "KSHS"
                         : null}
                     </h3>
                   </div>
@@ -237,29 +234,29 @@ const ProductDetails = ({ data }) => {
                       <ProductDetailscard
                         open={open}
                         setOpen={setOpen}
-                        data={data.product}
+                        data={data.event}
                       />
                     ) : null}
                   </div>
                   <div className="flex items-center mt-12 justify-between pr-3">
                     <div className="flex items-center pt-8 gap-2">
                       <div>
-                        <Link to={`/shop/preview/${data?.product?.shop?._id}`}>
+                        <Link to={`/shop/preview/${data?.event?.shop?._id}`}>
                           <img
-                            src={data?.product?.shop?.avatar?.url}
+                            src={data?.event?.shop?.avatar?.url}
                             alt=""
                             className="w-[50px] h-[50px] rounded-full mr-2 object-contain bg-slate-500"
                           />
                         </Link>
                       </div>
                       <div>
-                        <Link to={`/shop/preview/${data?.product?.shop._id}`}>
+                        <Link to={`/shop/preview/${data?.event?.shop._id}`}>
                           <h3 className={`${styles.shop_name} pb-1 pt-1 mr-8`}>
-                            {data?.product?.shop?.name}
+                            {data?.event?.shop?.name}
                           </h3>
                         </Link>
                         <h5 className="pb-3 text-[15px]">
-                          {/* ({data?.product?.shop?.ratings})Ratings */} (4/5)
+                          {/* ({data?.event?.shop?.ratings})Ratings */} (4/5)
                           Ratings
                         </h5>
                       </div>
@@ -329,18 +326,18 @@ const ProductDetailsInfo = ({ data }) => {
       {active === 1 ? (
         <>
           <h1 className={`${styles.productTitle} underline`}>
-            {data?.product?.name}
+            {data?.event?.name}
           </h1>
 
           <div className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line ">
-            <p>{data?.product?.description}</p>
+            <p>{data?.event?.description}</p>
           </div>
         </>
       ) : null}
 
       {active === 2 ? (
         <p className="w-full justify-center flex items-center min-h-[40vh]">
-          {/* {data?.shop?.product?.review} */}
+          {/* {data?.shop?.event?.review} */}
           No Reviews Yet!
         </p>
       ) : null}
@@ -348,9 +345,9 @@ const ProductDetailsInfo = ({ data }) => {
         <div className="w-full block sm:flex p-5">
           <div className="w-full sm:w-[50%]">
             <div className="flex items-center">
-              <Link to={`/shop/preview/${data.product.shop._id}`}>
+              <Link to={`/shop/preview/${data.event.shop._id}`}>
                 <img
-                  src={data?.product?.shop?.avatar?.url}
+                  src={data?.event?.shop?.avatar?.url}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
@@ -358,32 +355,32 @@ const ProductDetailsInfo = ({ data }) => {
 
               <div className="pl-2">
                 <h3 className={`${styles.shop_name}`}>
-                  {data?.product?.shop?.name}
+                  {data?.event?.shop?.name}
                 </h3>
                 <h5 className="pb-3 text-[15px]">
                   {/* ({data?.shop?.ratings}) Ratings */} (4/5) Ratings
                 </h5>
               </div>
             </div>
-            <p className="pt-2">{data?.product?.shop?.description}</p>
+            <p className="pt-2">{data?.event?.shop?.description}</p>
           </div>
           <div className="w-full sm:w-[50%] mt-5 sm:nt-0 sm:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
                 Joined on:{" "}
                 <span className="font-[500]">
-                  {data?.product?.shop?.createdAt.slice(0, 10)}
+                  {data?.event?.shop?.createdAt.slice(0, 10)}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
                 Total Products:{" "}
-                <span className="font-[500]">{data?.product?.stock}</span>
+                <span className="font-[500]">{data?.event?.stock}</span>
               </h5>
               <h5 className="font-[600] pt-3">
                 Total Reviews: <span className="font-[500]">131</span>
               </h5>
               <Link
-                to={`/shop/preview/${data.product.shop._id}`}
+                to={`/shop/preview/${data.event.shop._id}`}
                 className="inline-block"
               >
                 <div
@@ -400,4 +397,4 @@ const ProductDetailsInfo = ({ data }) => {
   );
 };
 
-export default ProductDetails;
+export default EventDetails;

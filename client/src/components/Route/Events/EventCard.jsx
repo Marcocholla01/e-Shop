@@ -3,9 +3,32 @@ import styles from "../../../styles/style";
 import CountDown from "./CountDown";
 import iphone from "../../../static/images/iphone.jpg";
 import { backend_url } from "../../../config";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../../redux/actions/cart";
+import { toast } from "react-toastify";
 
 const EventCard = ({ active, data }) => {
+  const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
+  const addTocartHandler = (data) => {
+    const isItemExist = cart && cart.find((i) => i._id === data._id);
+    if (isItemExist) {
+      toast.error(`Item already exists`);
+    } else {
+      if (data.stock < 1) {
+        toast.error(`Product Stock limited`);
+        return;
+      }
+      const cartData = { ...data, qty: 1 };
+      dispatch(addToCart(cartData));
+      toast.success(`Item added to cart successfully`);
+    }
+  };
+
   // console.log(data);
+  // console.log(cart)
   return (
     <div
       className={`w-full block bg-white rounded-lg ${
@@ -33,6 +56,19 @@ const EventCard = ({ active, data }) => {
           </span>
         </div>
         <CountDown data={data} />
+        <br />
+        <br />
+        <div className="flex items-center gap-5">
+          <Link to={`/event/${data._id}`}>
+            <div className={`${styles.button} text-white`}>See Details</div>
+          </Link>
+          <div
+            className={`${styles.button} text-white`}
+            onClick={() => addTocartHandler(data)}
+          >
+            Add to cart
+          </div>
+        </div>
       </div>
     </div>
   );

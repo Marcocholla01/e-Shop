@@ -21,6 +21,8 @@ const CreateEvent = () => {
   const [stock, setStock] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [discountPrice, setDiscountPrice] = useState(null);
+  const [originalPrice, setOriginalPrice] = useState(null);
 
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
@@ -104,6 +106,8 @@ const CreateEvent = () => {
     newForm.append("shopId", seller._id);
     newForm.append("start_date", startDate);
     newForm.append("finish_date", endDate);
+    newForm.append("discountPrice", discountPrice);
+    newForm.append("originalPrice", originalPrice);
 
     dispatch(createEvent(newForm));
   };
@@ -178,6 +182,38 @@ const CreateEvent = () => {
               value={stock}
               className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               onChange={(e) => setStock(e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+        <div className="block sm:flex items-center justify-between">
+          <div>
+            <label className="pb-2">
+              Original Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              // type="tel"
+              // pattern="[0-9]"
+              name="originalPrice"
+              id="originalPrice"
+              placeholder="Enter your product price..."
+              value={originalPrice}
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              onChange={(e) => setOriginalPrice(e.target.value)}
+            />
+          </div>
+          <br />
+          <div>
+            <label className="pb-2">Price (After Discount)</label>
+            <input
+              type="number"
+              name="discountPrice"
+              id="discountPrice"
+              placeholder="Enter your product price + discount price..."
+              value={discountPrice}
+              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              onChange={(e) => setDiscountPrice(e.target.value)}
             />
           </div>
         </div>
