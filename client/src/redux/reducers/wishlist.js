@@ -1,8 +1,8 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  wishList: localStorage.getItem(`wishListItems`)
-    ? JSON.parse(localStorage.getItem(`wishListItems`))
+  wishList: localStorage.getItem(`WishListItems`)
+    ? JSON.parse(localStorage.getItem(`WishListItems`))
     : [],
 };
 
@@ -13,7 +13,9 @@ export const wishListReducer = createReducer(initialState, {
     if (isItemExist) {
       return {
         ...state,
-        wishList: state.wishList.map((i) => (i._id == isItemExist._id ? item : i)),
+        wishList: state.wishList.map((i) =>
+          i._id == isItemExist._id ? item : i
+        ),
       };
     } else {
       return {
