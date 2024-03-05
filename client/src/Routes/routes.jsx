@@ -22,12 +22,14 @@ import ShopPreviewPage from "../pages/seller/ShopPreviewPage";
 import ShopDashboardPage from "../pages/Seller/Layout/ShopDashboardPage";
 import ShopCreateProduct from "../pages/Seller/ShopCreateProduct";
 import ShopAllProducts from "../pages/Seller/ShopAllProducts";
+import ShopOrderDetails from "../pages/seller/ShopOrderDetails";
 import ShopCreateEvent from "../pages/Seller/ShopCreateEvent";
 import ShopAllEvents from "../pages/Seller/ShopAllEvents";
 import ShopAllDisountCodes from "../pages/Seller/ShopAllDisountCodes";
 import ShopAllOrders from "../pages/Seller/ShopAllOrders";
 import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
 import OtpPage from "../pages/App/OtpPage";
+import OrderDetailsPage from "../pages/App/OrderDetailsPage";
 
 export {
   LoginPage,
@@ -54,10 +56,12 @@ export {
   ShopDashboardPage,
   ShopCreateProduct,
   ShopAllProducts,
+  ShopOrderDetails,
   ShopCreateEvent,
   ShopAllEvents,
   ShopAllDisountCodes,
   ShopAllOrders,
   AdminDashboardpage,
   OtpPage,
+  OrderDetailsPage,
 };

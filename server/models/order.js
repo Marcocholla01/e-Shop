@@ -14,13 +14,23 @@ const orderSchema = new mongoose.Schema({
     type: Object,
     required: true,
   },
+  subTotalPrice: {
+    type: Number,
+  },
+  couponDiscount: {
+    type: Number,
+  },
+  shippingCost: {
+    type: Number,
+  },
+
   totalPrice: {
     type: Number,
     required: true,
   },
   status: {
     type: String,
-    default: "proccessing",
+    default: "Processing",
   },
   paymentInfo: {
     id: {

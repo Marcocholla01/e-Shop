@@ -25,7 +25,6 @@ const ProductCard = ({ data }) => {
 
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
-  const [count, setCount] = useState("1");
 
   useEffect(() => {
     if (wishList && wishList.find((i) => i._id === data._id)) {
@@ -52,11 +51,11 @@ const ProductCard = ({ data }) => {
     if (isItemExist) {
       toast.error(`Item already exists`);
     } else {
-      if (data.stock < count) {
+      if (data.stock < 1) {
         toast.error(`Product Stock limited`);
         return;
       }
-      const cartData = { ...data, qty: count };
+      const cartData = { ...data, qty: 1 };
       dispatch(addToCart(cartData));
       toast.success(`Item added to cart successfully`);
     }
@@ -106,7 +105,9 @@ const ProductCard = ({ data }) => {
           </Link>
           <Link to={`/product/${data?._id}`}>
             <h4 className="pb-3 font-[500]">
-              {data.name.length > 50 ? data.name.slice(0,50) + "..." : data.name}
+              {data.name.length > 50
+                ? data.name.slice(0, 50) + "..."
+                : data.name}
             </h4>
 
             <div className="flex">

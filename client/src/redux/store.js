@@ -7,16 +7,15 @@ import { orderReducer } from "./reducers/order";
 import { cartReducer } from "./reducers/cart";
 import { wishListReducer } from "./reducers/wishlist";
 
-
 const Store = configureStore({
   reducer: {
     user: userReducer,
     seller: sellerReducer,
     product: productReducer,
-    order: orderReducer,
     event: eventReducer,
     cart: cartReducer,
     wishList: wishListReducer,
+    order: orderReducer,
   },
 });
 

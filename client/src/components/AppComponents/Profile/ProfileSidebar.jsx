@@ -22,11 +22,16 @@ const ProfileSidebar = ({ active, setActive }) => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+  // const clearLocalStorage = () => {
+  //   localStorage.clear();
+  // };
+
   const logoutHandler = () => {
     axios
       .get(`${BASE_URL}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
+        // clearLocalStorage();
         navigate(`/`);
         window.location.reload(true);
       })

@@ -116,6 +116,9 @@ const Payment = () => {
     shippingAddress: orderData?.shippingAddress,
     user: user && user,
     totalPrice: orderData?.totalPrice,
+    couponDiscount: orderData?.discountPrice,
+    shippingCost: orderData?.shipping,
+    subTotalPrice: orderData?.subTotalPrice,
   };
 
   const paymentHandler = async (e) => {

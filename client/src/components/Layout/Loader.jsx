@@ -4,7 +4,7 @@ import animationData from "../../assets/images/svg/animations/LoaderLottieFiles.
 
 const Loader = () => {
   const defaultOptions = {
-    loop: false,
+    loop: true,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {

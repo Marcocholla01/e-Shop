@@ -7,7 +7,7 @@ import CheckoutSteps from "../../components/Checkout/CheckoutSteps";
 
 const orderSuccessPage = () => {
   return (
-    <div className="w-full min-h-screen bg-[#f6f9fc]">
+    <div className="w-full min-h-screen ">
       <Header />
       <br />
       <br />
