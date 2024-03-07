@@ -123,14 +123,14 @@ const OrderDetails = () => {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className={`w-[200px] mt-2 border h-[35px] rounded-[5px] `}
+        className={`w-[300px] mt-2 border h-[35px] rounded-[5px] `}
       >
         {[
           "Processing",
           "Cancelled",
           "Transfered to delivery partner",
           "shipping",
-          "Recieved",
+          "Received",
           "On the way",
           "Delivered",
         ]
@@ -140,13 +140,31 @@ const OrderDetails = () => {
               "Cancelled",
               "Transfered to delivery partner",
               "shipping",
-              "Recieved",
+              "Received",
               "On the way",
               "Delivered",
             ].indexOf(data?.status)
           )
           .map((option, index) => (
-            <option value={option} key={index}>
+            <option
+              value={option}
+              key={index}
+              disabled={
+                (data?.status === "Processing" &&
+                  ["shipping", "Received", "On the way", "Delivered"].includes(
+                    option
+                  )) ||
+                (data?.status === "Cancelled" &&
+                  [
+                    "shipping",
+                    "Received",
+                    "On the way",
+                    "Delivered",
+                    "Processing",
+                    "Transfered to delivery partner",
+                  ].includes(option))
+              }
+            >
               {option}{" "}
             </option>
           ))}

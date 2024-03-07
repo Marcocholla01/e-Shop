@@ -19,22 +19,25 @@ import {
 import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
 import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
+import Ratings from "../Ratings/Ratings";
 
 const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { wishList } = useSelector((state) => state.wishList);
+  const { products } = useSelector((state) => state.product);
+
 
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
-  const [select, setSelect] = useState(1);
+  const [select, setSelect] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getAllProductsShop(id));
     dispatch(getAllProducts(id));
-    // dispatch(getAllProductsShop(id));
   }, []);
 
   const handleMessageSubmit = () => {
@@ -84,6 +87,12 @@ const ProductDetails = ({ data }) => {
     }
   };
 
+  // Calculate totalreviewslength
+  const totalReviewslength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  console.log(products);
   return (
     <div className="bg-white">
       {data ? (
@@ -277,7 +286,10 @@ const ProductDetails = ({ data }) => {
               </div>
             </div>
           </div>
-          <ProductDetailsInfo data={data} />
+          <ProductDetailsInfo
+            data={data}
+            totalReviewslength={totalReviewslength}
+          />
           <br />
           <br />
         </div>
@@ -286,8 +298,9 @@ const ProductDetails = ({ data }) => {
   );
 };
 
-const ProductDetailsInfo = ({ data }) => {
+const ProductDetailsInfo = ({ data, totalReviewslength }) => {
   // console.log(data);
+  // console.log(totalReviewslength);
   const [active, setActive] = useState(1);
   return (
     <div className=" bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
@@ -339,10 +352,31 @@ const ProductDetailsInfo = ({ data }) => {
       ) : null}
 
       {active === 2 ? (
-        <p className="w-full justify-center flex items-center min-h-[40vh]">
-          {/* {data?.shop?.product?.review} */}
-          No Reviews Yet!
-        </p>
+        <div className="w-full  flex flex-col items-center min-h-[40vh] p-3 overflow-y-scroll">
+          {data &&
+            data?.product?.reviews?.map((item, index) => (
+              <div className="w-full flex my-2">
+                <img
+                  src={`${item.user.avatar.url}`}
+                  className="w-[50px] h-[50px] rounded-full"
+                  alt=""
+                />
+                <div className="pl-2">
+                  <div className="w-full flex items-center">
+                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                  </div>
+                  <Ratings rating={item.rating} />
+
+                  <p>{item.comment} </p>
+                </div>
+              </div>
+            ))}
+          <div className="w-full flex justify-center">
+            {data && data?.product?.reviews.length === 0 && (
+              <h5> No reviews yet for this product</h5>
+            )}
+          </div>
+        </div>
       ) : null}
       {active === 3 ? (
         <div className="w-full block sm:flex p-5">
@@ -380,7 +414,10 @@ const ProductDetailsInfo = ({ data }) => {
                 <span className="font-[500]">{data?.product?.stock}</span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Reviews: <span className="font-[500]">131</span>
+                Total Reviews:{" "}
+                <span className="font-[500]">
+                  {data?.product?.reviews?.length}{" "}
+                </span>
               </h5>
               <Link
                 to={`/shop/preview/${data.product.shop._id}`}

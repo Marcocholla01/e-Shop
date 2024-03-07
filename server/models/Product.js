@@ -34,6 +34,25 @@ const productSchema = new mongoose.Schema({
       url: String,
     },
   ],
+  reviews: [
+    {
+      user: {
+        type: Object,
+      },
+      rating: {
+        type: Number,
+      },
+      comment: {
+        type: String,
+      },
+      productid: {
+        type: String,
+      },
+    },
+  ],
+  ratings: {
+    type: Number,
+  },
 
   // images: [
   //   {

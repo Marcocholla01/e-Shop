@@ -2,11 +2,12 @@ const express = require(`express`);
 const router = express.Router();
 const Product = require("../models/Product");
 const Shop = require("../models/shop");
+const Order = require(`../models/order`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../multer");
 const uuid = require("uuid");
-const { isSeller } = require("../middlewares/auth");
+const { isSeller, isAuthenticated } = require("../middlewares/auth");
 const fs = require(`fs`);
 
 // create product Api
@@ -144,6 +145,7 @@ router.get(
   })
 );
 
+// Get a product based on ID
 router.get(
   `/:id`,
   catchAsyncErrors(async (req, res, next) => {
@@ -152,6 +154,63 @@ router.get(
       res.status(200).json({
         success: true,
         product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// reivew for a product
+router.put(
+  `/create-new-review`,
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { rating, user, comment, productId, orderId } = req.body;
+
+      const product = await Product.findById(productId);
+
+      const review = {
+        user,
+        rating,
+        comment,
+        productId,
+      };
+
+      const isReviewed = product.reviews.find(
+        (rev) => rev.user._id === req.user._id
+      );
+
+      if (isReviewed) {
+        product.reviews.forEach((rev) => {
+          if (rev.user._id === req.user._id) {
+            (rev.rating = rating), (rev.comment = comment), (rev.user = user);
+          }
+        });
+      } else {
+        product.reviews.push(review);
+      }
+
+      let avg = 0;
+      product.reviews.forEach((rev) => {
+        avg += rev.rating;
+      });
+      product.ratings = avg / product.reviews.length;
+
+      await product.save({ validateBeforeSave: false });
+
+      await Order.findByIdAndUpdate(
+        orderId,
+        {
+          $set: { "cart.$[elem].isReviewed": true },
+        },
+        { arrayFilters: [{ "elem._id": productId }], new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: `product reviewed succesfully!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

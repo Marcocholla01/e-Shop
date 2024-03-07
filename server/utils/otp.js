@@ -363,9 +363,9 @@ ul.social li{
             		<td>
             			<div class="text" style="padding: 0 2.5em; text-align: center;">
             				<h2>Please verify your email</h2>
-            				<h4>Thank you for creating an account with us. Use the following USER ID and OTP to complete your Sign Up procedures. OTP is valid for 30 minutes</h4>
+            				<h4>Thank you for creating an account with us. Use the following SECRET KEY and OTP to complete your Sign Up procedures. OTP is valid for 30 minutes</h4>
 
-							<h3 style="margin: 0 auto;width: max-content;padding: 0 10px;border-radius: 4px; text:bold;">USER ID: ${newUser}</h3>
+							<h3 style="margin: 0 auto;width: max-content;padding: 0 10px;border-radius: 4px; text:bold;">SECRET KEY: ${newUser}</h3>
             				<h2 style="margin: 0 auto;width: max-content;padding: 0 10px; border-radius: 4px;">OTP:  ${OTP}</h2>
             			</div>
             		</td>

@@ -238,8 +238,8 @@ const Header = ({ activeHeading }) => {
       {/* Mobile Screen Header */}
       <div
         className={`${
-          active === true ? "shadow-sm fixed top-0 left-0 z-[10]" : null
-        }"w-full  h-[90px] bg-[#fff] z-50 top-0 left-0 w-full shadow-sm sm:hidden "`}
+          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
+        }"w-full  h-[90px] bg-[#fff] z-40 top-0 left-0 w-full shadow-sm sm:hidden "`}
       >
         <div className="w-full pt-4 flex justify-between">
           <div>
@@ -263,6 +263,7 @@ const Header = ({ activeHeading }) => {
               <AiOutlineShoppingCart
                 size={35}
                 className="mt-3 cursor-pointer"
+                onClick={() => setOpenCart(true)}
               />
               <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                 {cart && cart.length}
@@ -271,18 +272,26 @@ const Header = ({ activeHeading }) => {
           </div>
         </div>
       </div>
+      {/* Cart popup */}
+      {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
 
+      {/* wishList popup */}
+      {openWishlist ? <WishList setOpenWishList={setOpenWishList} /> : null}
       {/* Header sideBar  */}
 
       {open && (
         <div
-          className={`fixed w-full bg-[#0000005f] z-50 h-full top-0 left-0 sm:hidden`}
+          className={`fixed w-full bg-[#0000005f] z-40 h-full top-0 left-0 sm:hidden`}
         >
           <div className="fixed overflow-y-scroll h-screen left-0 z-10 w-[60%] bg-[#fff] sm:hidden">
             <div className="w-full justify-between flex pr-3">
               <div>
                 <div className="relative mr-[15px]">
-                  <AiOutlineHeart size={30} className="mt-5 ml-3" />
+                  <AiOutlineHeart
+                    size={30}
+                    className="mt-5 ml-3 cursor-pointer"
+                    onClick={() => setOpenWishList(true)}
+                  />
                   <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                     {wishList && wishList.length}
                   </span>

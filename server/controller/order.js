@@ -113,7 +113,7 @@ router.put(
 
       order.status = req.body.status;
 
-      if (req.body.status === `delivered`) {
+      if (req.body.status === `Delivered`) {
         order.deliveredAt = Date.now();
         order.paymentInfo.status = `Succeeded`;
       }

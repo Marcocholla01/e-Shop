@@ -49,7 +49,7 @@ const EventDetails = ({ data }) => {
   };
 
   useEffect(() => {
-    if (wishList && wishList.find((i) => i._id === data._id)) {
+    if (wishList && wishList.find((i) => i._id === data?._id)) {
       setClick(true);
     } else {
       setClick(false);

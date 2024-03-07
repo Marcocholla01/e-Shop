@@ -67,7 +67,8 @@ router.post(
       await verificationToken.save();
 
       await sendMail({
-        from: "accounts@shop0.com",
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
         email: newUser.email,
         subject: "Activate Your Account",
         html: generateEmailtemplate(OTP, newUser._id),
@@ -246,7 +247,8 @@ router.post(
         await verificationToken.save();
 
         await sendMail({
-          from: "accounts@shop0.com",
+          // from: "accounts@shop0.com",
+          from: process.env.SMTP_MAIL,
           email: newUser.email,
           subject: "Activate Your Account",
           html: generateEmailtemplate(OTP),
