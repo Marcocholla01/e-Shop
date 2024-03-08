@@ -14,13 +14,24 @@ const DashboardHero = () => {
   const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.product);
+  const [deliveredOrder, setDeliveredOrder] = useState(null);
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
     dispatch(getAllProductsShop(seller._id));
+
+    const orderData =
+      orders && orders.filter((item) => item.status === `Delivered`);
+    setDeliveredOrder(orderData);
   }, [dispatch]);
 
-  //   const availableBalance = seller && seller;
+  const totalEarningsWithoutTax =
+    deliveredOrder &&
+    deliveredOrder.reduce((acc, item) => acc + item.totalPrice, 0);
+
+  const serviceCharge = totalEarningsWithoutTax * 0.1;
+
+  const availableBalance = (totalEarningsWithoutTax - serviceCharge).toFixed(2);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -75,12 +86,15 @@ const DashboardHero = () => {
 
   const row = [];
 
-  row.push({
-    id: "7585599",
-    itemsQty: 10,
-    total: 100,
-    status: "Delivered",
-  });
+  orders &&
+    orders.forEach((item) => {
+      row.push({
+        id: item._id,
+        itemsQty: item.cart.length,
+        total: "KSHS " + item.totalPrice,
+        status: item.status,
+      });
+    });
 
   return (
     <div className="w-full p-8">
@@ -101,7 +115,7 @@ const DashboardHero = () => {
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-            {/* ${availableBalance} */} 200 KSHS
+            KSHS: {availableBalance}
           </h5>
           <Link to="/dashboard-withdraw-money">
             <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>
@@ -118,7 +132,7 @@ const DashboardHero = () => {
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-            {orders && orders.length} 20
+            {orders && orders.length}
           </h5>
           <Link to="/dashboard-orders">
             <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>

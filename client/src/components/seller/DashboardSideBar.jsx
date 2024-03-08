@@ -158,10 +158,10 @@ const DashboardSideBar = ({ active }) => {
       </div>
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/dashboard-settings`} className="w-full flex items-center">
-          <CiSettings size={30} color={active === 10 ? "red" : "#555"} />
+          <CiSettings size={30} color={active === 11 ? "red" : "#555"} />
           <h5
             className={`pl-3 ${
-              active === 10 ? "text-[red]" : ""
+              active === 11 ? "text-[red]" : ""
             } hidden sm:block`}
           >
             Settings

@@ -30,6 +30,8 @@ import ShopAllOrders from "../pages/Seller/ShopAllOrders";
 import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
 import OtpPage from "../pages/App/OtpPage";
 import OrderDetailsPage from "../pages/App/OrderDetailsPage";
+import TrackOrderPage from "../pages/App/TrackOrderPage";
+import ShopRefundPage from "../pages/seller/ShopRefundPage";
 
 export {
   LoginPage,
@@ -64,4 +66,6 @@ export {
   AdminDashboardpage,
   OtpPage,
   OrderDetailsPage,
+  TrackOrderPage,
+  ShopRefundPage,
 };

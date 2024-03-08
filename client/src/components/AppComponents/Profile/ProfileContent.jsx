@@ -476,159 +476,15 @@ const AllRefundOrders = () => {
 };
 
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: "745gcgdje7464535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: "Processing",
-    },
-    {
-      _id: "57575784584535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: "Cancelled",
-    },
-    {
-      _id: "745gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "9hggx5645gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "7ertvjjhyg45gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "7turghdx45gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "mfgdbd45gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "989kg45gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "45gbgf745gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "4tg745gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "745wqagcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-    {
-      _id: "745dggcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  // console.log(orders);
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -638,9 +494,16 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        const status = params.getValue(params.id, "status"); // Get the status value from the cell
+
+        // Apply Tailwind CSS classes directly based on the status
+        if (status === "Delivered" || "delivered") {
+          return "text-green-500";
+        } else if (status === "Processing" || "processing") {
+          return "text-blue-500";
+        } else {
+          return "text-red-500";
+        }
       },
     },
     {
@@ -669,7 +532,7 @@ const TrackOrder = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/user/order/${params.id}`}>
+            <Link to={`/user/track-order/${params.id}`}>
               <Button>
                 <MdTrackChanges size={20} />
               </Button>
@@ -686,9 +549,9 @@ const TrackOrder = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
-        total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        itemsQty: item.cart.length,
+        total: "KSHS " + item.totalPrice,
+        status: item.status,
       });
     });
   return (

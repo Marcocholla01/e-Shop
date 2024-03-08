@@ -144,7 +144,7 @@ router.put(
   })
 );
 
-//Give a refund
+//Give a refund ==== user
 router.put(
   `/order-refund/:id`,
   isAuthenticated,
@@ -165,6 +165,46 @@ router.put(
         message: `Request sent successfully`,
         order,
       });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+//accept refund ==== seller
+router.put(
+  `/order-refund-success/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id);
+
+      if (!order) {
+        return next(new ErrorHandler(`Order no found with this ID`, 404));
+      }
+
+      order.status = req.body.status;
+
+      await order.save({ validateBeforeSave: false });
+
+      res.status(200).json({
+        success: true,
+        message: `order refund successfully`,
+      });
+
+      if (req.body.status === `Refund Success`)
+        order.cart.forEach(async (o) => {
+          await updateOrder(o._id, o.qty);
+        });
+
+      async function updateOrder(id, qty) {
+        const product = await Product.findById(id);
+
+        product.stock += qty;
+        product.sold_out -= qty;
+
+        await product.save({ validateBeforeSave: false });
+      }
     } catch (error) {
       return next(new ErrorHandler(error, 500));
     }

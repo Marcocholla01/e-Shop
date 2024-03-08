@@ -93,7 +93,7 @@ const UserOrderDetails = () => {
       )
       .then((res) => {
         toast.success(res.data.message);
-
+        dispatch(getAllOrdersOfUser(user._id));
       })
       .catch((error) => {
         toast.error(error.response.data.message);
