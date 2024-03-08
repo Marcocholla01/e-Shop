@@ -380,42 +380,18 @@ const AllOrders = () => {
 };
 
 const AllRefundOrders = () => {
-  const orders = [
-    {
-      _id: "745gcgdje7464535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: "Processing",
-    },
-    {
-      _id: "57575784584535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-      ],
-      totalPrice: 120,
-      orderStatus: "Cancelled",
-    },
-    {
-      _id: "745gcgdje749964535",
-      orderItems: [
-        {
-          name: "Iphone 14 pro max",
-        },
-        {
-          name: "mac book air",
-        },
-      ],
-      totalPrice: 420,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === `Processing refund`);
+
+  // console.log(orders);
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -425,9 +401,16 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        const status = params.getValue(params.id, "status"); // Get the status value from the cell
+
+        // Apply Tailwind CSS classes directly based on the status
+        if (status === "Delivered" || "delivered") {
+          return "text-green-500";
+        } else if (status === "Processing" || "processing") {
+          return "text-blue-500";
+        } else {
+          return "text-red-500";
+        }
       },
     },
     {
@@ -469,13 +452,13 @@ const AllRefundOrders = () => {
 
   const row = [];
 
-  orders &&
-    orders.forEach((item) => {
+  eligibleOrders &&
+    eligibleOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
-        total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        itemsQty: item.cart.length,
+        total: "KSHS " + item.totalPrice,
+        status: item.status,
       });
     });
 

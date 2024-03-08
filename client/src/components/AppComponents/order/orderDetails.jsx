@@ -80,7 +80,25 @@ const UserOrderDetails = () => {
       });
   };
 
-  const refundHandler = async () => {};
+  const refundHandler = async () => {
+    await axios
+      .put(
+        `${BASE_URL}/order/order-refund/${id}`,
+        {
+          status: `Processing refund`,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
@@ -238,7 +256,7 @@ const UserOrderDetails = () => {
       <br />
       <br />
       <div className="w-full justify-between sm:flex">
-        <div className="w-full sm:w-[60%]">
+        <div className="w-full sm:w-auto">
           <h4 className="pt-3 text-[20px] font-[600]">Shipping Addresses:</h4>
           <h4 className="pt-3 text-[20px]">
             {data?.shippingAddress.address1 +
@@ -249,7 +267,7 @@ const UserOrderDetails = () => {
           <h4 className="text-[20px]">{data?.shippingAddress.city} </h4>
           <h4 className="text-[20px]">{data?.user?.phoneNumber} </h4>
         </div>
-        <div className="w-full sm:w-[40%]">
+        <div className="w-full sm:w-auto">
           <h4 className="pt-3 text-[20px] font-[600]">Payment Info:</h4>
           <h4 className="pt-3 text-[20px]">
             Mode:{" "}
@@ -260,7 +278,7 @@ const UserOrderDetails = () => {
             {data?.paymentInfo.status ? data?.paymentInfo?.status : "Not Paid"}{" "}
           </h4>
         </div>
-        <div className="w-full sm:w-[10%]">
+        <div className="w-full sm:w-auto">
           <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
           <h4 className={`pt-3 text-[20px]  `}>{data?.status}</h4>
         </div>
