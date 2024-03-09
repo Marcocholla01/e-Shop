@@ -7,9 +7,12 @@ import { HiOutlineReceiptRefund } from "react-icons/hi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { VscNewFile } from "react-icons/vsc";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
 const DashboardSideBar = ({ active }) => {
+  const { isLoading, seller } = useSelector((state) => state.seller);
+  const { id } = useParams();
   return (
     <div
       className={`w-full h-[80vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-8`}
@@ -156,8 +159,11 @@ const DashboardSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-      <div className={`w-full flex items-center p-4`}>
-        <Link to={`/dashboard-settings`} className="w-full flex items-center">
+      {/* <div className={`w-full flex items-center p-4`}>
+        <Link
+          to={`/dashboard-settings/${id}`}
+          className="w-full flex items-center"
+        >
           <CiSettings size={30} color={active === 11 ? "red" : "#555"} />
           <h5
             className={`pl-3 ${
@@ -167,7 +173,7 @@ const DashboardSideBar = ({ active }) => {
             Settings
           </h5>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

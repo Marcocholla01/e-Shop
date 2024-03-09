@@ -31,28 +31,28 @@ const shopSchema = new mongoose.Schema({
     required: true,
   },
   phoneNumber: [{ type: Number }],
-  //   addresses: [
-  //     {
-  //       country: {
-  //         type: String,
-  //       },
-  //       city: {
-  //         type: String,
-  //       },
-  //       address1: {
-  //         type: String,
-  //       },
-  //       address2: {
-  //         type: String,
-  //       },
-  //       zipCode: {
-  //         type: Number,
-  //       },
-  //       addressType: {
-  //         type: String,
-  //       },
-  //     },
-  //   ],
+  addresses: [
+    {
+      country: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      address1: {
+        type: String,
+      },
+      address2: {
+        type: String,
+      },
+      zipCode: {
+        type: Number,
+      },
+      addressType: {
+        type: String,
+      },
+    },
+  ],
   role: {
     type: String,
     default: "seller",
@@ -60,12 +60,15 @@ const shopSchema = new mongoose.Schema({
   avatar: {
     public_id: {
       type: String,
-      required: true,
+      // required: true,
     },
     url: {
       type: String,
       default: defaultAvatarUrl,
-      required: true,
+      // required: true,
+    },
+    filename: {
+      type: String,
     },
   },
   description: {

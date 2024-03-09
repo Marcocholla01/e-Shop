@@ -32,6 +32,7 @@ import OtpPage from "../pages/App/OtpPage";
 import OrderDetailsPage from "../pages/App/OrderDetailsPage";
 import TrackOrderPage from "../pages/App/TrackOrderPage";
 import ShopRefundPage from "../pages/seller/ShopRefundPage";
+import ShopSettingsPage from "../pages/seller/ShopSettingsPage";
 
 export {
   LoginPage,
@@ -68,4 +69,5 @@ export {
   OrderDetailsPage,
   TrackOrderPage,
   ShopRefundPage,
+  ShopSettingsPage,
 };

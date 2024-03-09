@@ -44,6 +44,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopRefundPage,
+  ShopSettingsPage,
 } from "./Routes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -256,6 +257,15 @@ function App() {
                   element={
                     <SellerProtectedRoute>
                       <ShopAllEvents />
+                    </SellerProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="dashboard-settings/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <ShopSettingsPage />
                     </SellerProtectedRoute>
                   }
                 />

@@ -236,7 +236,7 @@ const CreateProduct = () => {
           />
           <div className="flex flex-wrap w-full items-center">
             <label htmlFor="upload">
-              <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
+              <AiOutlinePlusCircle size={30} className="mt-3 cursor-pointer" color="#555" />
             </label>
             {images &&
               images.map((image) => (

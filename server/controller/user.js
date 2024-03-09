@@ -15,6 +15,9 @@ const VerificationToken = require("../models/activationToken");
 const { generateOTP, generateEmailtemplate } = require("../utils/otp");
 const { isValidObjectId } = require("mongoose");
 const path = require("path");
+const { promisify } = require("util");
+const accessAsync = promisify(fs.access);
+const unlinkAsync = promisify(fs.unlink);
 
 //create user
 router.post(
@@ -373,10 +376,6 @@ router.put(
 );
 
 //update user avatar
-const { promisify } = require("util");
-const accessAsync = promisify(fs.access);
-const unlinkAsync = promisify(fs.unlink);
-
 router.put(
   `/update-avatar`,
   isAuthenticated,

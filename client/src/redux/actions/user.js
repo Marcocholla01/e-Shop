@@ -71,14 +71,14 @@ export const updateUserInfomation =
         payload: error.response.data.message,
       });
     }
-    console.log(
-      "newform is ",
-      email,
-      password,
-      phoneNumber,
-      name,
-      "from the frontend"
-    );
+    // console.log(
+    //   "newform is ",
+    //   email,
+    //   password,
+    //   phoneNumber,
+    //   name,
+    //   "from the frontend"
+    // );
   };
 
 // update user Address
