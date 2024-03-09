@@ -29,7 +29,7 @@ const WithdrawMoney = () => {
 
   const availableBalance = (totalEarningsWithoutTax - serviceCharge).toFixed(2);
   return (
-    <div className="w-full h-[80vh] p-8 pb-0 ">
+    <div className="w-full h-[100vh] p-5 pb-0 ">
       <div className="w-full bg-white h-full rounded flex flex-col items-center justify-center">
         <h5 className="20px pb-4 ">
           Available Balance:{" "}

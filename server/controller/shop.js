@@ -218,11 +218,11 @@ router.put(
         req.body;
 
       const seller = await Shop.findById(req.params.id).select(`+password`);
-      console.log(seller);
+      // console.log(seller);
       if (!seller) {
         return res.status(404).json({
           success: false,
-          message: "User not found. Please check your credentials.",
+          message: "Shop not found. Please check your credentials.",
         });
       }
       const isPasswordValid = await seller.comparePassword(password);
@@ -243,6 +243,58 @@ router.put(
         success: true,
         message: `information updated successfully`,
         seller,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// update seller password
+router.put(
+  "/update-seller-password",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { oldPassword, newPassword, confirmPassword, email } = req.body;
+
+      // console.log(req.body);
+
+      // Find the seller by ID
+      const seller = await Shop.findOne({ email }).select("+password");
+
+      // Check if the seller exists
+      if (!seller) {
+        return res.status(404).json({
+          success: false,
+          message: "Shop not found",
+        });
+      }
+
+      // Validate old password
+      const isPasswordValid = await seller.comparePassword(oldPassword);
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: "Old password is incorrect",
+        });
+      }
+
+      // Check if new password matches confirmPassword
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "Passwords do not match",
+        });
+      }
+
+      // Update seller's password
+      seller.password = newPassword;
+      await seller.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

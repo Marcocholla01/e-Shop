@@ -68,7 +68,18 @@ const AllSettings = () => {
       });
   };
   const updateShopHandler = async (e) => {
-    e.prevntDefault();
+    e.preventDefault();
+    if (
+      !description ||
+      !password ||
+      !phoneNumber ||
+      !name ||
+      !zipCode ||
+      !address
+    ) {
+      return toast.error(`Please fill all the fields`);
+    }
+
     await axios
       .put(
         `${BASE_URL}/shop/update-shop-info/${id}`,
@@ -83,12 +94,13 @@ const AllSettings = () => {
 
         {
           withCredentials: true,
-        },
-        console.log(description, password, phoneNumber, name, zipCode, address)
+        }
+        // console.log(description, password, phoneNumber, name, zipCode, address)
       )
       .then((response) => {
         toast.success(response.data.message);
-        // dispatch(loadSeller);
+        dispatch(loadSeller);
+        window.location.reload(true);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -99,151 +111,154 @@ const AllSettings = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
-      <div className="flex w-full sm:w-[80%] flex-col justify-center my-5">
-        <div className="w-full flex flex-col items-center justify-center">
-          <div className="relative">
-            <img
-              src={
-                avatar
-                  ? URL.createObjectURL(avatar)
-                  : `${backend_url}/uploads/${seller.avatar.filename}`
-              }
-              className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
-              alt=""
-            />
-            <div className="absolute flex items-center cursor-pointer rounded-full bg-[#e3e9ee] w-[30px] h-[30px] bottom-[10px] right-[10px]">
-              <input
-                type="file"
-                id="image"
-                className="hidden"
-                onChange={handleImage}
-              />
-              <label htmlFor="image">
-                <AiOutlineCamera
-                  size={20}
-                  className="relative left-1 cursor-pointer"
+      <div className="w-full h-[100vh] p-5 pb-0 ">
+        <div className="w-full bg-white h-full rounded flex flex-col items-center justify-center">
+          <div className="flex w-full sm:w-[80%] flex-col justify-center my-5">
+            <div className="w-full flex flex-col items-center justify-center">
+              <div className="relative">
+                <img
+                  src={
+                    avatar
+                      ? URL.createObjectURL(avatar)
+                      : `${backend_url}/uploads/${seller.avatar.filename}`
+                  }
+                  className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
+                  alt=""
                 />
-              </label>
+                <div className="absolute flex items-center cursor-pointer rounded-full bg-[#e3e9ee] w-[30px] h-[30px] bottom-[10px] right-[10px]">
+                  <input
+                    type="file"
+                    id="image"
+                    className="hidden"
+                    onChange={handleImage}
+                  />
+                  <label htmlFor="image">
+                    <AiOutlineCamera
+                      size={20}
+                      className="relative left-1 cursor-pointer"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <form
+                aria-required={true}
+                className="w-full px-5 flex flex-col justify-center items-center"
+                onSubmit={updateShopHandler}
+              >
+                <div className="w-[100%] sm:w-[50%] mt-10">
+                  <label className="block pb-2">Shop Name</label>
+                  <div className={`mt-1 relative`}>
+                    <input
+                      type="name"
+                      placeholder={`${seller.name}`}
+                      name=""
+                      id=""
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3">
+                  <label className="block pb-2">Shop Description</label>
+                  <div className={`mt-1 relative`}>
+                    <textarea
+                      type="name"
+                      cols={10}
+                      rows={5}
+                      placeholder={`${
+                        seller.description
+                          ? seller.description
+                          : `Enter your shop description`
+                      }`}
+                      name=""
+                      id=""
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3">
+                  <label className="block pb-2">Shop Address</label>
+                  <div className={`mt-1 relative`}>
+                    <input
+                      type="name"
+                      placeholder={`${seller.address}`}
+                      name=""
+                      id=""
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3">
+                  <label className="block pb-2">Shop Phone Number</label>
+                  <div className={`mt-1 relative`}>
+                    <input
+                      type="number"
+                      placeholder={`${seller.phoneNumber}`}
+                      name=""
+                      id=""
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3">
+                  <label className="block pb-2">Shop Zip Code</label>
+                  <div className={`mt-1 relative`}>
+                    <input
+                      type="name"
+                      placeholder={`${seller.zipCode}`}
+                      name=""
+                      id=""
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={zipCode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3 ">
+                  <label className="block pb-2">Enter Your Password</label>
+                  <div className={`mt-1 relative`}>
+                    <input
+                      type={visible ? "text" : "password"}
+                      name=""
+                      id=""
+                      placeholder="Enter Your Password"
+                      className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {visible ? (
+                      <AiOutlineEye
+                        className="absolute right-10 top-1 cursor-pointer"
+                        size={25}
+                        onClick={() => setVisible(false)}
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        className="absolute right-10 top-1 cursor-pointer"
+                        size={25}
+                        onClick={() => setVisible(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="mt-7 group w-[250px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-700 hover:bg-blue-600 uppercase"
+                >
+                  submit
+                </button>
+              </form>
             </div>
           </div>
-
-          <form
-            aria-required={true}
-            className="w-full px-5 flex flex-col justify-center items-center"
-            onSubmit={updateShopHandler}
-          >
-            <div className="w-[100%] sm:w-[50%] mt-10">
-              <label className="block pb-2">Shop Name</label>
-              <div className={`mt-1 relative`}>
-                <input
-                  type="name"
-                  placeholder={`${seller.name}`}
-                  name=""
-                  id=""
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="w-[100%] sm:w-[50%] mt-3">
-              <label className="block pb-2">Shop Description</label>
-              <div className={`mt-1 relative`}>
-                <textarea
-                  type="name"
-                  cols={10}
-                  rows={5}
-                  placeholder={`${
-                    seller.description
-                      ? seller.description
-                      : `Enter your shop description`
-                  }`}
-                  name=""
-                  id=""
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="w-[100%] sm:w-[50%] mt-3">
-              <label className="block pb-2">Shop Address</label>
-              <div className={`mt-1 relative`}>
-                <input
-                  type="name"
-                  placeholder={`${seller.address}`}
-                  name=""
-                  id=""
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="w-[100%] sm:w-[50%] mt-3">
-              <label className="block pb-2">Shop Phone Number</label>
-              <div className={`mt-1 relative`}>
-                <input
-                  type="number"
-                  placeholder={`${seller.phoneNumber}`}
-                  name=""
-                  id=""
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="w-[100%] sm:w-[50%] mt-3">
-              <label className="block pb-2">Shop Zip Code</label>
-              <div className={`mt-1 relative`}>
-                <input
-                  type="name"
-                  placeholder={`${seller.zipCode}`}
-                  name=""
-                  id=""
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  value={zipCode}
-                  onChange={(e) => setZipCode(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="w-[100%] sm:w-[50%] mt-3 ">
-              <label className="block pb-2">Enter Your Password</label>
-              <div className={`mt-1 relative`}>
-                <input
-                  type={visible ? "text" : "password"}
-                  name=""
-                  id=""
-                  placeholder="Enter Your Password"
-                  className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                {visible ? (
-                  <AiOutlineEye
-                    className="absolute right-10 top-1 cursor-pointer"
-                    size={25}
-                    onClick={() => setVisible(false)}
-                  />
-                ) : (
-                  <AiOutlineEyeInvisible
-                    className="absolute right-10 top-1 cursor-pointer"
-                    size={25}
-                    onClick={() => setVisible(true)}
-                  />
-                )}
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="mt-7 group w-[250px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-700 hover:bg-blue-600 uppercase"
-            >
-              submit
-            </button>
-          </form>
         </div>
       </div>
     </div>

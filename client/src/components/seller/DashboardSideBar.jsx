@@ -4,7 +4,7 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
-import { MdOutlineLocalOffer } from "react-icons/md";
+import { MdOutlineLocalOffer, MdOutlineLockPerson } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { VscNewFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
@@ -15,7 +15,7 @@ const DashboardSideBar = ({ active }) => {
   const { id } = useParams();
   return (
     <div
-      className={`w-full h-[80vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-8`}
+      className={`w-full h-[100vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-8`}
     >
       {/* Single Items */}
       <div className={`w-full flex items-center p-4`}>
@@ -159,9 +159,27 @@ const DashboardSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-      {/* <div className={`w-full flex items-center p-4`}>
+      <div className={`w-full flex items-center p-4`}>
         <Link
-          to={`/dashboard-settings/${id}`}
+          to={`/change-password/${seller._id}`}
+          className="w-full flex items-center"
+        >
+          <MdOutlineLockPerson
+            size={30}
+            color={active === 12 ? "red" : "#555"}
+          />
+          <h5
+            className={`pl-3 ${
+              active === 12 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
+            Change Password
+          </h5>
+        </Link>
+      </div>
+      <div className={`w-full flex items-center p-4`}>
+        <Link
+          to={`/dashboard-settings/${seller._id}`}
           className="w-full flex items-center"
         >
           <CiSettings size={30} color={active === 11 ? "red" : "#555"} />
@@ -170,10 +188,10 @@ const DashboardSideBar = ({ active }) => {
               active === 11 ? "text-[red]" : ""
             } hidden sm:block`}
           >
-            Settings
+            Shop Settings
           </h5>
         </Link>
-      </div> */}
+      </div>
     </div>
   );
 };

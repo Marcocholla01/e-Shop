@@ -46,6 +46,7 @@ import {
   ShopRefundPage,
   ShopSettingsPage,
   ShopWithdrawMoneyPage,
+  ShopChangePasswordPage,
 } from "./Routes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -267,6 +268,14 @@ function App() {
                   element={
                     <SellerProtectedRoute>
                       <ShopSettingsPage />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="change-password/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <ShopChangePasswordPage />
                     </SellerProtectedRoute>
                   }
                 />

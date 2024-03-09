@@ -14,19 +14,19 @@ import CheckoutPage from "../pages/App/CheckoutPage";
 import PaymentPage from "../pages/App/PaymentPage";
 import OrderSuccessPage from "../pages/App/orderSuccessPage";
 import ProfilePage from "../pages/App/ProfilePage";
-import SellerRegisterPage from "../pages/Seller/SellerRegisterPage";
-import SellerActivationPage from "../pages/Seller/SellerActivationPage";
-import SellerLoginPage from "../pages/Seller/SellerLoginPage";
-import ShopHomePage from "../pages/Seller/ShopHomePage";
+import SellerRegisterPage from "../pages/seller/SellerRegisterPage";
+import SellerActivationPage from "../pages/seller/SellerActivationPage";
+import SellerLoginPage from "../pages/seller/SellerLoginPage";
+import ShopHomePage from "../pages/seller/ShopHomePage";
 import ShopPreviewPage from "../pages/seller/ShopPreviewPage";
-import ShopDashboardPage from "../pages/Seller/Layout/ShopDashboardPage";
-import ShopCreateProduct from "../pages/Seller/ShopCreateProduct";
-import ShopAllProducts from "../pages/Seller/ShopAllProducts";
+import ShopDashboardPage from "../pages/seller/Layout/ShopDashboardPage";
+import ShopCreateProduct from "../pages/seller/ShopCreateProduct";
+import ShopAllProducts from "../pages/seller/ShopAllProducts";
 import ShopOrderDetails from "../pages/seller/ShopOrderDetails";
-import ShopCreateEvent from "../pages/Seller/ShopCreateEvent";
-import ShopAllEvents from "../pages/Seller/ShopAllEvents";
-import ShopAllDisountCodes from "../pages/Seller/ShopAllDisountCodes";
-import ShopAllOrders from "../pages/Seller/ShopAllOrders";
+import ShopCreateEvent from "../pages/seller/ShopCreateEvent";
+import ShopAllEvents from "../pages/seller/ShopAllEvents";
+import ShopAllDisountCodes from "../pages/seller/ShopAllDisountCodes";
+import ShopAllOrders from "../pages/seller/ShopAllOrders";
 import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
 import OtpPage from "../pages/App/OtpPage";
 import OrderDetailsPage from "../pages/App/OrderDetailsPage";
@@ -34,6 +34,7 @@ import TrackOrderPage from "../pages/App/TrackOrderPage";
 import ShopRefundPage from "../pages/seller/ShopRefundPage";
 import ShopSettingsPage from "../pages/seller/ShopSettingsPage";
 import ShopWithdrawMoneyPage from "../pages/seller/ShopWithdrawMoneyPage";
+import ShopChangePasswordPage from "../pages/seller/ShopChangePasswordPage";
 
 export {
   LoginPage,
@@ -72,4 +73,5 @@ export {
   ShopRefundPage,
   ShopSettingsPage,
   ShopWithdrawMoneyPage,
+  ShopChangePasswordPage,
 };

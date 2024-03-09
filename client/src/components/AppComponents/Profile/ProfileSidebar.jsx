@@ -97,7 +97,7 @@ const ProfileSidebar = ({ active, setActive }) => {
           Track Order
         </span>
       </div>
-      <div
+      {/* <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(6)}
       >
@@ -107,7 +107,7 @@ const ProfileSidebar = ({ active, setActive }) => {
         >
           Payment Methods
         </span>
-      </div>
+      </div> */}
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
         onClick={() => setActive(7)}
