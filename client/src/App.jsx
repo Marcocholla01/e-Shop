@@ -45,6 +45,7 @@ import {
   TrackOrderPage,
   ShopRefundPage,
   ShopSettingsPage,
+  ShopWithdrawMoneyPage,
 } from "./Routes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -266,6 +267,14 @@ function App() {
                   element={
                     <SellerProtectedRoute>
                       <ShopSettingsPage />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="dashboard-withdraw-money"
+                  element={
+                    <SellerProtectedRoute>
+                      <ShopWithdrawMoneyPage />
                     </SellerProtectedRoute>
                   }
                 />

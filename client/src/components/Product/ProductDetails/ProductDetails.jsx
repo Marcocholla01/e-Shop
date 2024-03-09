@@ -26,7 +26,6 @@ const ProductDetails = ({ data }) => {
   const { wishList } = useSelector((state) => state.wishList);
   const { products } = useSelector((state) => state.product);
 
-
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
@@ -88,11 +87,22 @@ const ProductDetails = ({ data }) => {
   };
 
   // Calculate totalreviewslength
-  const totalReviewslength =
+  const totalReviewsLength =
     products &&
     products.reduce((acc, product) => acc + product.reviews.length, 0);
 
-  console.log(products);
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+  const averageRating = (totalRatings / totalReviewsLength).toFixed(2) || 0;
+
+  console.log(averageRating);
+  console.log(totalRatings);
+  console.log(totalReviewsLength);
   return (
     <div className="bg-white">
       {data ? (
@@ -268,8 +278,7 @@ const ProductDetails = ({ data }) => {
                           </h3>
                         </Link>
                         <h5 className="pb-3 text-[15px]">
-                          {/* ({data?.product?.shop?.ratings})Ratings */} (4/5)
-                          Ratings
+                          ({averageRating}/5)Ratings
                         </h5>
                       </div>
                     </div>
@@ -288,7 +297,7 @@ const ProductDetails = ({ data }) => {
           </div>
           <ProductDetailsInfo
             data={data}
-            totalReviewslength={totalReviewslength}
+            totalReviewsLength={totalReviewsLength}
           />
           <br />
           <br />
@@ -298,9 +307,9 @@ const ProductDetails = ({ data }) => {
   );
 };
 
-const ProductDetailsInfo = ({ data, totalReviewslength }) => {
+const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
   // console.log(data);
-  // console.log(totalReviewslength);
+  // console.log(totalReviewsLength);
   const [active, setActive] = useState(1);
   return (
     <div className=" bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">

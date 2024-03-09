@@ -42,9 +42,16 @@ const DashboardHero = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        const status = params.getValue(params.id, "status"); // Get the status value from the cell
+
+        // Apply Tailwind CSS classes directly based on the status
+        if (status === "Delivered" || "delivered") {
+          return "text-green-500";
+        } else if (status === "Processing" || "processing") {
+          return "text-blue-500";
+        } else {
+          return "text-red-500";
+        }
       },
     },
     {
@@ -73,7 +80,7 @@ const DashboardHero = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/dashboard/order/`}>
+            <Link to={`/shop/order/${params.id}`}>
               <Button>
                 <AiOutlineArrowRight size={20} />
               </Button>

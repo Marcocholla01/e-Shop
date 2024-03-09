@@ -11,6 +11,7 @@ const ShopInfo = ({ isOwner }) => {
   const [data, setData] = useState({});
 
   const { isLoading, seller } = useSelector((state) => state.seller);
+  const { products } = useSelector((state) => state.product);
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -33,7 +34,20 @@ const ShopInfo = ({ isOwner }) => {
     window.location.reload(true);
   };
 
-  // console.log(data);
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+  const averageRating = (totalRatings / totalReviewsLength).toFixed(2) || 0;
+
+  console.log(averageRating);
   return (
     <>
       <div>
@@ -67,11 +81,11 @@ const ShopInfo = ({ isOwner }) => {
         </div>
         <div className="p-3">
           <h4 className="font-[600]">Total Products</h4>
-          <h5 className="text-[#000000a6]">{data?.total_products || 10}</h5>
+          <h5 className="text-[#000000a6]">{products && products.length} </h5>
         </div>
         <div className="p-3">
           <h4 className="font-[600]">Shop Ratings</h4>
-          <h5 className="text-[#000000a6]">{data?.ratings || 4}</h5>
+          <h5 className="text-[#000000a6]">{averageRating}/5</h5>
         </div>
         <div className="p-3">
           <h4 className="font-[600]">Joined On</h4>

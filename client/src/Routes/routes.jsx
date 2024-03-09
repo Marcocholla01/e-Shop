@@ -33,6 +33,7 @@ import OrderDetailsPage from "../pages/App/OrderDetailsPage";
 import TrackOrderPage from "../pages/App/TrackOrderPage";
 import ShopRefundPage from "../pages/seller/ShopRefundPage";
 import ShopSettingsPage from "../pages/seller/ShopSettingsPage";
+import ShopWithdrawMoneyPage from "../pages/seller/ShopWithdrawMoneyPage";
 
 export {
   LoginPage,
@@ -70,4 +71,5 @@ export {
   TrackOrderPage,
   ShopRefundPage,
   ShopSettingsPage,
+  ShopWithdrawMoneyPage,
 };
