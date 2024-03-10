@@ -47,7 +47,14 @@ import {
   ShopWithdrawMoneyPage,
   ShopChangePasswordPage,
 } from "./Routes/routes";
-import { AdminDashboardPage, AdminAllSellersPage , AdminAllUsersPage} from "./Routes/AdminRoutes/routes";
+import {
+  AdminDashboardPage,
+  AdminAllSellersPage,
+  AdminAllUsersPage,
+  AdminAllOrdersPage,
+  AdminAllProductsPage,
+  AdminAllEventsPage,
+} from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
 import Store from "./redux/store";
@@ -337,6 +344,30 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminAllUsersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-orders"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllOrdersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-products"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllProductsPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-all-events"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllEventsPage />
                     </AdminProtectedRoute>
                   }
                 />

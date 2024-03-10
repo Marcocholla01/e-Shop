@@ -7,7 +7,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../multer");
 const uuid = require("uuid");
-const { isSeller, isAuthenticated } = require("../middlewares/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const fs = require(`fs`);
 
 // create product Api
@@ -141,6 +141,27 @@ router.get(
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// get all products -----Admin
+router.get(
+  `/admin-all-products`,
+  isAuthenticated,
+  isAdmin(`Admin`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await Product.find().sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   })
 );

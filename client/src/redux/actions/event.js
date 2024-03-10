@@ -19,7 +19,7 @@ export const createEvent = (newForm) => async (dispatch) => {
     );
     dispatch({
       type: "createEventSuccess",
-      payload: data.product,
+      payload: data.event,
     });
   } catch (error) {
     dispatch({
@@ -98,7 +98,30 @@ export const getAllEvents = () => async (dispatch) => {
   }
 };
 
-// Action to clear product creation state
+// get all events ---Admin
+export const adminGetAllEvents = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "adminGetAllEventsRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/event/admin-all-events`, {
+      withCredentials: true,
+    });
+    dispatch({
+      type: "adminGetAllEventsSuccess",
+      payload: data.events,
+    });
+  } catch (error) {
+    dispatch({
+      type: "adminGetAllEventsFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+
+// Action to clear event creation state
 // export const clearProductState = () => (dispatch) => {
 //   dispatch({
 //     type: "clearProductState",

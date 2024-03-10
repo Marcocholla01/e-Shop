@@ -98,6 +98,28 @@ export const getAllProducts = () => async (dispatch) => {
   }
 };
 
+// get all products ---Admin
+export const adminGetAllProducts = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "adminGetAllProductsRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/product/admin-all-products`, {
+      withCredentials: true,
+    });
+    dispatch({
+      type: "adminGetAllProductsSuccess",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "adminGetAllProductsFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Action to clear product creation state
 // export const clearProductState = () => (dispatch) => {
 //   dispatch({

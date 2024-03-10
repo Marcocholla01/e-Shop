@@ -68,7 +68,7 @@ const AdminSideBar = ({ active }) => {
         </Link>
       </div>
       <div className={`w-full flex items-center p-4`}>
-        <Link to={`/admin-users `} className="w-full flex items-center">
+        <Link to={`/admin-products `} className="w-full flex items-center">
           <BsHandbag size={30} color={active === 5 ? "red" : "#555"} />
           <h5
             className={`pl-3 ${

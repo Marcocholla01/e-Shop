@@ -4,7 +4,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { upload } = require("../multer");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller } = require("../middlewares/auth");
+const { isSeller, isAdmin, isAuthenticated } = require("../middlewares/auth");
 const fs = require(`fs`);
 
 const router = express.Router();
@@ -139,6 +139,27 @@ router.get("/get-all-events", async (req, res, next) => {
     return next(new ErrorHandler(error, 400));
   }
 });
+
+// get all events -----Admin
+router.get(
+  `/admin-all-events`,
+  isAuthenticated,
+  isAdmin(`Admin`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const events = await Event.find().sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
 
 router.get(
   `/:id`,
