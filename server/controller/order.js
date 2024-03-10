@@ -4,7 +4,7 @@ const Product = require(`../models/Product`);
 const Order = require(`../models/order`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const { isAuthenticated, isSeller } = require("../middlewares/auth");
+const { isAuthenticated, isSeller, isAdmin } = require("../middlewares/auth");
 
 //create new order
 router.post(
@@ -205,6 +205,28 @@ router.put(
 
         await product.save({ validateBeforeSave: false });
       }
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// orders ----Admin
+router.get(
+  `/admin-all-orders`,
+  isAuthenticated,
+  isAdmin(`Admin`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const orders = await Order.find().sort({
+        deliveredAt: -1,
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        orders,
+      });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
     }

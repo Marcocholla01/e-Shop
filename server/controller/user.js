@@ -9,7 +9,7 @@ const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
-const { isAuthenticated } = require("../middlewares/auth");
+const { isAuthenticated, isAdmin } = require("../middlewares/auth");
 const crypto = require("crypto");
 const VerificationToken = require("../models/activationToken");
 const { generateOTP, generateEmailtemplate } = require("../utils/otp");
@@ -542,6 +542,27 @@ router.put(
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// get all users -----Admin
+router.get(
+  `/admin-all-users`,
+  isAuthenticated,
+  isAdmin(`Admin`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const users = await User.find().sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        users,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   })
 );

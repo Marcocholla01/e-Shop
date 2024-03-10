@@ -126,7 +126,7 @@ export const deleteUserAddress = (id) => async (dispatch) => {
     });
 
     const { data } = await axios.delete(
-      `${BASE_URL}/user//delete-user-address/${id}`,
+      `${BASE_URL}/user/delete-user-address/${id}`,
       {
         withCredentials: true,
       }
@@ -141,6 +141,29 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "deleteUserAddressFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get all users ----- Admin
+export const getAllUsers = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAllUsersRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/user/admin-all-users`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "getAllUsersSuccess",
+      payload: data.users,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllUsersFail",
       payload: error.response.data.message,
     });
   }

@@ -38,7 +38,6 @@ import {
   ShopAllEvents,
   ShopAllDisountCodes,
   ShopAllOrders,
-  AdminDashboardpage,
   OtpPage,
   PaymentPage,
   OrderDetailsPage,
@@ -48,6 +47,7 @@ import {
   ShopWithdrawMoneyPage,
   ShopChangePasswordPage,
 } from "./Routes/routes";
+import { AdminDashboardPage, AdminAllSellersPage , AdminAllUsersPage} from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
 import Store from "./redux/store";
@@ -320,7 +320,23 @@ function App() {
                   path="/admin-dashboard"
                   element={
                     <AdminProtectedRoute>
-                      <AdminDashboardpage />
+                      <AdminDashboardPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-sellers"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllSellersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-users"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllUsersPage />
                     </AdminProtectedRoute>
                   }
                 />

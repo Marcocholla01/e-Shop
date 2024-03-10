@@ -9,7 +9,7 @@ const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendShopToken = require("../utils/shopToken");
-const { isSeller } = require("../middlewares/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const path = require("path");
 const { promisify } = require("util");
 const accessAsync = promisify(fs.access);
@@ -298,6 +298,27 @@ router.put(
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// get all sellers/shops -----Admin
+router.get(
+  `/admin-all-sellers`,
+  isAuthenticated,
+  isAdmin(`Admin`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const sellers = await Shop.find().sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        sellers,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   })
 );

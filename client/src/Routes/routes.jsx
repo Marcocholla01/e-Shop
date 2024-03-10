@@ -27,7 +27,6 @@ import ShopCreateEvent from "../pages/seller/ShopCreateEvent";
 import ShopAllEvents from "../pages/seller/ShopAllEvents";
 import ShopAllDisountCodes from "../pages/seller/ShopAllDisountCodes";
 import ShopAllOrders from "../pages/seller/ShopAllOrders";
-import AdminDashboardpage from "../pages/Admin/AdminDashboardPage";
 import OtpPage from "../pages/App/OtpPage";
 import OrderDetailsPage from "../pages/App/OrderDetailsPage";
 import TrackOrderPage from "../pages/App/TrackOrderPage";
@@ -66,7 +65,6 @@ export {
   ShopAllEvents,
   ShopAllDisountCodes,
   ShopAllOrders,
-  AdminDashboardpage,
   OtpPage,
   OrderDetailsPage,
   TrackOrderPage,

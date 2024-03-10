@@ -76,3 +76,13 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// Admin auth
+exports.isAdmin = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new ErrorHandler(`Access denied`));
+    }
+    next();
+  };
+};
