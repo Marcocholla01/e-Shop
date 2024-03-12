@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: Number,
   },
+
+  totalEarnings: {
+    type: Number,
+    default: 0,
+  },
   addresses: [
     {
       country: {

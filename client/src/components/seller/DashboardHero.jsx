@@ -29,9 +29,11 @@ const DashboardHero = () => {
     deliveredOrder &&
     deliveredOrder.reduce((acc, item) => acc + item.totalPrice, 0);
 
-  const serviceCharge = totalEarningsWithoutTax * 0.1;
+  const serviceCharge = (totalEarningsWithoutTax * 0.1).toFixed(2);
 
-  const availableBalance = (totalEarningsWithoutTax - serviceCharge).toFixed(2);
+  // const seller?.availableBalance = (
+  //   totalEarningsWithoutTax - serviceCharge
+  // ).toLocaleString();
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -122,7 +124,7 @@ const DashboardHero = () => {
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-            KSHS: {availableBalance}
+            KSHS: {seller?.availableBalance.toLocaleString()}
           </h5>
           <Link to="/dashboard-withdraw-money">
             <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>

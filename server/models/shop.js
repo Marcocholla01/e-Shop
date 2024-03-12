@@ -26,33 +26,65 @@ const shopSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  availableBalance: {
+    type: Number,
+    default: 0,
+  },
+  withdrawMethod: {
+    type: Object,
+  },
+
+  transactions: [
+    {
+      //   seller: {
+      //     type: Object,
+      //     required: true,
+      //   },
+
+      amount: {
+        type: Number,
+        required: true,
+      },
+      status: {
+        type: String,
+        default: "Processing",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      updatedAt: {
+        type: Date,
+      },
+    },
+  ],
   zipCode: {
     type: Number,
     required: true,
   },
   phoneNumber: [{ type: Number }],
-  addresses: [
-    {
-      country: {
-        type: String,
-      },
-      city: {
-        type: String,
-      },
-      address1: {
-        type: String,
-      },
-      address2: {
-        type: String,
-      },
-      zipCode: {
-        type: Number,
-      },
-      addressType: {
-        type: String,
-      },
-    },
-  ],
+  // addresses: [
+  //   {
+  //     country: {
+  //       type: String,
+  //     },
+  //     city: {
+  //       type: String,
+  //     },
+  //     address1: {
+  //       type: String,
+  //     },
+  //     address2: {
+  //       type: String,
+  //     },
+  //     zipCode: {
+  //       type: Number,
+  //     },
+  //     addressType: {
+  //       type: String,
+  //     },
+  //   },
+  // ],
   role: {
     type: String,
     default: "seller",
@@ -71,6 +103,7 @@ const shopSchema = new mongoose.Schema({
       type: String,
     },
   },
+
   description: {
     type: String,
     // default: "shop description has not been updated",

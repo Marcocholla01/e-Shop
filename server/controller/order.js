@@ -5,6 +5,8 @@ const Order = require(`../models/order`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { isAuthenticated, isSeller, isAdmin } = require("../middlewares/auth");
+const Shop = require("../models/shop");
+const User = require("../models/user");
 
 //create new order
 router.post(
@@ -121,6 +123,15 @@ router.put(
       if (req.body.status === `Delivered`) {
         order.deliveredAt = Date.now();
         order.paymentInfo.status = `Succeeded`;
+
+        const serviceFee = (order.totalPrice * 0.1).toFixed(2);
+        await updateAdminInfo(serviceFee);
+
+        order.cart.forEach(async (o) => {
+          const serviceFee = (order.totalPrice * 0.1).toFixed(2);
+          const amount = order.totalPrice - serviceFee;
+          await updateSellerInfo(o.shopId, amount);
+        });
       }
 
       await order.save({ validateBeforeSave: false });
@@ -129,6 +140,23 @@ router.put(
         success: true,
         order,
       });
+
+      async function updateAdminInfo(serviceFee) {
+        const admin = await User.findOne({ role: "Admin" });
+
+        admin.totalEarnings = admin.totalEarnings + parseInt(serviceFee);
+
+        await admin.save();
+        console.log(admin);
+      }
+      async function updateSellerInfo(shopId, amount) {
+        const seller = await Shop.findById(shopId);
+
+        seller.availableBalance += amount;
+
+        await seller.save({ validateBeforeSave: false });
+        console.log(seller);
+      }
 
       async function updateOrder(id, qty) {
         const product = await Product.findById(id);

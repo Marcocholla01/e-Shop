@@ -17,6 +17,8 @@ const AdminDashboardmain = () => {
     (state) => state.order
   );
   const { sellers } = useSelector((state) => state.seller);
+  const { user } = useSelector((state) => state.user);
+
   // console.log(sellers);
 
   const [orders, setOrders] = useState([]);
@@ -112,7 +114,7 @@ const AdminDashboardmain = () => {
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                12000 KSHS
+                KSHS: {user?.totalEarnings.toLocaleString()}
               </h5>
             </div>
 

@@ -125,7 +125,10 @@ const AdminSideBar = ({ active }) => {
         </Link>
       </div> */}
       <div className={`w-full flex items-center p-4`}>
-        <Link to={`/admin-withdraw-money`} className="w-full flex items-center">
+        <Link
+          to={`/admin-withdraw-request`}
+          className="w-full flex items-center"
+        >
           <CiMoneyBill size={30} color={active === 7 ? "red" : "#555"} />
           <h5
             className={`pl-3 ${

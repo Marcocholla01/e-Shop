@@ -54,6 +54,7 @@ import {
   AdminAllOrdersPage,
   AdminAllProductsPage,
   AdminAllEventsPage,
+  AdminWithdrawPage
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -368,6 +369,14 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminAllEventsPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-withdraw-request"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminWithdrawPage />
                     </AdminProtectedRoute>
                   }
                 />

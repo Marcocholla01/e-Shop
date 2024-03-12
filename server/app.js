@@ -31,6 +31,7 @@ const event = require(`./controller/event`);
 const couponCode = require(`./controller/couponCode`);
 const payment = require(`./controller/payment`);
 const order = require(`./controller/order`);
+const withdraw = require(`./controller/withdraw`);
 
 app.use(`/api/v2/user`, user);
 app.use(`/api/v2/shop`, shop);
@@ -39,6 +40,7 @@ app.use(`/api/v2/event`, event);
 app.use(`/api/v2/couponCode`, couponCode);
 app.use(`/api/v2/payment`, payment);
 app.use(`/api/v2/order`, order);
+app.use(`/api/v2/withdraw`, withdraw);
 
 // not found route
 app.all("*", (req, res) => {
