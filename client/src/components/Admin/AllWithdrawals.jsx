@@ -144,7 +144,7 @@ const AllWithdrawals = () => {
   return (
     <div className="w-full flex justify-center mt-3">
       <div className="w-[95%]">
-        <h3 className="text-[22px] font-Poppins pb-2">All Events</h3>
+        <h3 className="text-[22px] font-Poppins p-2 text-center">All Withdrawals</h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
           <DataGrid
             rows={row}

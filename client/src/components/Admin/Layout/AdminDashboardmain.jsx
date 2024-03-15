@@ -11,13 +11,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfAdmin } from "../../../redux/actions/order";
 import Loader from "../../../components/Layout/Loader";
 import { getAllSellers } from "../../../redux/actions/seller";
+import { getAllUsers } from "../../../redux/actions/user";
 
 const AdminDashboardmain = () => {
   const { adminOrders, adminOrderLoading } = useSelector(
     (state) => state.order
   );
   const { sellers } = useSelector((state) => state.seller);
-  const { user } = useSelector((state) => state.user);
+  const { user, users, loading } = useSelector((state) => state.user);
+
+  const activeUsers = users && users.filter((i) => i.role === "user");
 
   // console.log(sellers);
 
@@ -27,6 +30,7 @@ const AdminDashboardmain = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
     dispatch(getAllSellers());
+    dispatch(getAllUsers());
   }, []);
 
   const columns = [
@@ -69,7 +73,7 @@ const AdminDashboardmain = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/dashboard/order/`}>
+            <Link to={`/admin/order/${params.id}`}>
               <Button>
                 <AiOutlineArrowRight size={20} />
               </Button>
@@ -124,13 +128,13 @@ const AdminDashboardmain = () => {
                 <h3
                   className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
                 >
-                  All Sellers
+                  All Shop
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
                 {sellers && sellers.length}{" "}
               </h5>
-              <Link to="/admin-sellers">
+              <Link to="/admin-all-sellers">
                 <h5 className="pt-4 pl-2 text-[#077f9c]">View Sellers</h5>
               </Link>
             </div>
@@ -145,14 +149,14 @@ const AdminDashboardmain = () => {
                 <h3
                   className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
                 >
-                  All Orders
+                  All Customers
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                {adminOrders && adminOrders.length}{" "}
+                {activeUsers?.length}{" "}
               </h5>
-              <Link to="/admin-orders">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
+              <Link to="/admin-all-users">
+                <h5 className="pt-4 pl-2 text-[#077f9c]">View Customers</h5>
               </Link>
             </div>
           </div>

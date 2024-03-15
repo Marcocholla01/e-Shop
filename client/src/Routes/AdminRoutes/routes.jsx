@@ -5,6 +5,13 @@ import AdminDashboardPage from "../../pages/Admin/AdminDashboardPage";
 import AdminAllProductsPage from "../../pages/Admin/AdminAllProductsPage";
 import AdminAllEventsPage from "../../pages/Admin/AdminAllEventsPage";
 import AdminWithdrawPage from "../../pages/Admin/AdminWithdrawPage";
+import AdminSellersPage from "../../pages/Admin/AdminSellersPage";
+import AdminUsersPage from "../../pages/Admin/AdminUsersPage";
+import AdminActiveUsersPage from "../../pages/Admin/AdminActiveUsers";
+import AdminInactiveUsersPage from "../../pages/Admin/AdminInactiveUsersPage";
+import AdminInactiveSellersPage from "../../pages/Admin/AdminInactiveSellersPage";
+import AdminActiveSellersPage from "../../pages/Admin/AdminActiveSellersPage";
+import AdminAllOrderDetailsPage from "../../pages/Admin/AdminAllOrderDetailsPage";
 
 export {
   AdminDashboardPage,
@@ -14,4 +21,11 @@ export {
   AdminAllProductsPage,
   AdminAllEventsPage,
   AdminWithdrawPage,
+  AdminSellersPage,
+  AdminUsersPage,
+  AdminActiveUsersPage,
+  AdminInactiveUsersPage,
+  AdminInactiveSellersPage,
+  AdminActiveSellersPage,
+  AdminAllOrderDetailsPage,
 };

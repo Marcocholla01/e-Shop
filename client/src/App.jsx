@@ -47,7 +47,7 @@ import {
   ShopWithdrawMoneyPage,
   ShopChangePasswordPage,
   PasswordResetPage,
-  ResetPasswordPage
+  ResetPasswordPage,
 } from "./Routes/routes";
 import {
   AdminDashboardPage,
@@ -57,6 +57,13 @@ import {
   AdminAllProductsPage,
   AdminAllEventsPage,
   AdminWithdrawPage,
+  AdminSellersPage,
+  AdminUsersPage,
+  AdminActiveUsersPage,
+  AdminInactiveUsersPage,
+  AdminInactiveSellersPage,
+  AdminActiveSellersPage,
+  AdminAllOrderDetailsPage,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -387,6 +394,63 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminWithdrawPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+          
+                <Route
+                  path="/admin-all-users"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminUsersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-all-sellers"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminSellersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-active-users"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminActiveUsersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-inactive-users"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminInactiveUsersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-inactive-sellers"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminInactiveSellersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-active-sellers"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminActiveSellersPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/order/:id"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllOrderDetailsPage />
                     </AdminProtectedRoute>
                   }
                 />
