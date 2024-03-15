@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useRef, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Logo from "../../../assets/images/svg/logo.svg";
 import styles from "../../../styles/style";
@@ -10,14 +10,22 @@ import { toast } from "react-toastify";
 import FacebookOauth from "../Oauth/FacebookOauth";
 import GoogleOauth from "../Oauth/GoogleOauth";
 import AppleOauth from "../Oauth/AppleOauth";
+import { useSelector } from "react-redux";
 
 function Signup() {
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
+
+  const [userId, setUserId] = useState(user && user._id);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [open, setOpen] = useState(false);
+
+  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -92,22 +100,79 @@ function Signup() {
         if (response.data.success === true) {
           // console.log(response);
           toast.success(response.data.message); // Display success toast
-          navigate("/verify-user");
+          setName("");
+          setEmail("");
+          setPassword("");
+          setAvatar(null);
+          setOpen(true);
+          // navigate("/verify-user");
         } else {
           toast.error(response.data.message); // Display error toast
         }
 
         // Clear form fields
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar(null);
       })
       .catch((error) => {
         console.log("Request failed:", error);
         toast.error("Request failed. Please try again."); // Display error toast for network issues or unexpected errors
       });
   };
+
+  const handleOtpChange = (index, value) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < inputRefs.length - 1) {
+      inputRefs[index + 1].current.focus();
+    } else if (!value && index > 0) {
+      inputRefs[index - 1].current.focus();
+    }
+  };
+
+  const handleAccountVerification = async (e) => {
+    e.preventDefault();
+    const otpValue = otp.join("");
+    // Check if any  field is empty
+    if (!userId) {
+      toast.error("Please enter your secret key!");
+      return;
+    }
+    if (userId.length < 24) {
+      toast.error("Secret Key can not be less than 24 digits!");
+      return;
+    }
+    if (!otpValue) {
+      toast.error("Please enter the OTP CODES ");
+      return;
+    }
+    if (otpValue.length < 4) {
+      toast.error("Enter all the OTP digits");
+      return;
+    }
+
+    axios
+      .post(`${BASE_URL}/user/verify-user`, { userId, otp: otpValue })
+      .then((response) => {
+        if (
+          (response.data.success === true &&
+            response.data.message ===
+              `Account already verified!, Kindly login`) ||
+          (response.data.success === true &&
+            response.data.message === `Account verified succesfully`)
+        ) {
+          toast.success(response.data.message);
+          setUserId("");
+          setOtp(["", "", "", ""]);
+          setOpen(false);
+          navigate(`/login`);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -235,37 +300,131 @@ function Signup() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                className="group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
                 REGISTER
               </button>
             </div>
-            <div className="  flex justify-center py-2 text-lg font-bold text-gray-700 ">
+            <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
               -- OR --
             </div>
-            <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
+            <div className="flex justify-center space-x-6 w-full">
               <FacebookOauth />
               <GoogleOauth />
               {/* <AppleOauth /> */}
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4 className="relative w-full flex justify-center">
+              <h4 className="relative w-full flex justify-center font-Poppins">
                 Already have an account? Login as
               </h4>
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4 className="relative w-full h-[10] flex justify-center">
-                <Link to="/login" className="text-blue-600 pr-4">
-                  1. Customer
+              <h4 className="w-full h-[10] flex justify-around">
+                <Link to="/login" className="text-white pr-2">
+                  <div
+                    className={`${styles.button} !h-[42px] !rounded-[5px] uppercase`}
+                  >
+                    Customer
+                  </div>
                 </Link>
-                <Link to="/seller-login" className="text-blue-600 pl-4">
-                  2. Seller
+                <Link to="/seller-login" className="text-white pl-2">
+                  <div
+                    className={`${styles.button} !h-[42px] !rounded-[5px] uppercase`}
+                  >
+                    {" "}
+                    Seller{" "}
+                  </div>
                 </Link>
               </h4>
             </div>
           </form>
         </div>
       </div>
+
+      {open && (
+        <>
+          <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
+            <div
+              className={`sm:w-[40%] w-[75%] bg-gray-200 shadow rounded min-h-[30vh] p-3`}
+            >
+              {/* <div className="w-full flex justify-end">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div> */}
+              <div className="w-full flex items-center justify-center flex-col">
+                <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
+                  ACCOUNT VERIFICATION
+                </h3>
+                <p className="text-center">
+                  Enter the <span className="font-semibold">OTP</span> and{" "}
+                  <span className="font-semibold">SECRET KEY</span> sent to your
+                  email account
+                </p>
+                <form
+                  action=""
+                  className="mt-5 flex gap-3 items-center flex-col"
+                >
+                  <label
+                    htmlFor="email"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    Secret Key <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    className={`${styles.input} !w-[270px] mb-1 mt-1 sm:mb-0 px-3 py-2 mr-2 text-center  border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    required
+                    value={userId}
+                    placeholder="Input your Secret Key"
+                    onChange={(e) => setUserId(e.target.value)}
+                  />
+                  <label
+                    htmlFor="email"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    OTP CODE <span className="text-red-500">*</span>
+                  </label>
+                  <div className={`flex justify-center gap-3`}>
+                    {otp.map((value, index) => (
+                      <>
+                        <input
+                          key={index}
+                          className="otp text-center appearance-none block w-[50px] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          type="number"
+                          autoComplete={false}
+                          required
+                          placeholder={`${index + 1}`}
+                          value={value}
+                          onChange={(e) =>
+                            handleOtpChange(index, e.target.value)
+                          }
+                          ref={inputRefs[index]}
+                        />
+                        <span></span>
+                      </>
+                    ))}
+                  </div>
+                </form>
+                <div className="mt-4 flex justify-center">
+                  <hr className="mt-4" />
+                  <button
+                    onClick={handleAccountVerification}
+                    type="button"
+                    className="m-7 group relative w-auto h-[40] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 self-center"
+                  >
+                    VERIFY ACCOUNT
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

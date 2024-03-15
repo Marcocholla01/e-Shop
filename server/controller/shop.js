@@ -1,6 +1,7 @@
 const express = require(`express`);
 const router = express.Router();
 const Shop = require(`../models/shop`);
+const VerificationToken = require(`../models/activationToken`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
 const { upload } = require(`../multer`);
 const fs = require(`fs`);
@@ -12,6 +13,12 @@ const sendShopToken = require("../utils/shopToken");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const path = require("path");
 const { promisify } = require("util");
+const {
+  generatePasswordresetToken,
+  generateOTP,
+  generateEmailtemplate,
+} = require("../utils/otp");
+const { isValidObjectId } = require("mongoose");
 const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
@@ -46,7 +53,7 @@ router.post(
       const host = req.get("host");
       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
 
-      const newShop = await Shop.create({
+      const newShop = await Shop({
         name,
         phoneNumber,
         email,
@@ -59,16 +66,99 @@ router.post(
         },
         password,
       });
-      console.log(newShop);
 
-      // You can send a response or do any other necessary actions here.
+      const OTP = generateOTP();
+      const verificationToken = new VerificationToken({
+        shop: newShop._id,
+        token: OTP,
+      });
+
+      await verificationToken.save();
+
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: newShop.email,
+        subject: "Activate Your Account",
+        html: generateEmailtemplate(OTP, newShop._id),
+      });
+
+      await newShop.save();
       res.status(201).json({
         success: true,
-        message: `Account created successfully`,
-        shop: newShop,
+        message: `An Email sent to your account please verify`,
+        seller: newShop,
       });
+
+      // You can send a response or do any other necessary actions here.
+      // res.status(201).json({
+      //   success: true,
+      //   message: `Account created successfully`,
+      //   shop: newShop,
+      // });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// verify seller
+router.post(
+  "/verify-seller",
+  catchAsyncErrors(async (req, res) => {
+    try {
+      const { sellerId, otp } = req.body;
+      if (!sellerId || !otp.trim())
+        return res.status(400).json({
+          success: false,
+          message: "otp field are empty",
+        });
+      if (!sellerId)
+        return res.status(400).json({
+          success: false,
+          message: "Kindly enter the secret key",
+        });
+
+      if (!isValidObjectId(sellerId))
+        return res.status(400).json({
+          success: false,
+          message: "Invalid secret key",
+        });
+
+      const shop = await Shop.findById(sellerId);
+      if (!shop)
+        return res.status(400).json({
+          success: false,
+          message: "sorry, shop not found",
+        });
+
+      if (shop.isVerified)
+        return res.status(200).json({
+          success: true,
+          message: "Account already verified!, Kindly login",
+        });
+
+      const token = await VerificationToken.findOne({ shop: shop._id });
+      if (!token)
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Token",
+        });
+
+      shop.isVerified = true;
+      await VerificationToken.findByIdAndDelete(token._id);
+      await shop.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Account verified succesfully",
+      });
+      sendToken(shop, 201, res);
+    } catch (error) {
+      res.status(500).json({
+        succes: false,
+        message: error.message,
+      });
     }
   })
 );
@@ -95,6 +185,50 @@ router.post(
           success: false,
           message:
             "Invalid credentials. Please provide the correct information.",
+        });
+      }
+
+      if (!shop.isVerified) {
+        const OTP = generateOTP();
+        const verificationToken = new VerificationToken({
+          shop: shop._id,
+          token: OTP,
+        });
+
+        // const tokenExistst = await Shop.findOne({ email });
+        // if (tokenExistst) {
+        //   await sendMail({
+        //     // from: "accounts@shop0.com",
+        //     from: process.env.SMTP_MAIL,
+        //     email: shop.email,
+        //     subject: "Activate Your Account",
+        //     html: generateEmailtemplate(OTP, shop._id),
+        //   });
+
+        //   return res.status(404).json({
+        //     success: false,
+        //     message: "Tken exists.",
+        //   });
+        // }
+        await verificationToken.save();
+
+        await sendMail({
+          // from: "accounts@shop0.com",
+          from: process.env.SMTP_MAIL,
+          email: shop.email,
+          subject: "Activate Your Account",
+          html: generateEmailtemplate(OTP, shop._id),
+        });
+        return res.status(404).json({
+          success: false,
+          message: "Email not verified please check you email to verify.",
+        });
+      }
+
+      if (!shop.isActive) {
+        return res.status(401).json({
+          success: false,
+          message: "Account Not active wait for ADMIN approval.",
         });
       }
 
@@ -302,6 +436,115 @@ router.put(
   })
 );
 
+// Forgot password
+router.post(
+  `/password/forgot-password`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const email = req.body.passwordResset;
+      // console.log(email);
+
+      const seller = await Shop.findOne({ email: email });
+
+      if (!seller) {
+        return res.status(404).json({
+          success: false,
+          message: `No seller with this email found`,
+        });
+      }
+
+      try {
+        // Get ResetPassword Token
+        const resetToken = generatePasswordresetToken();
+        // console.log(resetToken);
+
+        await seller.updateOne({
+          resetPasswordTime: resetToken.resetPasswordTime,
+          resetPasswordToken: resetToken.resetPasswordToken,
+        });
+
+        const resetPasswordUrl = `${process.env.FRONTEND_URL}/seller/password/resset/${resetToken.resetPasswordToken}`;
+        // const resetPasswordUrl = `${(req, protocol)}://${req.get(
+        //   `host`
+        // )}/password/resset/${resetToken}`;
+
+        const message = `Your password reset token is :- \n\n ${resetPasswordUrl}`;
+
+        await sendMail({
+          email: seller.email,
+          subject: `shopO Password Recovery`,
+          html: message,
+        });
+        // res.status(201).json({
+        //   success: true,
+        // });
+      } catch (error) {
+        seller.resetPasswordToken = undefined;
+        seller.resetPasswordTime = undefined;
+
+        await seller.save({ validateBeforeSave: false });
+
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      res.status(201).json({
+        success: true,
+        message: `An Email sent to ${seller.email} successfully `,
+        seller,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+router.put(
+  `/reset-seller-password/:token`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+
+      // console.log(req.body);
+
+      const resetPasswordToken = req.params.token;
+
+      // console.log(req.params.token);
+      const seller = await Shop.findOne({
+        resetPasswordToken,
+        resetPasswordTime: { $gt: Date.now() },
+      });
+
+      if (!seller) {
+        res.status(400).json({
+          success: false,
+          message: `Reset password url invalid or exipred`,
+        });
+      }
+      if (newPassword !== confirmPassword) {
+        return next(
+          new ErrorHandler(
+            `New password and confirm password do not match!`,
+            400
+          )
+        );
+      }
+      seller.password = newPassword;
+
+      seller.resetPasswordToken = undefined;
+      seller.resetPasswordTime = undefined;
+
+      await seller.save();
+
+      res.status(200).json({
+        success: true,
+        message: `Your password was successfully reseted`,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 // get all sellers/shops -----Admin
 router.get(
   `/admin-all-sellers`,
@@ -368,6 +611,7 @@ router.delete(
     }
   })
 );
+
 module.exports = router;
 
 // router.post(

@@ -34,6 +34,8 @@ import ShopRefundPage from "../pages/seller/ShopRefundPage";
 import ShopSettingsPage from "../pages/seller/ShopSettingsPage";
 import ShopWithdrawMoneyPage from "../pages/seller/ShopWithdrawMoneyPage";
 import ShopChangePasswordPage from "../pages/seller/ShopChangePasswordPage";
+import PasswordResetPage from "../pages/App/PasswordResetPage ";
+import ResetPasswordPage from "../pages/seller/ResetPasswordPage";
 
 export {
   LoginPage,
@@ -72,4 +74,6 @@ export {
   ShopSettingsPage,
   ShopWithdrawMoneyPage,
   ShopChangePasswordPage,
+  PasswordResetPage,
+  ResetPasswordPage,
 };

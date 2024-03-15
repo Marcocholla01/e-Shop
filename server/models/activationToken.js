@@ -6,8 +6,14 @@ const verificationTokenSchema = new Schema({
   // Use Schema
   owner: {
     type: Schema.Types.ObjectId,
-    required: true,
+    // required: true,
     ref: "User",
+    unique: true,
+  },
+  shop: {
+    type: Schema.Types.ObjectId,
+    // required: true,
+    ref: "Shop",
     unique: true,
   },
   token: {

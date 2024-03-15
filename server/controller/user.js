@@ -12,7 +12,11 @@ const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middlewares/auth");
 const crypto = require("crypto");
 const VerificationToken = require("../models/activationToken");
-const { generateOTP, generateEmailtemplate } = require("../utils/otp");
+const {
+  generateOTP,
+  generateEmailtemplate,
+  generatePasswordresetToken,
+} = require("../utils/otp");
 const { isValidObjectId } = require("mongoose");
 const path = require("path");
 const { promisify } = require("util");
@@ -247,7 +251,7 @@ router.post(
           token: OTP,
         });
 
-        await verificationToken.save();
+        await verificationToken.updateOne();
 
         await sendMail({
           // from: "accounts@shop0.com",
@@ -329,6 +333,112 @@ router.get(
       res.status(200).json({
         success: true,
         message: "You have successfully loged out",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Forgot password
+router.post(
+  `/password/forgot-password`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const email = req.body.passwordResset;
+      // console.log(email);
+
+      const user = await User.findOne({ email: email });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with this email found`,
+        });
+      }
+
+      try {
+        // Get ResetPassword Token
+        const resetToken = generatePasswordresetToken();
+        // console.log(resetToken);
+
+        await user.updateOne({
+          resetPasswordTime: resetToken.resetPasswordTime,
+          resetPasswordToken: resetToken.resetPasswordToken,
+        });
+
+        const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/resset/${resetToken.resetPasswordToken}`;
+        // const resetPasswordUrl = `${(req, protocol)}://${req.get(
+        //   `host`
+        // )}/password/resset/${resetToken}`;
+
+        const message = `Your password reset token is :- \n\n ${resetPasswordUrl}`;
+
+        await sendMail({
+          email: user.email,
+          subject: `shopO Password Recovery`,
+          html: message,
+        });
+        // res.status(201).json({
+        //   success: true,
+        // });
+      } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTime = undefined;
+
+        await user.save({ validateBeforeSave: false });
+
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      res.status(201).json({
+        success: true,
+        message: `An Email sent to ${user.email} successfully `,
+        user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+router.put(
+  `/reset-user-password/:token`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+
+      // console.log(req.body);
+
+      const resetPasswordToken = req.params.token;
+
+      // console.log(req.params.token);
+      const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordTime: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return next(new ErrorHandler(`Reset password url invalid or exipred `));
+      }
+      if (newPassword !== confirmPassword) {
+        return next(
+          new ErrorHandler(
+            `New password and confirm password do not match!`,
+            400
+          )
+        );
+      }
+      user.password = newPassword;
+
+      user.resetPasswordToken = undefined;
+      user.resetPasswordTime = undefined;
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: `Your password was successfully reseted`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

@@ -10,11 +10,14 @@ import styles from "../../../../styles/style";
 import FacebookOauth from "../../../Authentication/Oauth/FacebookOauth";
 import GoogleOauth from "../../../Authentication/Oauth/GoogleOauth";
 import AppleOauth from "../../../Authentication/Oauth/AppleOauth";
+import { RxCross1 } from "react-icons/rx";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [passwordResset, setPasswordResset] = useState("");
   const navigate = useNavigate();
 
   // Regular expression for email validation
@@ -105,6 +108,28 @@ function Login() {
         }
       });
   };
+
+  const handlePasswordResetRequest = () => {
+    if (!passwordResset) {
+      return toast.error(`Kindly input your email`);
+    } else if (!emailRegex.test(passwordResset)) {
+      return toast.error(`Invalid email address`);
+    }
+
+    axios
+      .post(
+        `${BASE_URL}/shop/password/forgot-password`,
+        { passwordResset },
+        { withCredentials: false }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        setForgotPassword(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -192,8 +217,8 @@ function Login() {
               </div>
               <div className="text-sm">
                 <a
-                  href="#"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-blue-600 hover:text-blue-500 cursor-pointer"
+                  onClick={() => setForgotPassword(true)}
                 >
                   Forgot your password?
                 </a>
@@ -207,32 +232,81 @@ function Login() {
                 LOGIN
               </button>
             </div>
-            <div className="  flex justify-center py-2 text-lg font-bold text-gray-700 ">
+            <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
               -- OR --
             </div>
-            <div className="flex justify-center space-x-6 pb-2 px-2 w-full">
+            <div className="flex justify-center space-x-6  w-full">
               <FacebookOauth />
               <GoogleOauth />
               {/* <AppleOauth /> */}
             </div>
             <div className={`${styles.normalFlex} w-full`}>
-              <h4 className="relative w-full flex justify-center">
+              <h4 className="relative w-full flex justify-center font-Poppins">
                 Do not have an account? Register as
               </h4>
             </div>
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full h-[10] flex justify-center">
-                <Link to="/register" className="text-blue-600 pr-4">
-                  1. Customer
+                <Link to="/register" className="text-white pr-4">
+                  <div
+                    className={`${styles.button} !h-[42px] !rounded-[5px] uppercase`}
+                  >
+                    Customer
+                  </div>
                 </Link>
-                <Link to="/seller-register" className="text-blue-600 pl-4">
-                  2. Seller
+                <Link to="/seller-register" className="text-white pl-4">
+                  <div
+                    className={`${styles.button} !h-[42px] !rounded-[5px] uppercase`}
+                  >
+                    seller
+                  </div>
                 </Link>
               </h4>
             </div>
           </form>
         </div>
       </div>
+      {forgotPassword && (
+        <>
+          <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
+            <div
+              className={`sm:w-[40%] w-[75%] bg-gray-200 shadow rounded min-h-[30vh] p-3`}
+            >
+              <div className="w-full flex justify-end">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer"
+                  onClick={() => setForgotPassword(false)}
+                />
+              </div>
+              <div className="w-full flex items-center justify-center flex-col">
+                <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
+                  Forgot Password
+                </h3>
+                <h5 className="text-[16px] font-Poppins text-center  pb-2 ">
+                  Enter your current accout email address to recieve a password
+                  reset link
+                </h5>
+                <div className="flex items-center w-[80%] gap-3">
+                  <input
+                    type="email"
+                    value={passwordResset}
+                    onChange={(e) => setPasswordResset(e.target.value)}
+                    placeholder="Enter your email address..."
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mt-7 h-[42px]"
+                  />
+                  <button
+                    className="mt-7 group w-[200px] h-[40px]  px-3 py-2 border border-transparent text-md font-medium rounded-md text-white bg-blue-700 hover:bg-blue-600 uppercase "
+                    onClick={handlePasswordResetRequest}
+                  >
+                    submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

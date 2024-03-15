@@ -1,3 +1,5 @@
+const crypto = require(`crypto`);
+
 //generate otp
 
 exports.generateOTP = () => {
@@ -7,6 +9,23 @@ exports.generateOTP = () => {
     otp = otp + randVal;
   }
   return otp;
+};
+
+// Generate a password resset token
+
+exports.generatePasswordresetToken = () => {
+  const resetToken = crypto.randomBytes(40).toString(`hex`);
+
+  //   console.log(resetToken);
+
+  const resetPasswordToken = crypto
+    .createHash(`sha256`)
+    .update(resetToken)
+    .digest(`hex`);
+
+  const resetPasswordTime = Date.now() + 15 * 60 * 1000; // 15 mins
+
+  return { resetPasswordTime, resetPasswordToken };
 };
 
 exports.generateEmailtemplate = (OTP, newUser) => {

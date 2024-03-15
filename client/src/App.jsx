@@ -46,6 +46,8 @@ import {
   ShopSettingsPage,
   ShopWithdrawMoneyPage,
   ShopChangePasswordPage,
+  PasswordResetPage,
+  ResetPasswordPage
 } from "./Routes/routes";
 import {
   AdminDashboardPage,
@@ -54,7 +56,7 @@ import {
   AdminAllOrdersPage,
   AdminAllProductsPage,
   AdminAllEventsPage,
-  AdminWithdrawPage
+  AdminWithdrawPage,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -151,6 +153,14 @@ function App() {
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/verify-user" element={<OtpPage />} />
+                <Route
+                  path="/password/resset/:token"
+                  element={<PasswordResetPage />}
+                />
+                <Route
+                  path="/seller/password/resset/:token"
+                  element={<ResetPasswordPage />}
+                />
                 <Route
                   path="/checkout"
                   element={

@@ -147,7 +147,7 @@ router.put(
         admin.totalEarnings = admin.totalEarnings + parseInt(serviceFee);
 
         await admin.save();
-        console.log(admin);
+        // console.log(admin);
       }
       async function updateSellerInfo(shopId, amount) {
         const seller = await Shop.findById(shopId);
@@ -155,7 +155,7 @@ router.put(
         seller.availableBalance += amount;
 
         await seller.save({ validateBeforeSave: false });
-        console.log(seller);
+        // console.log(seller);
       }
 
       async function updateOrder(id, qty) {
