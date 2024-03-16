@@ -1,13 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/style";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../redux/actions/product";
 
 const DropDown = ({ categoriesData, setDropDown }) => {
+  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const submitHandle = (i) => {
-    navigate(`/products?category=${i.title}`);
+    dispatch(getAllProducts());
     setDropDown(false);
-    window.location.reload();
+    navigate(`/products?category=${i.title}`);
+    // window.location.reload();
   };
   return (
     <div className="pb-4 w-[260px] bg-[#fff] absolute z-30 rounded-b-md shadow-sm">

@@ -64,6 +64,8 @@ import {
   AdminInactiveSellersPage,
   AdminActiveSellersPage,
   AdminAllOrderDetailsPage,
+  AdminAllDiscountCodesPage,
+  AdminAllRefundsPage,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -397,7 +399,7 @@ function App() {
                     </AdminProtectedRoute>
                   }
                 />
-          
+
                 <Route
                   path="/admin-all-users"
                   element={
@@ -451,6 +453,22 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminAllOrderDetailsPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-all-discount-codes"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllDiscountCodesPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-all-refunds"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllRefundsPage />
                     </AdminProtectedRoute>
                   }
                 />

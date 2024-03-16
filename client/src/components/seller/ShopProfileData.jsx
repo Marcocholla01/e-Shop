@@ -21,7 +21,7 @@ const ShopProfileData = ({ isOwner }) => {
 
   useEffect(() => {
     dispatch(getAllProductsShop(id));
-    dispatch(getAllEventsShop(seller._id));
+    dispatch(getAllEventsShop(seller?._id));
   }, [dispatch]);
 
   const allReviews =
@@ -106,13 +106,13 @@ const ShopProfileData = ({ isOwner }) => {
             allReviews.map((item, index) => (
               <div className="w-full flex my-3">
                 <img
-                  src={`${item[0].user.avatar.url}`}
+                  src={`${item[0]?.user?.avatar?.url}`}
                   className="rounded-full w-[50px] h-[50px]"
                   alt=""
                 />
                 <div className="pl-2">
                   <div className="flex w-full items-center">
-                    <h1 className="pr-2 font-[600]">{item[0].user.name} </h1>
+                    <h1 className="pr-2 font-[600]">{item[0]?.user?.name} </h1>
                     <Ratings rating={item[0]?.rating} />
                   </div>
                   <p className="font-[400] text-[#000000a7]">

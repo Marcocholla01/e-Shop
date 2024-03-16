@@ -239,4 +239,31 @@ router.put(
   })
 );
 
+// delete product ----Admin
+router.delete(
+  `/delete-product/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const product = await Product.findByIdAndDelete(id);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `No product with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Product deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
 module.exports = router;

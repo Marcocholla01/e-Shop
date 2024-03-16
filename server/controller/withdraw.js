@@ -143,4 +143,31 @@ router.put(
   })
 );
 
+// delete withdraw ----Admin
+router.delete(
+  `/delete-withdraw/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const withdraw = await Withdraw.findByIdAndDelete(id);
+      if (!withdraw) {
+        return res.status(404).json({
+          success: false,
+          message: `No withdraw with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Withdrawal deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
 module.exports = router;

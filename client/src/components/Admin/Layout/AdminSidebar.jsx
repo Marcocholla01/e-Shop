@@ -157,9 +157,9 @@ const AdminSideBar = ({ active }) => {
           </h5>
         </Link>
       </div> */}
-      {/* <div className={`w-full flex items-center p-4`}>
+      <div className={`w-full flex items-center p-4`}>
         <Link
-          to={`/admin-dashboard-all-discount-codes`}
+          to={`/admin-all-discount-codes`}
           className="w-full flex items-center"
         >
           <AiOutlineGift size={30} color={active === 9 ? "red" : "#555"} />
@@ -168,15 +168,12 @@ const AdminSideBar = ({ active }) => {
               active === 9 ? "text-[red]" : ""
             } hidden sm:block`}
           >
-            Discount Codes
+            All Discount Codes
           </h5>
         </Link>
-      </div> */}
-      {/* <div className={`w-full flex items-center p-4`}>
-        <Link
-          to={`/admin-dashboard-refunds`}
-          className="w-full flex items-center"
-        >
+      </div>
+      <div className={`w-full flex items-center p-4`}>
+        <Link to={`/admin-all-refunds`} className="w-full flex items-center">
           <HiOutlineReceiptRefund
             size={30}
             color={active === 10 ? "red" : "#555"}
@@ -186,10 +183,10 @@ const AdminSideBar = ({ active }) => {
               active === 10 ? "text-[red]" : ""
             } hidden sm:block`}
           >
-            Refunds
+            All Refunds
           </h5>
         </Link>
-      </div> */}
+      </div>
       <div className={`w-full flex items-center p-4`}>
         <Link to={`/user/${user._id}`} className="w-full flex items-center">
           <CiSettings size={30} color={active === 8 ? "red" : "#555"} />

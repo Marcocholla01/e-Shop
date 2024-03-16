@@ -194,22 +194,6 @@ router.post(
           shop: shop._id,
           token: OTP,
         });
-
-        // const tokenExistst = await Shop.findOne({ email });
-        // if (tokenExistst) {
-        //   await sendMail({
-        //     // from: "accounts@shop0.com",
-        //     from: process.env.SMTP_MAIL,
-        //     email: shop.email,
-        //     subject: "Activate Your Account",
-        //     html: generateEmailtemplate(OTP, shop._id),
-        //   });
-
-        //   return res.status(404).json({
-        //     success: false,
-        //     message: "Tken exists.",
-        //   });
-        // }
         await verificationToken.save();
 
         await sendMail({
@@ -221,11 +205,20 @@ router.post(
         });
         return res.status(404).json({
           success: false,
+          errorCode: 600,
           message: "Email not verified please check you email to verify.",
         });
       }
 
       if (!shop.isActive) {
+        const message = `Hello ${shop.name} your account is inactive`;
+        await sendMail({
+          // from: "accounts@shop0.com",
+          from: process.env.SMTP_MAIL,
+          email: shop.email,
+          subject: "Account inactive",
+          html: message,
+        });
         return res.status(401).json({
           success: false,
           message: "Account Not active wait for ADMIN approval.",
@@ -424,6 +417,16 @@ router.put(
 
       // Update seller's password
       seller.password = newPassword;
+
+      const message = `Hello ${seller.name} your account has been updated successfully  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: seller.email,
+        subject: "shopO Account password updated",
+        html: message,
+      });
+
       await seller.save();
 
       return res.status(200).json({
@@ -534,6 +537,14 @@ router.put(
       seller.resetPasswordTime = undefined;
 
       await seller.save();
+      const message = `Hello ${seller.name} your account password has been changed  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: seller.email,
+        subject: "shopO Password Reset success",
+        html: message,
+      });
 
       res.status(200).json({
         success: true,
@@ -632,6 +643,15 @@ router.put(
 
       shop.isActive = status;
 
+      const message = `Hello ${shop.name} your account has been activated  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: shop.email,
+        subject: "Account Activation",
+        html: message,
+      });
+
       await shop.save();
       res.status(200).json({
         success: true,
@@ -663,6 +683,15 @@ router.put(
 
       shop.isActive = status;
 
+      const message = `Hello ${shop.name} your account has been deactivated  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: shop.email,
+        subject: "Account Deactivation",
+        html: message,
+      });
+
       await shop.save();
       res.status(200).json({
         success: true,
@@ -682,6 +711,30 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const id = req.params.id;
+      const existsUser = await User.findById(id);
+      const existsAvatarPath = `uploads/${existsUser.avatar.filename}`;
+
+      // Check if file exists before attempting to unlink it
+      try {
+        await accessAsync(existsAvatarPath, fs.constants.F_OK);
+
+        // File exists, proceed with deletion
+        await unlinkAsync(existsAvatarPath);
+        // console.log("File deleted successfully:", existsAvatarPath);
+        // res.status(200).json({
+        //   success: true,
+        //   message: `File deleted successfully: ${existsAvatarPath}`,
+        // });
+      } catch (error) {
+        // File does not exist or cannot be accessed
+        // console.log( "File does not exist or cannot be accessed:",existsAvatarPath);
+
+        res.status(400).json({
+          success: false,
+          message: `File does not exist or cannot be accessed: ${existsAvatarPath}`,
+        });
+      }
+
       const shop = await Shop.findByIdAndDelete(id);
       if (!shop) {
         return res.status(404).json({
@@ -689,6 +742,14 @@ router.delete(
           message: `No shop with the specified Id`,
         });
       }
+      const message = `Hello ${shop.name} your account has been deleted  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: shop.email,
+        subject: "Account Activation",
+        html: message,
+      });
 
       res.status(200).json({
         success: true,

@@ -22,15 +22,17 @@ const ProductDetailsPage = () => {
   // console.log("product Name :", productName);
 
   useEffect(() => {
+    // window.scrollTo(0, 0);
     axios
       .get(`${BASE_URL}/product/${id}`)
       .then((res) => {
         setData(res.data);
+        dispatch(getAllProducts());
       })
       .catch((error) => {
         toast.error(error);
       });
-  }, []);
+  }, [allProducts]);
 
   // console.log(id);
 

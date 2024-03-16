@@ -112,7 +112,7 @@ const ProductCard = ({ data }) => {
             </h4>
 
             <div className="flex">
-            <Ratings rating={data?.ratings} />
+              <Ratings rating={data?.ratings} />
             </div>
             <div className="py-2 flex items-center justify-between">
               <div className="flex-row items-center justify-between">

@@ -46,6 +46,7 @@ const Header = ({ activeHeading }) => {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
+    setSearchData(null);
 
     const filteredProducts =
       allProducts &&
@@ -90,7 +91,6 @@ const Header = ({ activeHeading }) => {
                 {searchData &&
                   searchData.map((i, index) => {
                     const d = i._id;
-                    const Product_name = d.replace(/\$+/g, "-");
                     return (
                       <Link to={`/product/${d}`}>
                         <div className="w-full flex items-start-py-5 gap-3 mt-4">

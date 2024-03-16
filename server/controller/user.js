@@ -244,49 +244,57 @@ router.post(
             "Invalid credentials. Please provide the correct information!!!",
         });
       }
+
+      // TODO make otp re-generated when user trys to login when acount email not verified
+
       if (!user.isVerified) {
+        const owner = await VerificationToken.findOne(user._id);
+        if (!owner) {
+          const OTP = generateOTP();
+          const verificationToken = new VerificationToken({
+            owner: user._id,
+            token: OTP,
+          });
+
+          await verificationToken.updateOne();
+        }
+
         const OTP = generateOTP();
         const verificationToken = new VerificationToken({
-          owner: newUser._id,
+          owner: user._id,
           token: OTP,
         });
 
-        await verificationToken.updateOne();
+        await verificationToken.save();
 
         await sendMail({
           // from: "accounts@shop0.com",
           from: process.env.SMTP_MAIL,
-          email: newUser.email,
+          email: user.email,
           subject: "Activate Your Account",
           html: generateEmailtemplate(OTP),
         });
 
-        // await verificationToken.save();
-
-        // await sendMail({
-        //   from: "accounts@shop0.com",
-        //   email: req.body.email,
-        //   subject: "Activate Your Account",
-        //   html: generateEmailtemplate(OTP),
-        // });
-
-        // try {
-        //   await sendMail({
-        //     email: user.email,
-        //     subject: "Activate Your Account",
-        //     message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
-        //   });
-        //   // console.log(message);
-        //   // res.status(201).json({
-        //   //   success: true,
-        //   //   message: `Please check your email: ${newUser.email} to activate your account`,
-        //   // });
-        // } catch (error) {
-        //   return next(new ErrorHandler(error.message, 500));
-        // }
         return res.status(404).json({
           success: false,
+          errorCode: 600,
           message: "Account not verified please check you email to verify.",
+        });
+      }
+      if (!user.isActive) {
+        const message = `Hello ${user.name} your account was deactivated kindly contact us via our support page`;
+
+        await sendMail({
+          // from: "accounts@shop0.com",
+          from: process.env.SMTP_MAIL,
+          email: user.email,
+          subject: "Inactive account",
+          html: message,
+        });
+
+        return res.status(401).json({
+          success: false,
+          message: "Your account is Inactive",
         });
       }
 
@@ -294,7 +302,7 @@ router.post(
     } catch (error) {
       return res.status(404).json({
         success: false,
-        message: "server error",
+        message: error.message,
         error,
       });
     }
@@ -433,6 +441,15 @@ router.put(
 
       user.resetPasswordToken = undefined;
       user.resetPasswordTime = undefined;
+
+      const message = `Hello ${user.name} your account password has been reseted successfully  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Accout password reset",
+        html: message,
+      });
 
       await user.save();
 
@@ -644,6 +661,16 @@ router.put(
 
       // Update user's password
       user.password = newPassword;
+
+      const message = `Hello ${user.name} your account has been activated  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Password updated",
+        html: message,
+      });
+
       await user.save();
 
       return res.status(200).json({
@@ -697,6 +724,15 @@ router.put(
 
       user.role = newRole;
 
+      const message = `Hello ${user.name} your account role has changed to ${newRole}  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Account Role changed",
+        html: message,
+      });
+
       await user.save();
       res.status(200).json({
         success: true,
@@ -728,6 +764,15 @@ router.put(
 
       user.isActive = status;
 
+      const message = `Hello ${user.name} your account has been activated  `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Account Activation",
+        html: message,
+      });
+
       await user.save();
       res.status(200).json({
         success: true,
@@ -758,6 +803,14 @@ router.put(
       }
 
       user.isActive = status;
+      const message = `Hello ${user.name} your account has been deactivated `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Account Deactivation",
+        html: message,
+      });
 
       await user.save();
       res.status(200).json({
@@ -778,13 +831,47 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const id = req.params.id;
+      const existsUser = await User.findById(id);
+      const existsAvatarPath = `uploads/${existsUser.avatar.filename}`;
+
+      // Check if file exists before attempting to unlink it
+      try {
+        await accessAsync(existsAvatarPath, fs.constants.F_OK);
+
+        // File exists, proceed with deletion
+        await unlinkAsync(existsAvatarPath);
+        // console.log("File deleted successfully:", existsAvatarPath);
+        // res.status(200).json({
+        //   success: true,
+        //   message: `File deleted successfully: ${existsAvatarPath}`,
+        // });
+      } catch (error) {
+        // File does not exist or cannot be accessed
+        // console.log( "File does not exist or cannot be accessed:",existsAvatarPath);
+
+        res.status(400).json({
+          success: false,
+          message: `File does not exist or cannot be accessed: ${existsAvatarPath}`,
+        });
+      }
+
       const user = await User.findByIdAndDelete(id);
+
       if (!user) {
         return res.status(404).json({
           success: false,
           message: `No user with the specified Id`,
         });
       }
+
+      const message = `Hello ${user.name} your account has been deleted `;
+      await sendMail({
+        // from: "accounts@shop0.com",
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Account Deletion",
+        html: message,
+      });
 
       res.status(200).json({
         success: true,

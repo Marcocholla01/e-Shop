@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useRef, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../../styles/style";
 import Logo from "../../../assets/images/svg/logo.svg";
@@ -18,6 +18,12 @@ function Login() {
   const [visible, setVisible] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
+
+  const [userId, setUserId] = useState("");
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [open, setOpen] = useState(false);
+
+  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   // Regular expression for email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,6 +94,9 @@ function Login() {
       })
       .catch((error) => {
         if (error.response) {
+          if (error.response.data.errorCode === 600) {
+            setOpen(true);
+          }
           // The request was made and the server responded with a non-2xx status code
           if (error.response.status === 404) {
             toast.error(error.response.data.message);
@@ -105,6 +114,61 @@ function Login() {
           // Something happened in setting up the request that triggered an error
           toast.error("Request failed. Please try again later.");
         }
+      });
+  };
+
+  const handleOtpChange = (index, value) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < inputRefs.length - 1) {
+      inputRefs[index + 1].current.focus();
+    } else if (!value && index > 0) {
+      inputRefs[index - 1].current.focus();
+    }
+  };
+
+  const handleAccountVerification = async (e) => {
+    e.preventDefault();
+    const otpValue = otp.join("");
+    // Check if any  field is empty
+    if (!userId) {
+      toast.error("Please enter your secret key!");
+      return;
+    }
+    if (userId.length < 24) {
+      toast.error("Secret Key can not be less than 24 digits!");
+      return;
+    }
+    if (!otpValue) {
+      toast.error("Please enter the OTP CODES ");
+      return;
+    }
+    if (otpValue.length < 4) {
+      toast.error("Enter all the OTP digits");
+      return;
+    }
+
+    axios
+      .post(`${BASE_URL}/user/verify-user`, { userId, otp: otpValue })
+      .then((response) => {
+        if (
+          (response.data.success === true &&
+            response.data.message ===
+              `Account already verified!, Kindly login`) ||
+          (response.data.success === true &&
+            response.data.message === `Account verified succesfully`)
+        ) {
+          toast.success(response.data.message);
+          setUserId("");
+          setOtp(["", "", "", ""]);
+          setOpen(false);
+          navigate(`/login`);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
       });
   };
 
@@ -129,6 +193,8 @@ function Login() {
         toast.error(error.response.data.message);
       });
   };
+
+
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -299,6 +365,90 @@ function Login() {
                     onClick={handlePasswordResetRequest}
                   >
                     submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      {open && (
+        <>
+          <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
+            <div
+              className={`sm:w-[40%] w-[75%] bg-gray-200 shadow rounded min-h-[30vh] p-3`}
+            >
+              {/* <div className="w-full flex justify-end">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div> */}
+              <div className="w-full flex items-center justify-center flex-col">
+                <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
+                  ACCOUNT VERIFICATION
+                </h3>
+                <p className="text-center">
+                  Enter the <span className="font-semibold">OTP</span> and{" "}
+                  <span className="font-semibold">SECRET KEY</span> sent to your
+                  email account
+                </p>
+                <form
+                  action=""
+                  className="mt-5 flex gap-3 items-center flex-col"
+                >
+                  <label
+                    htmlFor="email"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    Secret Key <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    className={`${styles.input} !w-[270px] mb-1 mt-1 sm:mb-0 px-3 py-2 mr-2 text-center  border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    required
+                    value={userId}
+                    placeholder="Input your Secret Key"
+                    onChange={(e) => setUserId(e.target.value)}
+                  />
+                  <label
+                    htmlFor="email"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    OTP CODE <span className="text-red-500">*</span>
+                  </label>
+                  <div className={`flex justify-center gap-3`}>
+                    {otp.map((value, index) => (
+                      <>
+                        <input
+                          key={index}
+                          className="otp text-center appearance-none block w-[50px] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          type="number"
+                          autoComplete={false}
+                          required
+                          placeholder={`${index + 1}`}
+                          value={value}
+                          onChange={(e) =>
+                            handleOtpChange(index, e.target.value)
+                          }
+                          ref={inputRefs[index]}
+                        />
+                        <span></span>
+                      </>
+                    ))}
+                  </div>
+                </form>
+                <div className="mt-4 flex justify-center">
+                  <hr className="mt-4" />
+                  <button
+                    onClick={handleAccountVerification}
+                    type="button"
+                    className="m-7 group relative w-auto h-[40] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 self-center"
+                  >
+                    VERIFY ACCOUNT
                   </button>
                 </div>
               </div>

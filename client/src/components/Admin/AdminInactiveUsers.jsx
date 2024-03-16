@@ -24,7 +24,7 @@ const AdminInactiveUsers = () => {
   const [userData, setUserData] = useState([]);
 
   const activeUsers = users && users.filter((i) => i.isActive === false);
-  const updateUserSubmitHandler = async () => {
+  const updateUserSubmitHandler = async (e) => {
     e.preventDefault();
     // console.log(userData.role);
     await axios
@@ -201,7 +201,7 @@ const AdminInactiveUsers = () => {
               </div>
               <div className="w-full flex items-center justify-center flex-col">
                 <h1 className="text-center font-Poppins font-[600] text-[22px]">
-                update user account status
+                  update user account status
                 </h1>
 
                 <form
@@ -255,9 +255,12 @@ const AdminInactiveUsers = () => {
                       onChange={(e) => setRole(e.target.value)}
                       className="appearance-none block w-full px-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm "
                     >
-                      <option value={activeUsers.role}>Choose Role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="user">User</option>
+                      <option>Choose Role</option>
+                      {["user", "Admin"].map((option, index) => (
+                        <option value={option} key={index}>
+                          {option}{" "}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

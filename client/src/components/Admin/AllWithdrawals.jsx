@@ -21,6 +21,8 @@ const AllWithdrawals = () => {
   const { id } = useParams();
 
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [productData, setProductData] = useState("");
   const [withdrawData, setWithdrawData] = useState([]);
   const [withdrawStatus, setWithdrawStatus] = useState("Processing");
 
@@ -48,7 +50,24 @@ const AllWithdrawals = () => {
       .then((res) => {
         toast.success(res.data.message);
         setWithdrawData(res.data.withdraw);
+        dispatch(adminGetAllWithdrawal());
         setOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const deleteWithdrawal = async (e) => {
+    e.preventDefault();
+    await axios
+      .delete(`${BASE_URL}/withdraw/delete-withdraw/${productData.id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(adminGetAllWithdrawal());
+        setOpenDelete(false);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -119,7 +138,9 @@ const AllWithdrawals = () => {
       renderCell: (params) => {
         return (
           <>
-            <Button>
+            <Button
+              onClick={() => setOpenDelete(true) || setProductData(params.row)}
+            >
               <AiOutlineDelete size={20} />
             </Button>
           </>
@@ -144,7 +165,9 @@ const AllWithdrawals = () => {
   return (
     <div className="w-full flex justify-center mt-3">
       <div className="w-[95%]">
-        <h3 className="text-[22px] font-Poppins p-2 text-center">All Withdrawals</h3>
+        <h3 className="text-[22px] font-Poppins p-2 text-center">
+          All Withdrawals
+        </h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
           <DataGrid
             rows={row}
@@ -191,6 +214,50 @@ const AllWithdrawals = () => {
                     onClick={hadleSubmit}
                   >
                     submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {openDelete && (
+        <>
+          <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
+            <div
+              className={`sm:w-[40%] w-[95%] bg-white shadow rounded min-h-[25vh] p-3`}
+            >
+              <div className="w-full flex justify-end">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer mr-3"
+                  onClick={() => setOpenDelete(false)}
+                />
+              </div>
+
+              <h1 className="text-center font-Poppins text-[25px]">
+                Are you sure you want to delete withdrawal data
+              </h1>
+              <h4 className="text-center font-Poppins text-[20px] text-[#0000007a]">
+                {productData.name.slice(0, 30)}...
+              </h4>
+
+              <div className="w-full items-center flex  justify-center flex-row gap-10">
+                <div className="flex items-center  ">
+                  <button
+                    className="mt-7 group w-[100px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-red-700 hover:bg-red-600 uppercase"
+                    onClick={() => setOpenDelete(false)}
+                  >
+                    no
+                  </button>
+                </div>
+                <div className="flex items-center  ">
+                  <button
+                    className="mt-7 group w-[100px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-green-700 hover:bg-green-600 uppercase"
+                    onClick={deleteWithdrawal}
+                  >
+                    yes
                   </button>
                 </div>
               </div>

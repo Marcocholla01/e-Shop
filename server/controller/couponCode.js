@@ -2,7 +2,7 @@ const express = require("express");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller, isAuthenticated } = require("../middlewares/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const CouponCode = require("../models/couponCode");
 
 const router = express.Router();
@@ -98,6 +98,52 @@ router.get(
         success: true,
         message: `coupon code applied successfully`,
         couponCode,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// Get all coupon codes ----Admin
+router.get(
+  `/admin-all-coupon-codes`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const couponCodes = await CouponCode.find().sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        couponCodes,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// delete withdraw ----Admin
+router.delete(
+  `/delete-coupon-code/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const couponCode = await CouponCode.findByIdAndDelete(id);
+      if (!couponCode) {
+        return res.status(404).json({
+          success: false,
+          message: `No coupon code with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Coupon code deleted Successfully `,
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));

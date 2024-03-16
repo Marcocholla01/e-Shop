@@ -176,4 +176,30 @@ router.get(
   })
 );
 
+// delete event ----Admin
+router.delete(
+  `/delete-event/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const event = await Event.findByIdAndDelete(id);
+      if (!event) {
+        return res.status(404).json({
+          success: false,
+          message: `No event with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Event deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
 module.exports = router;

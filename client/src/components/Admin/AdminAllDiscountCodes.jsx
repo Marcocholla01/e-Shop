@@ -6,35 +6,36 @@ import {
   AiOutlineDelete,
   AiOutlineEye,
 } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import { adminGetAllProducts } from "../../redux/actions/product";
-import { toast } from "react-toastify";
+import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { RxCross1 } from "react-icons/rx";
+import { toast } from "react-toastify";
+import { adminGetAllCouponCodes } from "../../redux/actions/couponCode";
 
-const AllProducts = () => {
-  const { adminProducts } = useSelector((state) => state.product);
+const AdminAllDiscountCodes = () => {
+  const { adminCouponCode } = useSelector((state) => state.couponCode);
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   const [open, setOpen] = useState();
   const [productData, setProductData] = useState();
 
   useEffect(() => {
-    dispatch(adminGetAllProducts());
+    dispatch(adminGetAllCouponCodes());
   }, []);
-  // console.log(adminProducts);
+  // console.log(adminCouponCode);
 
-  const deleteProduct = async (e) => {
+  const deleteEvent = async (e) => {
     e.preventDefault();
     await axios
-      .delete(`${BASE_URL}/product/delete-product/${productData.id}`, {
+      .delete(`${BASE_URL}/couponCode/delete-coupon-code/${productData.id}`, {
         withCredentials: true,
       })
       .then((response) => {
         toast.success(response.data.message);
-        dispatch(adminGetAllProducts());
+        dispatch(adminGetAllCouponCodes());
         setOpen(false);
       })
       .catch((error) => {
@@ -43,30 +44,45 @@ const AllProducts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Coupon Code",
       minWidth: 150,
       flex: 0.7,
     },
     {
       field: "price",
-      headerName: "Price",
-      minWidth: 70,
-      flex: 0.6,
-    },
-    {
-      field: "Stock",
-      headerName: "Stock",
+      headerName: "Discount",
       type: "number",
       minWidth: 80,
       flex: 0.5,
     },
 
     {
-      field: "sold",
-      headerName: "Sold out",
+      field: "status",
+      headerName: "Status",
+      minWidth: 70,
+      flex: 0.6,
+    },
+    {
+      field: "shop",
+      headerName: "Shop Id",
+      type: "number",
+      minWidth: 80,
+      flex: 0.5,
+    },
+
+    {
+      field: "startDate",
+      headerName: "Start Date",
+      type: "number",
+      minWidth: 100,
+      flex: 0.6,
+    },
+    {
+      field: "endDate",
+      headerName: "End Date",
       type: "number",
       minWidth: 100,
       flex: 0.6,
@@ -81,7 +97,7 @@ const AllProducts = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/product/${params.id}`}>
+            <Link to={`/couponCode/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>
@@ -111,20 +127,22 @@ const AllProducts = () => {
 
   const row = [];
 
-  adminProducts &&
-    adminProducts.forEach((item) => {
+  adminCouponCode &&
+    adminCouponCode.forEach((item) => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "KSHS " + item.discountPrice,
-        Stock: item.stock,
-        sold: item?.sold_out,
+        price: item.value + " %",
+        status: item.status,
+        shop: item.shopId,
+        startDate: item.start_date.slice(0, 10),
+        endDate: item.finish_date.slice(0, 10),
       });
     });
   return (
     <div className="w-full flex justify-center mt-3">
       <div className="w-[95%]">
-        <h3 className="text-[22px] font-Poppins pb-2">All Products</h3>
+        <h3 className="text-[22px] font-Poppins pb-2">All Coupon Codes</h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
           <DataGrid
             rows={row}
@@ -150,7 +168,7 @@ const AllProducts = () => {
               </div>
 
               <h1 className="text-center font-Poppins text-[25px]">
-                Are you sure you want to delete this product
+                Are you sure you want to delete this Coupon Code
               </h1>
               <h4 className="text-center font-Poppins text-[20px] text-[#0000007a]">
                 {productData.name.slice(0, 30)}...
@@ -168,7 +186,7 @@ const AllProducts = () => {
                 <div className="flex items-center  ">
                   <button
                     className="mt-7 group w-[100px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-green-700 hover:bg-green-600 uppercase"
-                    onClick={deleteProduct}
+                    onClick={deleteEvent}
                   >
                     yes
                   </button>
@@ -182,4 +200,4 @@ const AllProducts = () => {
   );
 };
 
-export default AllProducts;
+export default AdminAllDiscountCodes;

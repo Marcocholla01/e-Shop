@@ -1,26 +1,36 @@
+import { Button } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid } from "@material-ui/data-grid";
-import { AiOutlineArrowRight, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import Loader from "../Layout/Loader";
 import { getAllOrdersOfAdmin } from "../../redux/actions/order";
+import { AiOutlineArrowRight, AiOutlineDelete } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 
-const AllOrders = () => {
-  const { adminOrders } = useSelector((state) => state.order);
-  const dispatch = useDispatch();
+const AdminAllRefunds = () => {
+  const { adminOrders, adminOrderLoading } = useSelector(
+    (state) => state.order
+  );
 
-  const [open, setOpen] = useState();
-  const [productData, setProductData] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
-  }, []);
-  // console.log(adminOrders);
+  }, [dispatch]);
+
+  const refundOrder =
+    adminOrders &&
+    adminOrders.filter(
+      (item) =>
+        item.status === `Processing refund` || item.status === `Refund Success`
+    );
+
+  const [open, setOpen] = useState();
+  const [productData, setProductData] = useState();
 
   const deleteOrder = async (e) => {
     e.preventDefault();
@@ -37,7 +47,6 @@ const AllOrders = () => {
         toast.error(error.response.data.message);
       });
   };
-
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -47,9 +56,16 @@ const AllOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        const status = params.getValue(params.id, "status"); // Get the status value from the cell
+
+        // Apply Tailwind CSS classes directly based on the status
+        if (status === "Delivered" || "delivered") {
+          return "text-green-500";
+        } else if (status === "Processing" || "processing") {
+          return "text-blue-500";
+        } else {
+          return "text-red-500";
+        }
       },
     },
     {
@@ -108,8 +124,8 @@ const AllOrders = () => {
 
   const row = [];
 
-  adminOrders &&
-    adminOrders.forEach((item) => {
+  refundOrder &&
+    refundOrder.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
@@ -117,20 +133,27 @@ const AllOrders = () => {
         status: item.status,
       });
     });
+
   return (
-    <div className="w-full flex justify-center mt-3">
-      <div className="w-[95%]">
-        <h3 className="text-[22px] font-Poppins pb-2">All Orders</h3>
-        <div className="w-full min-h-[45vh] bg-white rounded">
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-        </div>{" "}
-      </div>
+    <>
+      {adminOrderLoading ? (
+        <Loader />
+      ) : (
+        <div className="w-full flex justify-center mt-3">
+          <div className="w-[95%]">
+            <h3 className="text-[22px] font-Poppins pb-2">All Refunds</h3>
+            <div className="w-full min-h-[45vh] bg-white rounded">
+              <DataGrid
+                rows={row}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+              />
+            </div>
+          </div>
+        </div>
+      )}
       {open && (
         <>
           <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
@@ -174,8 +197,8 @@ const AllOrders = () => {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 
-export default AllOrders;
+export default AdminAllRefunds;
