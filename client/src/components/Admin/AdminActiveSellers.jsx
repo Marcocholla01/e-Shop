@@ -8,8 +8,13 @@ import { BiEdit } from "react-icons/bi";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../styles/style";
 import { IoMailOutline, IoPersonCircleOutline } from "react-icons/io5";
-import { backend_url } from "../../config";
+import { BASE_URL, backend_url } from "../../config";
 import { MdVerifiedUser } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getAllUsers } from "../../redux/actions/user";
+import axios from "axios";
+import { getAllSellers } from "../../redux/actions/seller";
 
 const AdminActiveSellers = () => {
   const { sellers, adminUsersLoading } = useSelector((state) => state.seller);
@@ -19,7 +24,62 @@ const AdminActiveSellers = () => {
 
   const activeUsers = sellers && sellers.filter((i) => i.isActive === true);
 
-  const updateUserSubmitHandler = () => {};
+  const [userData, setUserData] = useState([]);
+  const updateUserSubmitHandler = async () => {
+    e.preventDefault();
+    // console.log(userData.role);
+    await axios
+      .put(
+        `${BASE_URL}/user/update-user-role/${userData.id}`,
+        {
+          newRole: role,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(getAllUsers());
+        setOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const deactivateUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${BASE_URL}/shop/deactivate-shop/${userData.id}`,
+        { status: false },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllSellers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+  // console.log(sellers);
+  const deleteUser = async (e) => {
+    e.preventDefault();
+
+    await axios
+      .delete(`${BASE_URL}/shop/delete-shop/${userData.id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllSellers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   const columns = [
     { field: "id", headerName: "User ID", minWidth: 150, flex: 0.8 },
@@ -73,7 +133,7 @@ const AdminActiveSellers = () => {
       renderCell: (params) => {
         return (
           <>
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => setOpen(true) || setUserData(params.row)}>
               <BiEdit size={20} />
             </Button>
           </>
@@ -115,6 +175,14 @@ const AdminActiveSellers = () => {
                 autoHeight
               />
             </div>
+            <div className="w-full mt-6 justify-end flex gap-3">
+              <Link
+                to={`/admin-inactive-sellers`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+              >
+                view Inactive shops
+              </Link>
+            </div>{" "}
           </div>{" "}
         </div>
       )}
@@ -134,7 +202,7 @@ const AdminActiveSellers = () => {
               </div>
               <div className="w-full flex items-center justify-center flex-col">
                 <h1 className="text-center font-Poppins font-[600] text-[22px]">
-                  Change Shop Account
+                  Change Shop Account Status
                 </h1>
 
                 <form
@@ -147,17 +215,18 @@ const AdminActiveSellers = () => {
                     srcset=""
                     className="w-[100px] h-[100px] rounded-full self-center m-3"
                   /> */}
-
-                  <div className=" w-full items-center flex flex-row">
-                    {/* <IoPersonCircleOutline
-                        className="absolute "
+                  <div className=" w-full items-center flex flex-row mt-7">
+                    {/* <IoMailOutline
+                        className="absolute"
                         size={35}
                         color="gray"
                       /> */}
+
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deactivateUser}
                     >
-                      Acivate Seller
+                      Deactivate Shop
                     </div>
                   </div>
                   <div className=" w-full items-center flex flex-row mt-7">
@@ -168,22 +237,10 @@ const AdminActiveSellers = () => {
                       /> */}
 
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deleteUser}
                     >
-                      Deactivate Seller
-                    </div>
-                  </div>
-                  <div className=" w-full items-center flex flex-row mt-7">
-                    {/* <IoMailOutline
-                        className="absolute"
-                        size={35}
-                        color="gray"
-                      /> */}
-
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
-                    >
-                      Delete Seller
+                      Delete Shop
                     </div>
                   </div>
                 </form>

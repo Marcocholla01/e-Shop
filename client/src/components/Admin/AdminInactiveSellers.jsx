@@ -7,6 +7,12 @@ import { Link } from "react-router-dom";
 import Loader from "../Layout/Loader";
 import { BiEdit } from "react-icons/bi";
 import { RxCross1 } from "react-icons/rx";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import { getAllUsers } from "../../redux/actions/user";
+import { toast } from "react-toastify";
+import styles from "../../styles/style";
+import { getAllSellers } from "../../redux/actions/seller";
 
 const AdminInactiveSellers = () => {
   const { sellers, adminUsersLoading } = useSelector((state) => state.seller);
@@ -17,8 +23,64 @@ const AdminInactiveSellers = () => {
 
   const activeSellers = sellers && sellers.filter((i) => i.isActive === false);
 
-  const updateUserSubmitHandler = () => {};
+  const [userData, setUserData] = useState([]);
 
+  const updateUserSubmitHandler = async (e) => {
+    e.preventDefault();
+    // console.log(userData.role);
+    await axios
+      .put(
+        `${BASE_URL}/shop/update-shop-role/${userData.id}`,
+        {
+          newRole: role,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllSellers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const activateUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${BASE_URL}/shop/activate-shop/${userData.id}`,
+        { status: true },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllSellers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  // console.log(sellers);
+  const deleteUser = async (e) => {
+    e.preventDefault();
+
+    await axios
+      .delete(`${BASE_URL}/shop/delete-shop/${userData.id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllSellers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
   const columns = [
     { field: "id", headerName: "Shop ID", minWidth: 150, flex: 0.8 },
 
@@ -64,7 +126,7 @@ const AdminInactiveSellers = () => {
       renderCell: (params) => {
         return (
           <>
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => setOpen(true) || setUserData(params.row)}>
               <BiEdit size={20} />
             </Button>
           </>
@@ -103,6 +165,14 @@ const AdminInactiveSellers = () => {
                 autoHeight
               />
             </div>
+            <div className="w-full mt-6 justify-end flex gap-3">
+              <Link
+                to={`/admin-active-sellers`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+              >
+                view Active shops
+              </Link>
+            </div>{" "}
           </div>{" "}
         </div>
       )}
@@ -143,7 +213,8 @@ const AdminInactiveSellers = () => {
                         color="gray"
                       /> */}
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
+                      onClick={activateUser}
                     >
                       Acivate User
                     </div>
@@ -156,20 +227,8 @@ const AdminInactiveSellers = () => {
                       /> */}
 
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
-                    >
-                      Deactivate User
-                    </div>
-                  </div>
-                  <div className=" w-full items-center flex flex-row mt-7">
-                    {/* <IoMailOutline
-                        className="absolute"
-                        size={35}
-                        color="gray"
-                      /> */}
-
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deleteUser}
                     >
                       Delete User
                     </div>

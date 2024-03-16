@@ -612,6 +612,94 @@ router.delete(
   })
 );
 
+// activate shop
+router.put(
+  `/activate-shop/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { status } = req.body;
+      const id = req.params.id;
+
+      const shop = await Shop.findById(id);
+      if (!shop) {
+        return res.status(404).json({
+          success: false,
+          message: `No shop with the specified Id`,
+        });
+      }
+
+      shop.isActive = status;
+
+      await shop.save();
+      res.status(200).json({
+        success: true,
+        message: `Shop status changed successfully to Active `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// deactivate shop
+router.put(
+  `/deactivate-shop/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { status } = req.body;
+      const id = req.params.id;
+
+      const shop = await Shop.findById(id);
+      if (!shop) {
+        return res.status(404).json({
+          success: false,
+          message: `No shop with the specified Id`,
+        });
+      }
+
+      shop.isActive = status;
+
+      await shop.save();
+      res.status(200).json({
+        success: true,
+        message: `Shop status changed successfully to Inactive `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// delete shop
+router.delete(
+  `/delete-shop/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const shop = await Shop.findByIdAndDelete(id);
+      if (!shop) {
+        return res.status(404).json({
+          success: false,
+          message: `No shop with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Shop deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
 module.exports = router;
 
 // router.post(

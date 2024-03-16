@@ -8,7 +8,7 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ error: "Please login to continue" });
+    return res.status(401).json({ message: "Please login to continue" });
   }
 
   try {
@@ -17,7 +17,7 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
     // Check if the user exists
     const user = await User.findById(decoded.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     req.user = user;
@@ -27,16 +27,16 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
     if (error.name === "JsonWebTokenError") {
       return res
         .status(401)
-        .json({ error: "Invalid token, please login again" });
+        .json({ message: "Invalid token, please login again" });
     } else if (error.name === "TokenExpiredError") {
       return res
         .status(401)
-        .json({ error: "Token has expired, please login again" });
+        .json({ message: "Token has expired, please login again" });
     }
 
     // Handle other errors
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -45,7 +45,7 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
   const { shop_token } = req.cookies;
 
   if (!shop_token) {
-    return res.status(401).json({ error: "Please login to continue" });
+    return res.status(401).json({ message: "Please login to continue" });
   }
 
   try {
@@ -54,7 +54,7 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
     // Check if the user exists
     const shop = await Shop.findById(decoded.id);
     if (!shop) {
-      return res.status(404).json({ error: "Shop not found" });
+      return res.status(404).json({ message: "Shop not found" });
     }
 
     req.shop = shop;
@@ -64,16 +64,16 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
     if (error.name === "JsonWebTokenError") {
       return res
         .status(401)
-        .json({ error: "Invalid token, please login again" });
+        .json({ message: "Invalid token, please login again" });
     } else if (error.name === "TokenExpiredError") {
       return res
         .status(401)
-        .json({ error: "Token has expired, please login again" });
+        .json({ message: "Token has expired, please login again" });
     }
 
     // Handle other errors
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -81,7 +81,11 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
 exports.isAdmin = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new ErrorHandler(`Access denied`));
+      return res
+        .status(500)
+        .json({
+          message: `Operation not permitted to ${req.user.role} ..Access denied`,
+        });
     }
     next();
   };

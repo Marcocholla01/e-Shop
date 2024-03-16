@@ -8,12 +8,92 @@ import Loader from "../Layout/Loader";
 import { BiEdit } from "react-icons/bi";
 import { MdVerifiedUser } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
+import { getAllUsers } from "../../redux/actions/user";
+import styles from "../../styles/style";
 
 const AdminAllUsers = () => {
   const { users, loading } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState("");
-  const updateUserSubmitHandler = () => {};
+  const [role, setRole] = useState("choose Role");
+
+  const [userData, setUserData] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const updateUserSubmitHandler = async (e) => {
+    e.preventDefault();
+    // console.log(userData.role);
+    await axios
+      .put(
+        `${BASE_URL}/user/update-user-role/${userData.id}`,
+        {
+          newRole: role,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllUsers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const activateUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${BASE_URL}/user/activate-user/${userData.id}`,
+        { status: true },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllUsers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const deactivateUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${BASE_URL}/user/deactivate-user/${userData.id}`,
+        { status: false },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllUsers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+  const deleteUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .delete(`${BASE_URL}/user/delete-user/${userData.id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        toast.success(response.data.message);
+        setOpen(false);
+        dispatch(getAllUsers());
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   const columns = [
     { field: "id", headerName: "User ID", minWidth: 150, flex: 0.8 },
@@ -40,6 +120,13 @@ const AdminAllUsers = () => {
       minWidth: 70,
       flex: 0.5,
     },
+    {
+      field: "status",
+      headerName: "isActive",
+      type: "text",
+      minWidth: 70,
+      flex: 0.5,
+    },
 
     {
       field: "joinedOn",
@@ -61,13 +148,13 @@ const AdminAllUsers = () => {
       field: "   ",
       flex: 0.5,
       minWidth: 10,
-      headerName: "View More",
+      headerName: "Edit User",
       type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
           <>
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => setOpen(true) || setUserData(params.row)}>
               <BiEdit size={20} />
             </Button>
           </>
@@ -85,6 +172,7 @@ const AdminAllUsers = () => {
         name: item.name,
         email: item.email,
         role: item.role,
+        status: item.isActive,
         joinedOn: item.createdAt.slice(0, 10),
         joinedAt: item.createdAt.slice(11, 19),
       });
@@ -107,6 +195,20 @@ const AdminAllUsers = () => {
                 autoHeight
               />
             </div>
+            <div className="w-full mt-6 justify-end flex gap-3">
+              <Link
+                to={`/admin-active-users`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+              >
+                view Active users
+              </Link>
+              <Link
+                to={`/admin-inactive-users`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+              >
+                view Inactive users
+              </Link>
+            </div>{" "}
           </div>{" "}
         </div>
       )}
@@ -126,7 +228,7 @@ const AdminAllUsers = () => {
               </div>
               <div className="w-full flex items-center justify-center flex-col">
                 <h1 className="text-center font-Poppins font-[600] text-[22px]">
-                  Change User Account Role
+                  update user account status
                 </h1>
 
                 <form
@@ -147,7 +249,8 @@ const AdminAllUsers = () => {
                         color="gray"
                       /> */}
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
+                      onClick={activateUser}
                     >
                       Acivate User
                     </div>
@@ -160,7 +263,8 @@ const AdminAllUsers = () => {
                       /> */}
 
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deactivateUser}
                     >
                       Deactivate User
                     </div>
@@ -173,7 +277,8 @@ const AdminAllUsers = () => {
                       /> */}
 
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deleteUser}
                     >
                       Delete User
                     </div>
@@ -190,9 +295,12 @@ const AdminAllUsers = () => {
                       onChange={(e) => setRole(e.target.value)}
                       className="appearance-none block w-full px-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm "
                     >
-                      <option value={users.role}>Choose Role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="user">User</option>
+                      <option>Choose Role</option>
+                      {["user", "Admin"].map((option, index) => (
+                        <option value={option} key={index}>
+                          {option}{" "}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

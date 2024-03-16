@@ -677,6 +677,125 @@ router.get(
   })
 );
 
+// update or change user role
+router.put(
+  `/update-user-role/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { newRole } = req.body;
+      const id = req.params.id;
+
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with the specified Id`,
+        });
+      }
+
+      user.role = newRole;
+
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: `User Role updated to ${newRole} successfully`,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// activate user
+router.put(
+  `/activate-user/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { status } = req.body;
+      const id = req.params.id;
+
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with the specified Id`,
+        });
+      }
+
+      user.isActive = status;
+
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: `User status changed successfully to Active `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// deactivate user
+router.put(
+  `/deactivate-user/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { status } = req.body;
+      const id = req.params.id;
+
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with the specified Id`,
+        });
+      }
+
+      user.isActive = status;
+
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: `User status changed successfully to Inactive `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// delete user
+router.delete(
+  `/delete-user/:id`,
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findByIdAndDelete(id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `User deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
 //   // Generate the activation token
 //   const activationToken = createActivationToken(user);
 

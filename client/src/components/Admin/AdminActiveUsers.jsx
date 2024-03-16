@@ -12,11 +12,13 @@ import { BASE_URL, backend_url } from "../../config";
 import { MdVerifiedUser } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getAllUsers } from "../../redux/actions/user";
+import { Link } from "react-router-dom";
 
 const AdminActiveUsers = () => {
   const { users, adminUsersLoading } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("choose Role");
   const dispatch = useDispatch();
 
   const [userData, setUserData] = useState([]);
@@ -27,11 +29,50 @@ const AdminActiveUsers = () => {
     e.preventDefault();
     // console.log(userData.role);
     await axios
-      .put(`${BASE_URL}/user/update-user-role/${userData.id}`, {
-        newRole: role,
+      .put(
+        `${BASE_URL}/user/update-user-role/${userData.id}`,
+        {
+          newRole: role,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(getAllUsers());
+        setOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const deactivateUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .put(
+        `${BASE_URL}/user/deactivate-user/${userData.id}`,
+        { status: false },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(getAllUsers());
+        setOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+  const deleteUser = async (e) => {
+    e.preventDefault();
+    await axios
+      .delete(`${BASE_URL}/user/delete-user/${userData.id}`, {
+        withCredentials: true,
       })
       .then((response) => {
         toast.success(response.data.message);
+        dispatch(getAllUsers());
+        setOpen(false);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -84,7 +125,7 @@ const AdminActiveUsers = () => {
       field: "   ",
       flex: 0.5,
       minWidth: 10,
-      headerName: "Edit Seller",
+      headerName: "Edit User",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -110,7 +151,7 @@ const AdminActiveUsers = () => {
         role: item.role,
         joinedOn: item.createdAt.slice(0, 10),
         joinedAt: item.createdAt.slice(11, 19),
-        // image: item.avatar.filename,
+        image: item.avatar.filename,
       });
     });
 
@@ -132,6 +173,15 @@ const AdminActiveUsers = () => {
                 autoHeight
               />
             </div>
+            <div className="w-full mt-6 justify-between flex">
+              <br />
+              <Link
+                to={`/admin-inactive-users`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+              >
+                view Inactive users
+              </Link>
+            </div>{" "}
           </div>{" "}
         </div>
       )}
@@ -151,7 +201,7 @@ const AdminActiveUsers = () => {
               </div>
               <div className="w-full flex items-center justify-center flex-col">
                 <h1 className="text-center font-Poppins font-[600] text-[22px]">
-                  Change User Account Role
+                  update user account status
                 </h1>
 
                 <form
@@ -159,24 +209,11 @@ const AdminActiveUsers = () => {
                   onSubmit={updateUserSubmitHandler}
                 >
                   {/* <img
-                    src={`${backend_url}/uploads/`}
+                    src={`${backend_url}/uploads/${activeUsers?.avatar?.filename}`}
                     alt=""
                     srcset=""
                     className="w-[100px] h-[100px] rounded-full self-center m-3"
                   /> */}
-
-                  <div className=" w-full items-center flex flex-row">
-                    {/* <IoPersonCircleOutline
-                        className="absolute "
-                        size={35}
-                        color="gray"
-                      /> */}
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
-                    >
-                      Acivate User
-                    </div>
-                  </div>
                   <div className=" w-full items-center flex flex-row mt-7">
                     {/* <IoMailOutline
                         className="absolute"
@@ -185,7 +222,8 @@ const AdminActiveUsers = () => {
                       /> */}
 
                     <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
+                      onClick={deactivateUser}
                     >
                       Deactivate User
                     </div>
@@ -199,6 +237,7 @@ const AdminActiveUsers = () => {
 
                     <div
                       className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 `}
+                      onClick={deleteUser}
                     >
                       Delete User
                     </div>
@@ -216,7 +255,7 @@ const AdminActiveUsers = () => {
                       className="appearance-none block w-full px-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm "
                     >
                       <option>Choose Role</option>
-                      {["User", "Admin"].map((option, index) => (
+                      {["user", "Admin"].map((option, index) => (
                         <option value={option} key={index}>
                           {option}{" "}
                         </option>
