@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../../assets/images/svg/Logo.svg";
+import Logo from "../../../assets/images/svg/logo.svg";
 import { AiOutlineGift } from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
