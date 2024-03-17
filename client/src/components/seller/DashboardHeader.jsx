@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Logo from "../../assets/images/svg/Logo.svg";
+import Logo from "../../assets/images/svg/logo.svg";
 import { Link } from "react-router-dom";
 import { AiOutlineGift } from "react-icons/ai";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
