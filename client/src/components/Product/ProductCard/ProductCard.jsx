@@ -18,6 +18,7 @@ import {
 import { addToCart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "../Ratings/Ratings.jsx";
+import { backend_url } from "../../../config.js";
 
 const ProductCard = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -96,7 +97,9 @@ const ProductCard = ({ data }) => {
           <Link to={`/product/${data?._id}`}>
             {/* window.location.reload(true); */}
             <img
-              src={`${data?.images && data?.images[0]?.url}`}
+              src={`${backend_url}/uploads/${
+                data?.images && data?.images[0]?.filename
+              }`}
               alt=""
               className=" h-[135px] object-contain rounded-md self-center"
             />
@@ -132,12 +135,19 @@ const ProductCard = ({ data }) => {
                 )}
               </div>
               <div className="py-2 flex-row items-center justify-between">
-                <p className="font-[400] text-[17px] text-[#68d284]">
-                  {data?.sold_out} sold
-                </p>
-                <p className="font-[400] text-[17px] text-[#68d284]">
-                  {data?.stock} Stock
-                </p>
+                {data?.stock !== 0 ? (
+                  <div className="bg-green-600 rounded-md  p-1">
+                    <span className="p-1 font-semibold text-sm text-[#fff]">
+                      stock Available {data?.stock}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="bg-red-600 rounded-md  p-1">
+                    <span className="p-1 font-semibold text-sm text-[#fff]">
+                      Out of Stock
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </Link>

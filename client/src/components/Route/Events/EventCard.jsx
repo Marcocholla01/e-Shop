@@ -35,25 +35,47 @@ const EventCard = ({ active, data }) => {
         active ? "unset" : "mb-12"
       } lg:flex p-2`}
     >
-      <div className="w-full lg:w-[50] m-auto">
-        <img src={`${backend_url}/uploads/${data?.images[0]}`} alt="" />
+      <div className="w-full lg:w-[50%] m-auto">
+        <img
+          src={`${backend_url}/uploads/${data?.images[0].filename}`}
+          alt=""
+          className=" w-[90%] h-[300px] object-cover rounded-[10px] m-2"
+        />
       </div>
-      <div className="w-full lg:[w-50] flex flex-col justify-center">
+      <div className="w-full lg:w-[50%] flex flex-col justify-center">
         <h2 className={`${styles.productTitle}`}>{data?.name}</h2>
-        <p>{data?.description}</p>
+        <p>
+          {" "}
+          {data.description.length > 50 ? data.description.slice(0, 200) + "..." : data.description}
+        </p>
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="pr-3 font-bold text-[18px] text-[#333] font-Roboto ">
               {" "}
-              999 KSH
+              KSHS: {data.discountPrice}
             </h5>
             <h5 className="font-[500] text-[16px] text-[#d55b45] pl-3 mt-[-4px] line-through">
-              1099 KSHS
+              KSHS: {data.originalPrice}
             </h5>
           </div>
-          <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-            120 sold
-          </span>
+        </div>
+        <div className="flex justify-end pr-3">
+          <br />
+          <div>
+            {data?.stock !== 0 ? (
+              <div className="bg-green-600 rounded-md m-3 p-1">
+                <span className="p-3 font-[400] text-[17px] text-[#fff]">
+                  Stock Available {data?.stock}
+                </span>
+              </div>
+            ) : (
+              <div className="bg-red-600 rounded-md m-3 p-1">
+                <span className="p-3 font-[400] text-[17px] text-[#fff]">
+                  Out of Stock
+                </span>
+              </div>
+            )}
+          </div>
         </div>
         <CountDown data={data} />
         <br />

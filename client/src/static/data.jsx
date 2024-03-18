@@ -217,7 +217,7 @@ export const brandingData = [
 export const categoriesData = [
   {
     id: 1,
-    title: "Computers and Laptops",
+    title: "Electronics eg Computers",
     subTitle: "",
     image_Url: macLaptop,
   },

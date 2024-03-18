@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
 import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
 import Ratings from "../Ratings/Ratings";
+import { backend_url } from "../../../config";
 
 const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -100,9 +101,9 @@ const ProductDetails = ({ data }) => {
     );
   const averageRating = (totalRatings / totalReviewsLength).toFixed(2) || 0;
 
-  console.log(averageRating);
-  console.log(totalRatings);
-  console.log(totalReviewsLength);
+  // console.log(averageRating);
+  // console.log(totalRatings);
+  // console.log(totalReviewsLength);
   return (
     <div className="bg-white">
       {data ? (
@@ -111,7 +112,7 @@ const ProductDetails = ({ data }) => {
             <div className="block w-full sm:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data?.product?.images[select]?.url}
+                  src={`${backend_url}/uploads/${data?.product?.images[select].filename}`}
                   alt=""
                   className="w-[80%] h-[450px] object-contain overflow-hidden rounded-md m-5"
                 />
@@ -139,7 +140,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[0]?.url}
+                      src={`${backend_url}/uploads/${data?.product?.images[0].filename}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(0)}
@@ -153,7 +154,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[1]?.url}
+                      src={`${backend_url}/uploads/${data?.product?.images[1].filename}`}
                       alt=""
                       className=" h-[200px] overflow-hidden  rounded-md"
                       onClick={() => setSelect(1)}
@@ -167,7 +168,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[2]?.url}
+                      src={`${backend_url}/uploads/${data?.product?.images[2].filename}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(2)}
@@ -181,7 +182,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={data?.product?.images[3]?.url}
+                      src={`${backend_url}/uploads/${data?.product?.images[3]?.filename}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(3)}
@@ -226,6 +227,7 @@ const ProductDetails = ({ data }) => {
                       </button>
                     </div> */}
                     <div>
+                      {data?.product?.tags}
                       {/* {click ? (
                         <AiFillHeart
                           size={22}
@@ -265,7 +267,7 @@ const ProductDetails = ({ data }) => {
                       <div>
                         <Link to={`/shop/preview/${data?.product?.shop?._id}`}>
                           <img
-                            src={data?.product?.shop?.avatar?.url}
+                            src={`${backend_url}/uploads/${data?.product?.shop?.avatar?.filename}`}
                             alt=""
                             className="w-[50px] h-[50px] rounded-full mr-2 object-contain bg-slate-500"
                           />
@@ -366,7 +368,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
             data?.product?.reviews?.map((item, index) => (
               <div className="w-full flex my-2">
                 <img
-                  src={`${item.user.avatar.url}`}
+                  src={`${backend_url}/uploads/${item.user.avatar.filename}`}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />
@@ -393,7 +395,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
             <div className="flex items-center">
               <Link to={`/shop/preview/${data.product.shop._id}`}>
                 <img
-                  src={data?.product?.shop?.avatar?.url}
+                  src={`${backend_url}/uploads/${data?.product?.shop?.avatar?.filename}`}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
@@ -404,7 +406,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
                   {data?.product?.shop?.name}
                 </h3>
                 <h5 className="pb-3 text-[15px]">
-                  {/* ({data?.shop?.ratings}) Ratings */} (4/5) Ratings
+                  ({data?.shop?.ratings}/5) Ratings
                 </h5>
               </div>
             </div>
