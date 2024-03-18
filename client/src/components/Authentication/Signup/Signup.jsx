@@ -21,11 +21,11 @@ function Signup() {
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
 
-  const [userId, setUserId] = useState(user && user._id);
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const [open, setOpen] = useState(false);
+  // const [userId, setUserId] = useState(user && user._id);
+  // const [otp, setOtp] = useState(["", "", "", ""]);
+  // const [open, setOpen] = useState(false);
 
-  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  // const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -97,81 +97,74 @@ function Signup() {
     axios
       .post(`${BASE_URL}/user/create-user`, newForm, config)
       .then((response) => {
-        if (response.data.success === true) {
-          // console.log(response);
-          toast.success(response.data.message); // Display success toast
-          setName("");
-          setEmail("");
-          setPassword("");
-          setAvatar(null);
-          setOpen(true);
-          // navigate("/verify-user");
-        } else {
-          toast.error(response.data.message); // Display error toast
-        }
-
-        // Clear form fields
+        // console.log(response);
+        toast.success(response.data.message); // Display success toast
+        setName("");
+        setEmail("");
+        setPassword("");
+        setAvatar(null);
+        // setOpen(true);
+        // navigate("/verify-user");
       })
       .catch((error) => {
-        console.log("Request failed:", error);
-        toast.error("Request failed. Please try again."); // Display error toast for network issues or unexpected errors
+        toast.error(error.response.data.message); // Display error toast
       });
   };
 
-  const handleOtpChange = (index, value) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+  // const handleOtpChange = (index, value) => {
+  //   const newOtp = [...otp];
+  //   newOtp[index] = value;
+  //   setOtp(newOtp);
 
-    if (value && index < inputRefs.length - 1) {
-      inputRefs[index + 1].current.focus();
-    } else if (!value && index > 0) {
-      inputRefs[index - 1].current.focus();
-    }
-  };
+  //   if (value && index < inputRefs.length - 1) {
+  //     inputRefs[index + 1].current.focus();
+  //   } else if (!value && index > 0) {
+  //     inputRefs[index - 1].current.focus();
+  //   }
+  // };
 
-  const handleAccountVerification = async (e) => {
-    e.preventDefault();
-    const otpValue = otp.join("");
-    // Check if any  field is empty
-    if (!userId) {
-      toast.error("Please enter your secret key!");
-      return;
-    }
-    if (userId.length < 24) {
-      toast.error("Secret Key can not be less than 24 digits!");
-      return;
-    }
-    if (!otpValue) {
-      toast.error("Please enter the OTP CODES ");
-      return;
-    }
-    if (otpValue.length < 4) {
-      toast.error("Enter all the OTP digits");
-      return;
-    }
+  // const handleAccountVerification = async (e) => {
+  //   e.preventDefault();
+  //   const otpValue = otp.join("");
+  //   // Check if any  field is empty
+  //   if (!userId) {
+  //     toast.error("Please enter your secret key!");
+  //     return;
+  //   }
+  //   if (userId.length < 24) {
+  //     toast.error("Secret Key can not be less than 24 digits!");
+  //     return;
+  //   }
+  //   if (!otpValue) {
+  //     toast.error("Please enter the OTP CODES ");
+  //     return;
+  //   }
+  //   if (otpValue.length < 4) {
+  //     toast.error("Enter all the OTP digits");
+  //     return;
+  //   }
 
-    axios
-      .post(`${BASE_URL}/user/verify-user`, { userId, otp: otpValue })
-      .then((response) => {
-        if (
-          (response.data.success === true &&
-            response.data.message ===
-              `Account already verified!, Kindly login`) ||
-          (response.data.success === true &&
-            response.data.message === `Account verified succesfully`)
-        ) {
-          toast.success(response.data.message);
-          setUserId("");
-          setOtp(["", "", "", ""]);
-          setOpen(false);
-          navigate(`/login`);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  };
+  //   axios
+  //     .post(`${BASE_URL}/user/verify-user`, { userId, otp: otpValue })
+  //     .then((response) => {
+  //       if (
+  //         (response.data.success === true &&
+  //           response.data.message ===
+  //             `Account already verified!, Kindly login`) ||
+  //         (response.data.success === true &&
+  //           response.data.message === `Account verified succesfully`)
+  //       ) {
+  //         toast.success(response.data.message);
+  //         setUserId("");
+  //         setOtp(["", "", "", ""]);
+  //         setOpen(false);
+  //         navigate(`/login`);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.response.data.message);
+  //     });
+  // };
 
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -341,7 +334,7 @@ function Signup() {
         </div>
       </div>
 
-      {open && (
+      {/* {open && (
         <>
           <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
             <div
@@ -353,7 +346,7 @@ function Signup() {
                   className="cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
-              </div> */}
+              </div> 
               <div className="w-full flex items-center justify-center flex-col">
                 <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
                   ACCOUNT VERIFICATION
@@ -424,7 +417,7 @@ function Signup() {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 }

@@ -214,14 +214,14 @@ function App() {
                   }
                 />
 
-                {/* <Route
-              path="/activation/:activation_token"
-              element={<ActivationPage />}
-            /> */}
                 <Route
-                  path="/user/:id/verify/:token"
+                  path="/user/user-activation/:activation_token"
                   element={<ActivationPage />}
                 />
+                {/* <Route
+                  path="/user/:id/verify/:token"
+                  element={<ActivationPage />}
+                /> */}
 
                 {/* SHOP/SELLER ROUTES */}
 

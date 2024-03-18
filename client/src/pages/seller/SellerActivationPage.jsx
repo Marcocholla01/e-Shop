@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 
 const SellerActivationPage = () => {
-  const { activation_token } = useSearchParams();
+  const { activation_token } = useParams();
   const [error, setError] = useState(false);
 
   useEffect(() => {

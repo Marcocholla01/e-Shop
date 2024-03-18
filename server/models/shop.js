@@ -22,10 +22,10 @@ const shopSchema = new mongoose.Schema({
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+  // isVerified: {
+  //   type: Boolean,
+  //   default: false,
+  // },
   isActive: {
     type: Boolean,
     default: false,

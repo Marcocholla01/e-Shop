@@ -1,7 +1,6 @@
 const express = require(`express`);
 const router = express.Router();
 const Shop = require(`../models/shop`);
-const VerificationToken = require(`../models/activationToken`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
 const { upload } = require(`../multer`);
 const fs = require(`fs`);
@@ -15,45 +14,182 @@ const path = require("path");
 const { promisify } = require("util");
 const {
   generatePasswordresetToken,
-  generateOTP,
   generateEmailtemplate,
 } = require("../utils/otp");
 const { isValidObjectId } = require("mongoose");
+const sendToken = require("../utils/jwtToken");
 const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
-// create seller / shop account api
+// // create seller / shop account api
+// router.post(
+//   `/create-shop`,
+//   upload.single("file"),
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const { name, email, password, address, phoneNumber, zipCode } = req.body;
+//       const shopEmail = await Shop.findOne({ email });
+
+//       if (shopEmail) {
+//         const filename = req.file.filename;
+//         const filepath = `uploads/${filename}`;
+
+//         fs.unlink(filepath, (err) => {
+//           if (err) {
+//             console.log(err);
+//             res.status(500).json({ message: `Error deleting file` });
+//           }
+//         });
+
+//         res
+//           .status(201)
+//           .json({ success: false, message: `Shop already exists ` });
+//         return next(new ErrorHandler(`Shop already exists`, 400));
+//       }
+
+//       const fileId = uuid.v4();
+//       const protocol = req.protocol;
+//       const host = req.get("host");
+//       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
+//       const newShop = await Shop({
+//         name,
+//         phoneNumber,
+//         email,
+//         address,
+//         zipCode,
+//         avatar: {
+//           public_id: fileId,
+//           url: fileUrl,
+//           filename: req.file.filename,
+//         },
+//         password,
+//       });
+
+//       const OTP = generateOTP();
+//       const verificationToken = new VerificationToken({
+//         shop: newShop._id,
+//         token: OTP,
+//       });
+
+//       await verificationToken.save();
+
+//       await sendMail({
+//         // from: "accounts@shop0.com",
+//         from: process.env.SMTP_MAIL,
+//         email: newShop.email,
+//         subject: "Activate Your Account",
+//         html: generateEmailtemplate(OTP, newShop._id),
+//       });
+
+//       await newShop.save();
+//       res.status(201).json({
+//         success: true,
+//         message: `An Email sent to your account please verify`,
+//         seller: newShop,
+//       });
+
+//       // You can send a response or do any other necessary actions here.
+//       // res.status(201).json({
+//       //   success: true,
+//       //   message: `Account created successfully`,
+//       //   shop: newShop,
+//       // });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
+
+// verify seller
+// router.post(
+//   "/verify-seller",
+//   catchAsyncErrors(async (req, res) => {
+//     try {
+//       const { sellerId, otp } = req.body;
+//       if (!sellerId || !otp.trim())
+//         return res.status(400).json({
+//           success: false,
+//           message: "otp field are empty",
+//         });
+//       if (!sellerId)
+//         return res.status(400).json({
+//           success: false,
+//           message: "Kindly enter the secret key",
+//         });
+
+//       if (!isValidObjectId(sellerId))
+//         return res.status(400).json({
+//           success: false,
+//           message: "Invalid secret key",
+//         });
+
+//       const shop = await Shop.findById(sellerId);
+//       if (!shop)
+//         return res.status(400).json({
+//           success: false,
+//           message: "sorry, shop not found",
+//         });
+
+//       if (shop.isVerified)
+//         return res.status(200).json({
+//           success: true,
+//           message: "Account already verified!, Kindly login",
+//         });
+
+//       const token = await VerificationToken.findOne({ shop: shop._id });
+//       if (!token)
+//         return res.status(400).json({
+//           success: false,
+//           message: "Invalid Token",
+//         });
+
+//       shop.isVerified = true;
+//       await VerificationToken.findByIdAndDelete(token._id);
+//       await shop.save();
+
+//       res.status(200).json({
+//         success: true,
+//         message: "Account verified succesfully",
+//       });
+//       sendToken(shop, 201, res);
+//     } catch (error) {
+//       res.status(500).json({
+//         succes: false,
+//         message: error.message,
+//       });
+//     }
+//   })
+// );
+
 router.post(
   `/create-shop`,
-  upload.single("file"),
+  upload.single(`file`),
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { name, email, password, address, phoneNumber, zipCode } = req.body;
       const shopEmail = await Shop.findOne({ email });
 
       if (shopEmail) {
-        const filename = req.file.filename;
-        const filepath = `uploads/${filename}`;
-
+        const filepath = `uploads/${req.file.filename}`;
         fs.unlink(filepath, (err) => {
           if (err) {
             console.log(err);
-            res.status(500).json({ message: `Error deleting file` });
+            return res.status(500).json({ message: `Error deleting file` });
           }
         });
 
-        res
-          .status(201)
-          .json({ success: false, message: `Shop already exists ` });
-        return next(new ErrorHandler(`Shop already exists`, 400));
+        return res
+          .status(400)
+          .json({ success: false, message: `Shop already exists` });
       }
 
       const fileId = uuid.v4();
       const protocol = req.protocol;
       const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+      const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
 
-      const newShop = await Shop({
+      const shop = {
         name,
         phoneNumber,
         email,
@@ -62,103 +198,95 @@ router.post(
         avatar: {
           public_id: fileId,
           url: fileUrl,
-          filename: req.file.filename,
+          filename: req.file.filename, // Use req.file.filename
         },
         password,
-      });
+      };
 
-      const OTP = generateOTP();
-      const verificationToken = new VerificationToken({
-        shop: newShop._id,
-        token: OTP,
-      });
+      // console.log(shop);
 
-      await verificationToken.save();
+      // Define a function to create an activation token
+      const createActivationToken = (shop) => {
+        return jwt.sign(shop, process.env.ACTIVATION_SECRET, {
+          expiresIn: "30m",
+        });
+      };
 
-      await sendMail({
-        // from: "accounts@shop0.com",
-        from: process.env.SMTP_MAIL,
-        email: newShop.email,
-        subject: "Activate Your Account",
-        html: generateEmailtemplate(OTP, newShop._id),
-      });
+      // Generate the activation token
+      const activationToken = createActivationToken(shop);
 
-      await newShop.save();
-      res.status(201).json({
-        success: true,
-        message: `An Email sent to your account please verify`,
-        seller: newShop,
-      });
+      // Construct the activation URL
+      const activationUrl = `${process.env.FRONTEND_URL}/shop/shop-activation/${activationToken}`;
 
-      // You can send a response or do any other necessary actions here.
-      // res.status(201).json({
-      //   success: true,
-      //   message: `Account created successfully`,
-      //   shop: newShop,
-      // });
+      console.log(activationUrl);
+
+      try {
+        await sendMail({
+          email: shop.email,
+          subject: "Activate Your Shop",
+          html: generateEmailtemplate(activationUrl),
+        });
+        res.status(201).json({
+          success: true,
+          message: `Account verification pending please check your email ${shop.email} to activate your account `,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+      // Other code for sending activation email and creating activation token
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
 
-// verify seller
 router.post(
-  "/verify-seller",
-  catchAsyncErrors(async (req, res) => {
+  "/shop-activation",
+  catchAsyncErrors(async (req, res, next) => {
     try {
-      const { sellerId, otp } = req.body;
-      if (!sellerId || !otp.trim())
-        return res.status(400).json({
-          success: false,
-          message: "otp field are empty",
-        });
-      if (!sellerId)
-        return res.status(400).json({
-          success: false,
-          message: "Kindly enter the secret key",
-        });
+      const { activation_token } = req.body;
 
-      if (!isValidObjectId(sellerId))
-        return res.status(400).json({
-          success: false,
-          message: "Invalid secret key",
-        });
+      // Verify the activation token
+      const newShop = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_SECRET
+      );
 
-      const shop = await Shop.findById(sellerId);
-      if (!shop)
-        return res.status(400).json({
-          success: false,
-          message: "sorry, shop not found",
-        });
+      if (!newShop) {
+        return next(new ErrorHandler("Invalid token", 400));
+      }
 
-      if (shop.isVerified)
-        return res.status(200).json({
-          success: true,
-          message: "Account already verified!, Kindly login",
-        });
+      // Extract shop details from activation token
+      const { name, email, password, address, phoneNumber, avatar, zipCode } =
+        newShop;
+      const fileId = avatar.public_id;
+      const fileUrl = avatar.url;
 
-      const token = await VerificationToken.findOne({ shop: shop._id });
-      if (!token)
-        return res.status(400).json({
-          success: false,
-          message: "Invalid Token",
-        });
+      // Check if shop already exists
+      let shop = await Shop.findOne({ email });
+      if (shop) {
+        return next(new ErrorHandler("Shop already exists", 400));
+      }
 
-      shop.isVerified = true;
-      await VerificationToken.findByIdAndDelete(token._id);
-      await shop.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Account verified succesfully",
+      // Create the new shop document
+      shop = await Shop.create({
+        name,
+        phoneNumber,
+        email,
+        address,
+        zipCode,
+        avatar: {
+          public_id: fileId,
+          url: fileUrl,
+          filename: avatar.filename,
+        },
+        password,
       });
+
+      // Send the JWT token as a response
       sendToken(shop, 201, res);
     } catch (error) {
-      res.status(500).json({
-        succes: false,
-        message: error.message,
-      });
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
@@ -188,27 +316,27 @@ router.post(
         });
       }
 
-      if (!shop.isVerified) {
-        const OTP = generateOTP();
-        const verificationToken = new VerificationToken({
-          shop: shop._id,
-          token: OTP,
-        });
-        await verificationToken.save();
+      // if (!shop.isVerified) {
+      //   const OTP = generateOTP();
+      //   const verificationToken = new VerificationToken({
+      //     shop: shop._id,
+      //     token: OTP,
+      //   });
+      //   await verificationToken.save();
 
-        await sendMail({
-          // from: "accounts@shop0.com",
-          from: process.env.SMTP_MAIL,
-          email: shop.email,
-          subject: "Activate Your Account",
-          html: generateEmailtemplate(OTP, shop._id),
-        });
-        return res.status(404).json({
-          success: false,
-          errorCode: 600,
-          message: "Email not verified please check you email to verify.",
-        });
-      }
+      //   await sendMail({
+      //     // from: "accounts@shop0.com",
+      //     from: process.env.SMTP_MAIL,
+      //     email: shop.email,
+      //     subject: "Activate Your Account",
+      //     html: generateEmailtemplate(OTP, shop._id),
+      //   });
+      //   return res.status(404).json({
+      //     success: false,
+      //     errorCode: 600,
+      //     message: "Email not verified please check you email to verify.",
+      //   });
+      // }
 
       if (!shop.isActive) {
         const message = `Hello ${shop.name} your account is inactive`;
@@ -762,142 +890,5 @@ router.delete(
 );
 
 module.exports = router;
-
-// router.post(
-//   `/create-shop`,
-//   upload.single(`file`),
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const { name, email, password, address, phoneNumber, avatar, zipCode } =
-//         req.body;
-//       const shopEmail = await Shop.findOne({ email });
-//       if (shopEmail) {
-//         const filename = req.file.filename;
-//         const filepath = `uploads/${filename}`;
-
-//         fs.unlink(filepath, (err) => {
-//           if (err) {
-//             console.log(err);
-//             res.status(500).json({ message: `Error deleting file` });
-//           }
-//         });
-
-//         res
-//           .status(201)
-//           .json({ success: false, message: `Shop already exists ` });
-//         return next(new ErrorHandler(`Shop already exists`, 400));
-//       }
-
-//       const fileId = uuid.v4();
-//       const protocol = req.protocol;
-//       const host = req.get("host");
-//       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
-
-//       const shop = {
-//         name,
-//         phoneNumber,
-//         email,
-//         address,
-//         zipCode,
-//         avatar: {
-//           public_id: fileId,
-//           url: fileUrl,
-//         },
-//         password,
-//       };
-
-//       //   const newShop = await Shop.create({
-//       //     name,
-//       //     phoneNumber,
-//       //     email,
-//       //     address,
-//       //     zipCode,
-//       //     avatar: {
-//       //       public_id: fileId,
-//       //       url: fileUrl,
-//       //     },
-//       //     password,
-//       //   });
-//       console.log(shop);
-
-//       // Define a function to create an activation token
-//       const createActivationToken = (shop) => {
-//         return jwt.sign(shop, process.env.ACTIVATION_SECRET, {
-//           expiresIn: "5m",
-//         });
-//       };
-
-//       // Generate the activation token
-//       const activationToken = createActivationToken(shop);
-
-//       // Construct the activation URL
-//       const activationUrl = `http://localhost:1001/shop/shop-activation/${activationToken}`;
-
-//       console.log(activationUrl);
-
-//       try {
-//         await sendMail({
-//           email: shop.email,
-//           subject: "Activate Your Shop",
-//           message: `Hello ${shop.name}, please click on the link to activate your shop: ${activationUrl}`,
-//         });
-//         res.status(201).json({
-//           success: true,
-//           message: `Account verification pending please check your email<br/> ${shop.email} <br/> to activate your account `,
-//         });
-//       } catch (error) {
-//         return next(new ErrorHandler(error.message, 500));
-//       }
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 400));
-//     }
-//   })
-// );
-
-// router.post(
-//   "/shop-activation",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const { activation_token } = req.body;
-
-//       // Verify the activation token
-//       const newShop = jwt.verify(
-//         activation_token,
-//         process.env.ACTIVATION_SECRET
-//       );
-
-//       if (!newShop) {
-//         return next(new ErrorHandler("Invalid token", 400));
-//       }
-//       const { name, email, password, address, phoneNumber, avatar, zipCode } =
-//         newShop;
-
-//       let shop = await Shop.findOne({ email });
-
-//       if (shop) {
-//         return next(new ErrorHandler("Shop already exists", 400));
-//       }
-//       shop = await Shop.create({
-//         name,
-//         phoneNumber,
-//         email,
-//         address,
-//         zipCode,
-//         avatar: {
-//           public_id: fileId,
-//           url: fileUrl,
-//         },
-//         password,
-//       });
-//       console.log(shop);
-//       // Send the JWT token as a response
-//       sendToken(shop, 201, res);
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
-
-// module.exports = router;
 
 //

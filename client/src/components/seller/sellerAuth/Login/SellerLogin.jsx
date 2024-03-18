@@ -20,10 +20,10 @@ function Login() {
   const [passwordResset, setPasswordResset] = useState("");
   const navigate = useNavigate();
 
-  const [sellerId, setSellerId] = useState("");
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const [open, setOpen] = useState(false);
-  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  // const [sellerId, setSellerId] = useState("");
+  // const [otp, setOtp] = useState(["", "", "", ""]);
+  // const [open, setOpen] = useState(false);
+  // const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   // Regular expression for email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
@@ -93,9 +93,9 @@ function Login() {
       })
       .catch((error) => {
         if (error.response) {
-          if (error.response.data.errorCode === 600) {
-            setOpen(true);
-          }
+          // if (error.response.data.errorCode === 600) {
+          //   setOpen(true);
+          // }
 
           // The request was made and the server responded with a non-2xx status code
           if (error.response.status === 404) {
@@ -139,62 +139,62 @@ function Login() {
       });
   };
 
-  const handleOtpChange = (index, value) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+  // const handleOtpChange = (index, value) => {
+  //   const newOtp = [...otp];
+  //   newOtp[index] = value;
+  //   setOtp(newOtp);
 
-    if (value && index < inputRefs.length - 1) {
-      inputRefs[index + 1].current.focus();
-    } else if (!value && index > 0) {
-      inputRefs[index - 1].current.focus();
-    }
-  };
+  //   if (value && index < inputRefs.length - 1) {
+  //     inputRefs[index + 1].current.focus();
+  //   } else if (!value && index > 0) {
+  //     inputRefs[index - 1].current.focus();
+  //   }
+  // };
 
-  const handleAccountVerification = async (e) => {
-    e.preventDefault();
-    const otpValue = otp.join("");
-    // Check if any  field is empty
-    if (!sellerId) {
-      toast.error("Please enter your secret key!");
-      return;
-    }
-    if (sellerId.length < 24) {
-      toast.error("Secret Key can not be less than 24 digits!");
-      return;
-    }
-    if (!otpValue) {
-      toast.error("Please enter the OTP CODES ");
-      return;
-    }
-    if (otpValue.length < 4) {
-      toast.error("Enter all the OTP digits");
-      return;
-    }
+  // const handleAccountVerification = async (e) => {
+  //   e.preventDefault();
+  //   const otpValue = otp.join("");
+  //   // Check if any  field is empty
+  //   if (!sellerId) {
+  //     toast.error("Please enter your secret key!");
+  //     return;
+  //   }
+  //   if (sellerId.length < 24) {
+  //     toast.error("Secret Key can not be less than 24 digits!");
+  //     return;
+  //   }
+  //   if (!otpValue) {
+  //     toast.error("Please enter the OTP CODES ");
+  //     return;
+  //   }
+  //   if (otpValue.length < 4) {
+  //     toast.error("Enter all the OTP digits");
+  //     return;
+  //   }
 
-    axios
-      .post(`${BASE_URL}/shop/verify-seller`, { sellerId, otp: otpValue })
-      .then((response) => {
-        if (
-          (response.data.success === true &&
-            response.data.message ===
-              `Account already verified!, Kindly login`) ||
-          (response.data.success === true &&
-            response.data.message === `Account verified succesfully`)
-        ) {
-          navigate(`/login`);
-          toast.success(response.data.message);
-        } else {
-          toast.error(response.data.message);
-          console.log(response);
-        }
-        setUserId("");
-        setOtp(["", "", "", ""]);
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  };
+  //   axios
+  //     .post(`${BASE_URL}/shop/verify-seller`, { sellerId, otp: otpValue })
+  //     .then((response) => {
+  //       if (
+  //         (response.data.success === true &&
+  //           response.data.message ===
+  //             `Account already verified!, Kindly login`) ||
+  //         (response.data.success === true &&
+  //           response.data.message === `Account verified succesfully`)
+  //       ) {
+  //         navigate(`/login`);
+  //         toast.success(response.data.message);
+  //       } else {
+  //         toast.error(response.data.message);
+  //         console.log(response);
+  //       }
+  //       setUserId("");
+  //       setOtp(["", "", "", ""]);
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.response.data.message);
+  //     });
+  // };
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -373,7 +373,7 @@ function Login() {
         </>
       )}
 
-      {open && (
+      {/*}  {open && (
         <>
           <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
             <div
@@ -385,7 +385,7 @@ function Login() {
                   className="cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
-              </div> */}
+              </div>
               <div className="w-full flex items-center justify-center flex-col">
                 <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
                   ACCOUNT VERIFICATION
@@ -456,7 +456,7 @@ function Login() {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 }

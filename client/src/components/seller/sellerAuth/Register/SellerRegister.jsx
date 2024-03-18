@@ -26,10 +26,10 @@ function SellerRegister() {
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
 
-  const [sellerId, setSellerId] = useState(seller && seller._id);
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const [open, setOpen] = useState(false);
-  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  // const [sellerId, setSellerId] = useState(seller && seller._id);
+  // const [otp, setOtp] = useState(["", "", "", ""]);
+  // const [open, setOpen] = useState(false);
+  // const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -117,86 +117,75 @@ function SellerRegister() {
     axios
       .post(`${BASE_URL}/shop/create-shop`, newForm, config)
       .then((response) => {
-        if (response.data.success === true) {
-          toast.success(response.data.message); // Display success toast
-          setName("");
-          setEmail("");
-          setPassword("");
-          setAvatar(null);
-          setOpen(true);
-          // navigate("/seller-login");
-        } else {
-          toast.error(response.data.message); // Display error toast
-        }
-        // console.log(newForm);
-        // Clear form fields
+        toast.success(response.data.message); // Display success toast
         setName("");
         setEmail("");
         setPassword("");
         setAvatar(null);
+        setOpen(true);
+        // navigate("/seller-login");
       })
       .catch((error) => {
-        console.log("Request failed:", error);
-        toast.error("Request failed. Please try again."); // Display error toast for network issues or unexpected errors
+        toast.error(error.response.data.message); // Display error toast for network issues or unexpected errors
       });
   };
 
-  const handleOtpChange = (index, value) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+  // const handleOtpChange = (index, value) => {
+  //   const newOtp = [...otp];
+  //   newOtp[index] = value;
+  //   setOtp(newOtp);
 
-    if (value && index < inputRefs.length - 1) {
-      inputRefs[index + 1].current.focus();
-    } else if (!value && index > 0) {
-      inputRefs[index - 1].current.focus();
-    }
-  };
+  //   if (value && index < inputRefs.length - 1) {
+  //     inputRefs[index + 1].current.focus();
+  //   } else if (!value && index > 0) {
+  //     inputRefs[index - 1].current.focus();
+  //   }
+  // };
 
-  const handleAccountVerification = async (e) => {
-    e.preventDefault();
-    const otpValue = otp.join("");
-    // Check if any  field is empty
-    if (!sellerId) {
-      toast.error("Please enter your secret key!");
-      return;
-    }
-    if (sellerId.length < 24) {
-      toast.error("Secret Key can not be less than 24 digits!");
-      return;
-    }
-    if (!otpValue) {
-      toast.error("Please enter the OTP CODES ");
-      return;
-    }
-    if (otpValue.length < 4) {
-      toast.error("Enter all the OTP digits");
-      return;
-    }
+  // const handleAccountVerification = async (e) => {
+  //   e.preventDefault();
+  //   const otpValue = otp.join("");
+  //   // Check if any  field is empty
+  //   if (!sellerId) {
+  //     toast.error("Please enter your secret key!");
+  //     return;
+  //   }
+  //   if (sellerId.length < 24) {
+  //     toast.error("Secret Key can not be less than 24 digits!");
+  //     return;
+  //   }
+  //   if (!otpValue) {
+  //     toast.error("Please enter the OTP CODES ");
+  //     return;
+  //   }
+  //   if (otpValue.length < 4) {
+  //     toast.error("Enter all the OTP digits");
+  //     return;
+  //   }
 
-    axios
-      .post(`${BASE_URL}/shop/verify-seller`, { sellerId, otp: otpValue })
-      .then((response) => {
-        if (
-          (response.data.success === true &&
-            response.data.message ===
-              `Account already verified!, Kindly login`) ||
-          (response.data.success === true &&
-            response.data.message === `Account verified succesfully`)
-        ) {
-          navigate(`/login`);
-          toast.success(response.data.message);
-        } else {
-          toast.error(response.data.message);
-          console.log(response);
-        }
-        setUserId("");
-        setOtp(["", "", "", ""]);
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  };
+  //   axios
+  //     .post(`${BASE_URL}/shop/verify-seller`, { sellerId, otp: otpValue })
+  //     .then((response) => {
+  //       if (
+  //         (response.data.success === true &&
+  //           response.data.message ===
+  //             `Account already verified!, Kindly login`) ||
+  //         (response.data.success === true &&
+  //           response.data.message === `Account verified succesfully`)
+  //       ) {
+  //         navigate(`/login`);
+  //         toast.success(response.data.message);
+  //       } else {
+  //         toast.error(response.data.message);
+  //         console.log(response);
+  //       }
+  //       setUserId("");
+  //       setOtp(["", "", "", ""]);
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.response.data.message);
+  //     });
+  // };
 
   return (
     <div className="min-h-screen bg-grsy-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -425,7 +414,7 @@ function SellerRegister() {
         </div>
       </div>
 
-      {open && (
+      {/* {open && (
         <>
           <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
             <div
@@ -437,7 +426,7 @@ function SellerRegister() {
                   className="cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
-              </div> */}
+              </div> 
               <div className="w-full flex items-center justify-center flex-col">
                 <h3 className="text-[22px] font-Poppins text-center  pb-5 font-[600]">
                   ACCOUNT VERIFICATION
@@ -508,7 +497,7 @@ function SellerRegister() {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 }

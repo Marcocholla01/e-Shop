@@ -28,7 +28,7 @@ exports.generatePasswordresetToken = () => {
   return { resetPasswordTime, resetPasswordToken };
 };
 
-exports.generateEmailtemplate = (OTP, newUser) => {
+exports.generateEmailtemplate = (activationUrl) => {
   return `
     <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -382,10 +382,10 @@ ul.social li{
             		<td>
             			<div class="text" style="padding: 0 2.5em; text-align: center;">
             				<h2>Please verify your email</h2>
-            				<h4>Thank you for creating an account with us. Use the following SECRET KEY and OTP to complete your Sign Up procedures. OTP is valid for 30 minutes</h4>
+            				<h4>Thank you for creating an account with us. Use the following link to complete your Sign Up procedures. Activation link is valid for 25 minutes</h4>
 
-							<h3 style="margin: 0 auto;width: max-content;padding: 0 10px;border-radius: 4px; text:bold;">SECRET KEY: ${newUser}</h3>
-            				<h2 style="margin: 0 auto;width: max-content;padding: 0 10px; border-radius: 4px;">OTP:  ${OTP}</h2>
+							<a href=${activationUrl} style="margin: 0 auto;width: max-content;padding: 0 10px;border-radius: 4px; text:bold;">  <button>ACITVATION LINK </button></a>
+            				
             			</div>
             		</td>
             	</tr>

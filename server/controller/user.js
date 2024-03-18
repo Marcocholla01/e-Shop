@@ -24,165 +24,136 @@ const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
 //create user
-router.post(
-  `/create-user`,
-  upload.single("file"),
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { name, email, password } = req.body;
-      const userEmail = await User.findOne({ email });
+// router.post(
+//   `/create-user`,
+//   upload.single("file"),
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const { name, email, password } = req.body;
+//       const userEmail = await User.findOne({ email });
 
-      if (userEmail) {
-        const filename = req.file.filename;
-        const filepath = `uploads/${filename}`;
+//       if (userEmail) {
+//         const filename = req.file.filename;
+//         const filepath = `uploads/${filename}`;
 
-        fs.unlink(filepath, (err) => {
-          if (err) {
-            console.log(err);
-            res.status(500).json({ message: `Error deleting file` });
-          }
-        });
+//         fs.unlink(filepath, (err) => {
+//           if (err) {
+//             console.log(err);
+//             res.status(500).json({ message: `Error deleting file` });
+//           }
+//         });
 
-        res
-          .status(201)
-          .json({ success: false, message: `User already exists ` });
-        return next(new ErrorHandler(`User already exists`, 400));
-      }
+//         res
+//           .status(201)
+//           .json({ success: false, message: `User already exists ` });
+//         return next(new ErrorHandler(`User already exists`, 400));
+//       }
 
-      const fileId = uuid.v4();
-      const protocol = req.protocol;
-      const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+//       const fileId = uuid.v4();
+//       const protocol = req.protocol;
+//       const host = req.get("host");
+//       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
 
-      const newUser = await User({
-        name,
-        email,
-        avatar: {
-          public_id: fileId,
-          url: fileUrl,
-          filename: req.file.filename,
-        },
-        password,
-      });
+//       const newUser = await User({
+//         name,
+//         email,
+//         avatar: {
+//           public_id: fileId,
+//           url: fileUrl,
+//           filename: req.file.filename,
+//         },
+//         password,
+//       });
 
-      const OTP = generateOTP();
-      const verificationToken = new VerificationToken({
-        owner: newUser._id,
-        token: OTP,
-      });
+//       const OTP = generateOTP();
+//       const verificationToken = new VerificationToken({
+//         owner: newUser._id,
+//         token: OTP,
+//       });
 
-      await verificationToken.save();
+//       await verificationToken.save();
 
-      await sendMail({
-        // from: "accounts@shop0.com",
-        from: process.env.SMTP_MAIL,
-        email: newUser.email,
-        subject: "Activate Your Account",
-        html: generateEmailtemplate(OTP, newUser._id),
-      });
+//       await sendMail({
+//         // from: "accounts@user0.com",
+//         from: process.env.SMTP_MAIL,
+//         email: newUser.email,
+//         subject: "Activate Your Account",
+//         html: generateEmailtemplate(OTP, newUser._id),
+//       });
 
-      await newUser.save();
-      res.status(201).json({
-        success: true,
-        message: `An Email sent to your account please verify`,
-        user: newUser,
-      });
-      // console.log(newUser);
+//       await newUser.save();
+//       res.status(201).json({
+//         success: true,
+//         message: `An Email sent to your account please verify`,
+//         user: newUser,
+//       });
+// console.log(newUser);
 
-      // const activationToken = await ActivationToken.create({
-      //   userId: newUser._id,
-      //   activationToken: crypto.randomBytes(32).toString("hex"),
-      // });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 
-      // // Construct the activation URL
-      // const activationUrl = `http://localhost:1001/user/${newUser._id}/verify/${activationToken.activationToken}`;
+// router.post(
+//   "/verify-user",
+//   catchAsyncErrors(async (req, res) => {
+//     try {
+//       const { userId, otp } = req.body;
+//       if (!userId || !otp.trim())
+//         return res.status(400).json({
+//           success: false,
+//           message: "otp field are empty",
+//         });
+//       if (!userId)
+//         return res.status(400).json({
+//           success: false,
+//           message: "Kindly enter the secret key",
+//         });
 
-      // try {
-      //   await sendMail({
-      //     from: "accounts@shop0.com",
-      //     email: newUser.email,
-      //     subject: "Activate Your Account",
-      //     message: `Hello ${newUser.name}, please click on the link to activate your account: ${activationUrl}`,
-      //   });
-      //   // console.log(message);
-      //   // res.status(201).json({
-      //   //   success: true,
-      //   //   message: `Please check your email: ${newUser.email} to activate your account`,
-      //   // });
-      // } catch (error) {
-      //   return next(new ErrorHandler(error.message, 500));
-      // }
-      // // You can send a response or do any other necessary actions here.
-      // res.status(201).json({
-      //   success: true,
-      //   message: `An Email sent to your account please verify`,
-      //   // user: newUser,
-      // });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
+//       if (!isValidObjectId(userId))
+//         return res.status(400).json({
+//           success: false,
+//           message: "Invalid secret key",
+//         });
 
-router.post(
-  "/verify-user",
-  catchAsyncErrors(async (req, res) => {
-    try {
-      const { userId, otp } = req.body;
-      if (!userId || !otp.trim())
-        return res.status(400).json({
-          success: false,
-          message: "otp field are empty",
-        });
-      if (!userId)
-        return res.status(400).json({
-          success: false,
-          message: "Kindly enter the secret key",
-        });
+//       const user = await User.findById(userId);
+//       if (!user)
+//         return res.status(400).json({
+//           success: false,
+//           message: "sorry, user not found",
+//         });
 
-      if (!isValidObjectId(userId))
-        return res.status(400).json({
-          success: false,
-          message: "Invalid secret key",
-        });
+//       if (user.isVerified)
+//         return res.status(200).json({
+//           success: true,
+//           message: "Account already verified!, Kindly login",
+//         });
 
-      const user = await User.findById(userId);
-      if (!user)
-        return res.status(400).json({
-          success: false,
-          message: "sorry, user not found",
-        });
+//       const token = await VerificationToken.findOne({ owner: user._id });
+//       if (!token)
+//         return res.status(400).json({
+//           success: false,
+//           message: "Invalid Token",
+//         });
 
-      if (user.isVerified)
-        return res.status(200).json({
-          success: true,
-          message: "Account already verified!, Kindly login",
-        });
+//       user.isVerified = true;
+//       await VerificationToken.findByIdAndDelete(token._id);
+//       await user.save();
 
-      const token = await VerificationToken.findOne({ owner: user._id });
-      if (!token)
-        return res.status(400).json({
-          success: false,
-          message: "Invalid Token",
-        });
-
-      user.isVerified = true;
-      await VerificationToken.findByIdAndDelete(token._id);
-      await user.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Account verified succesfully",
-      });
-      sendToken(user, 201, res);
-    } catch (error) {
-      res.status(400).json({
-        succes: false,
-        message: "Internal Server Error",
-      });
-    }
-  })
-);
+//       res.status(200).json({
+//         success: true,
+//         message: "Account verified succesfully",
+//       });
+//       sendToken(user, 201, res);
+//     } catch (error) {
+//       res.status(400).json({
+//         succes: false,
+//         message: "Internal Server Error",
+//       });
+//     }
+//   })
+// );
 
 // // verify user
 // router.post(
@@ -220,6 +191,133 @@ router.post(
 //     }
 //   })
 // );
+
+router.post(
+  `/create-user`,
+  upload.single(`file`),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { name, email, password, address, phoneNumber, zipCode } = req.body;
+      const userEmail = await User.findOne({ email });
+
+      if (userEmail) {
+        const filepath = `uploads/${req.file.filename}`;
+        fs.unlink(filepath, (err) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({ message: `Error deleting file` });
+          }
+        });
+
+        return res
+          .status(400)
+          .json({ success: false, message: `User already exists` });
+      }
+
+      const fileId = uuid.v4();
+      const protocol = req.protocol;
+      const host = req.get("host");
+      const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
+
+      const user = {
+        name,
+        phoneNumber,
+        email,
+        address,
+        zipCode,
+        avatar: {
+          public_id: fileId,
+          url: fileUrl,
+          filename: req.file.filename, // Use req.file.filename
+        },
+        password,
+      };
+
+      // console.log(user);
+
+      // Define a function to create an activation token
+      const createActivationToken = (user) => {
+        return jwt.sign(user, process.env.ACTIVATION_SECRET, {
+          expiresIn: "30m",
+        });
+      };
+
+      // Generate the activation token
+      const activationToken = createActivationToken(user);
+
+      // Construct the activation URL
+      const activationUrl = `${process.env.FRONTEND_URL}/user/user-activation/${activationToken}`;
+
+      console.log(activationUrl);
+
+      try {
+        await sendMail({
+          email: user.email,
+          subject: "Activate Your User",
+          html: generateEmailtemplate(activationUrl),
+        });
+        res.status(201).json({
+          success: true,
+          message: `Account verification pending please check your email ${user.email} to activate your account `,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+      // Other code for sending activation email and creating activation token
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+router.post(
+  "/user-activation",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { activation_token } = req.body;
+
+      // Verify the activation token
+      const newUser = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_SECRET
+      );
+
+      if (!newUser) {
+        return next(new ErrorHandler("Invalid token", 400));
+      }
+
+      // Extract user details from activation token
+      const { name, email, password, address, avatar } = newUser;
+      const fileId = avatar.public_id;
+      const fileUrl = avatar.url;
+
+      // Check if user already exists
+      let user = await User.findOne({ email });
+      if (user) {
+        return next(new ErrorHandler("User already exists", 400));
+      }
+
+      // Create the new user document
+      user = await User.create({
+        name,
+        email,
+        address,
+        avatar: {
+          public_id: fileId,
+          url: fileUrl,
+          filename: avatar.filename,
+        },
+        password,
+      });
+
+      // Send the JWT token as a response
+      sendToken(user, 201, res);
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 // Login user
 router.post(
   `/login-user`,
@@ -247,45 +345,46 @@ router.post(
 
       // TODO make otp re-generated when user trys to login when acount email not verified
 
-      if (!user.isVerified) {
-        const owner = await VerificationToken.findOne(user._id);
-        if (!owner) {
-          const OTP = generateOTP();
-          const verificationToken = new VerificationToken({
-            owner: user._id,
-            token: OTP,
-          });
+      // if (!user.isVerified) {
+      //   const owner = await VerificationToken.findOne(user._id);
+      //   if (!owner) {
+      //     const OTP = generateOTP();
+      //     const verificationToken = new VerificationToken({
+      //       owner: user._id,
+      //       token: OTP,
+      //     });
 
-          await verificationToken.updateOne();
-        }
+      //     await verificationToken.updateOne();
+      //   }
 
-        const OTP = generateOTP();
-        const verificationToken = new VerificationToken({
-          owner: user._id,
-          token: OTP,
-        });
+      //   const OTP = generateOTP();
+      //   const verificationToken = new VerificationToken({
+      //     owner: user._id,
+      //     token: OTP,
+      //   });
 
-        await verificationToken.save();
+      //   await verificationToken.save();
 
-        await sendMail({
-          // from: "accounts@shop0.com",
-          from: process.env.SMTP_MAIL,
-          email: user.email,
-          subject: "Activate Your Account",
-          html: generateEmailtemplate(OTP),
-        });
+      //   await sendMail({
+      //     // from: "accounts@user0.com",
+      //     from: process.env.SMTP_MAIL,
+      //     email: user.email,
+      //     subject: "Activate Your Account",
+      //     html: generateEmailtemplate(OTP),
+      //   });
 
-        return res.status(404).json({
-          success: false,
-          errorCode: 600,
-          message: "Account not verified please check you email to verify.",
-        });
-      }
+      //   return res.status(404).json({
+      //     success: false,
+      //     errorCode: 600,
+      //     message: "Account not verified please check you email to verify.",
+      //   });
+      // }
+
       if (!user.isActive) {
         const message = `Hello ${user.name} your account was deactivated kindly contact us via our support page`;
 
         await sendMail({
-          // from: "accounts@shop0.com",
+          // from: "accounts@user0.com",
           from: process.env.SMTP_MAIL,
           email: user.email,
           subject: "Inactive account",
@@ -384,7 +483,7 @@ router.post(
 
         await sendMail({
           email: user.email,
-          subject: `shopO Password Recovery`,
+          subject: `userO Password Recovery`,
           html: message,
         });
         // res.status(201).json({
@@ -444,7 +543,7 @@ router.put(
 
       const message = `Hello ${user.name} your account password has been reseted successfully  `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Accout password reset",
@@ -664,7 +763,7 @@ router.put(
 
       const message = `Hello ${user.name} your account has been activated  `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Password updated",
@@ -726,7 +825,7 @@ router.put(
 
       const message = `Hello ${user.name} your account role has changed to ${newRole}  `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Account Role changed",
@@ -766,7 +865,7 @@ router.put(
 
       const message = `Hello ${user.name} your account has been activated  `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Account Activation",
@@ -805,7 +904,7 @@ router.put(
       user.isActive = status;
       const message = `Hello ${user.name} your account has been deactivated `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Account Deactivation",
@@ -866,7 +965,7 @@ router.delete(
 
       const message = `Hello ${user.name} your account has been deleted `;
       await sendMail({
-        // from: "accounts@shop0.com",
+        // from: "accounts@user0.com",
         from: process.env.SMTP_MAIL,
         email: user.email,
         subject: "Account Deletion",
