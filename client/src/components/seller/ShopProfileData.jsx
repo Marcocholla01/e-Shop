@@ -24,8 +24,10 @@ const ShopProfileData = ({ isOwner }) => {
     dispatch(getAllEventsShop(seller?._id));
   }, [dispatch]);
 
-  const allReviews =
-    products && products.map((product) => product.reviews.flat());
+  // const allReviews =
+  //   products && products.map((product) => product.reviews.flat());
+
+  const ratings = products.map((product) => product.ratings);
 
   // console.log(allReviews);
   // console.log(events);
@@ -66,7 +68,7 @@ const ShopProfileData = ({ isOwner }) => {
             <div>
               <Link to={`/dashboard`}>
                 <div
-                  className={`${styles.button} !rounded-[4px] !h-[42px]  mb-0`}
+                  className={`${styles.button} !rounded-[4px] !h-[42px]  mb-0 mr-7`}
                 >
                   <span className="text-[#fff]">Go Dashboard</span>
                 </div>
@@ -90,38 +92,38 @@ const ShopProfileData = ({ isOwner }) => {
       {active == 2 && (
         <div className="w-full">
           <div
-            className={`grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25] lg:gap-[25px] lg:grid-cols-3 xl:grid-cols-4 mb-12 border-0 sm:mt-7 mt-0`}
+           className="w-[96%] sm:flex gap-4"
           >
-            {events &&
-              events.map((i, index) => (
-                <EventCard data={i} />
-              ))}
+            {events && events.map((i, index) => <EventCard data={i} />)}
           </div>
         </div>
       )}
 
       {active === 3 && (
-        <div className="w-full">
-          {allReviews &&
-            allReviews.map((item, index) => (
-              <div className="w-full flex my-3">
-                <img
-                  src={`${item[0]?.user?.avatar?.url}`}
-                  className="rounded-full w-[50px] h-[50px]"
-                  alt=""
-                />
-                <div className="pl-2">
-                  <div className="flex w-full items-center">
-                    <h1 className="pr-2 font-[600]">{item[0]?.user?.name} </h1>
-                    <Ratings rating={item[0]?.rating} />
+        <div>
+          {products.map((product) => (
+            <div>
+              {product.reviews.map((review) => (
+                <div key={review._id} className="w-full flex my-3">
+                  <img
+                    src={`${review?.user?.avatar?.url}`}
+                    className="rounded-full w-[50px] h-[50px]"
+                    alt=""
+                  />
+                  <div className="pl-2">
+                    <div className="flex w-full items-center">
+                      <h1 className="pr-2 font-[600]"> </h1>
+                      <Ratings rating={review.rating} />
+                    </div>
+                    <p className="font-[400] text-[#000000a7]">
+                      {review.comment}{" "}
+                    </p>
+                    <p className="text-[14px] text-[#000000a7] ">{`2 Days ago`}</p>
                   </div>
-                  <p className="font-[400] text-[#000000a7]">
-                    {item[0]?.comment}{" "}
-                  </p>
-                  <p className="text-[14px] text-[#000000a7] ">{`2 Days ago`}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          ))}
         </div>
       )}
     </div>
