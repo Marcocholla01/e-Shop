@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Importing routes
 const user = require(`./controller/user`);
 const shop = require(`./controller/shop`);
-const product = require(`./controller/product`);
+const product = require(`./controller/Product`);
 const event = require(`./controller/event`);
 const couponCode = require(`./controller/couponCode`);
 const payment = require(`./controller/payment`);

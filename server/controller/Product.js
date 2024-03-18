@@ -45,6 +45,7 @@ router.post(
           return {
             public_id: fileId,
             url: fileUrl,
+            filename: file.filename,
           };
         });
 
@@ -89,35 +90,34 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const productId = req.params.id;
-
-      const productData = await Product.findById(productId);
-
-      // Delete local images
-      // productData.images.forEach(async (image) => {
-      //   try {
-      //     const filePath = `uploads/${image.url}`;
-      //     await fs.unlink(filePath);
-      //   } catch (err) {
-      //     console.error("Error deleting local image:", err);
-      //   }
-      // });
-
-      productData.images.forEach((imageUrls) => {
-        const filename = imageUrls;
-        const filePath = `uploads/${filename}`;
-
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err.message);
-          }
-        });
-      });
-
-      const product = await Product.findByIdAndDelete(productId);
+      const product = await Product.findById(productId);
 
       if (!product) {
-        return next(new ErrorHandler("Product not found with this id", 400));
+        return res.status(404).json({
+          success: false,
+          message: "No product found with the specified ID",
+        });
       }
+
+      // Get image filenames from the product
+      const imageFilenames = product.images.map((image) => image.filename);
+
+      // Delete each image
+      for (const filename of imageFilenames) {
+        const imagePath = `uploads/${filename}`;
+        try {
+          // Check if file exists before attempting to delete it
+          fs.unlinkSync(imagePath);
+          console.log(`Deleted image: ${imagePath}`);
+        } catch (error) {
+          // Handle errors if any image deletion fails
+          console.error(`Error deleting image: ${imagePath}`, error);
+        }
+      }
+
+      // Delete the product document from the database
+      await Product.findByIdAndRemove(productId);
+
       res.status(200).json({
         success: true,
         message: "Product deleted successfully",
@@ -239,26 +239,44 @@ router.put(
   })
 );
 
-// delete product ----Admin
 router.delete(
-  `/delete-product/:id`,
+  "/delete-product/:productId",
   isAuthenticated,
   isAdmin("Admin"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const productId = req.params.productId;
+      const product = await Product.findById(productId);
 
-      const product = await Product.findByIdAndDelete(id);
       if (!product) {
         return res.status(404).json({
           success: false,
-          message: `No product with the specified Id`,
+          message: "No product found with the specified ID",
         });
       }
 
+      // Get image filenames from the product
+      const imageFilenames = product.images.map((image) => image.filename);
+
+      // Delete each image
+      for (const filename of imageFilenames) {
+        const imagePath = `uploads/${filename}`;
+        try {
+          // Check if file exists before attempting to delete it
+          fs.unlinkSync(imagePath);
+          console.log(`Deleted image: ${imagePath}`);
+        } catch (error) {
+          // Handle errors if any image deletion fails
+          console.error(`Error deleting image: ${imagePath}`, error);
+        }
+      }
+
+      // Delete the product document from the database
+      await Product.findByIdAndRemove(productId);
+
       res.status(200).json({
         success: true,
-        message: `Product deleted Successfully `,
+        message: "Product and associated images deleted successfully",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));

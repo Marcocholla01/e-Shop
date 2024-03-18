@@ -6,6 +6,7 @@ const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAdmin, isAuthenticated } = require("../middlewares/auth");
 const fs = require(`fs`);
+const uuid = require("uuid");
 
 const router = express.Router();
 
@@ -22,41 +23,42 @@ router.post(
       if (!shopId) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
       } else {
-        const files = req.files;
-        const imageUrls = files.map((file) => `${file.filename}`);
-        const eventData = req.body;
-        eventData.images = imageUrls;
-        eventData.shop = shop;
-
-        const event = await Event.create(eventData);
-        res.status(201).json({
-          success: true,
-          event,
-        });
-
         // const files = req.files;
-        // const imageUrls = files.map((file) => {
-        //   const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
-        //   const protocol = req.protocol;
-        //   const host = req.get("host");
-        //   const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
-
-        //   return {
-        //     public_id: fileId,
-        //     url: fileUrl,
-        //   };
-        // });
-
+        // const imageUrls = files.map((file) => `${file.filename}`);
         // const eventData = req.body;
         // eventData.images = imageUrls;
         // eventData.shop = shop;
 
         // const event = await Event.create(eventData);
-
         // res.status(201).json({
         //   success: true,
         //   event,
         // });
+
+        const files = req.files;
+        const imageUrls = files.map((file) => {
+          const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
+          const protocol = req.protocol;
+          const host = req.get("host");
+          const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
+
+          return {
+            public_id: fileId,
+            url: fileUrl,
+            filename: file.filename,
+          };
+        });
+
+        const eventData = req.body;
+        eventData.images = imageUrls;
+        eventData.shop = shop;
+
+        const event = await Event.create(eventData);
+
+        res.status(201).json({
+          success: true,
+          event,
+        });
       }
     } catch (error) {
       return next(new ErrorHandler(error, 400));
@@ -87,36 +89,39 @@ router.delete(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const eventId = req.params.id;
+      const id = req.params.id;
 
-      const eventData = await Event.findById(eventId);
-
-      // Delete local images
-      // eventData.images.forEach(async (image) => {
-      //   try {
-      //     const filePath = `uploads/${image.url}`;
-      //     await fs.unlink(filePath);
-      //   } catch (err) {
-      //     console.error("Error deleting local image:", err);
-      //   }
-      // });
-
-      eventData.images.forEach((imageUrls) => {
-        const filename = imageUrls;
-        const filePath = `uploads/${filename}`;
-
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err.message);
-          }
-        });
-      });
-
-      const event = await Event.findByIdAndDelete(eventId);
+      const event = await Event.findById(id);
 
       if (!event) {
-        return next(new ErrorHandler("Event not found with this id", 400));
+        return res.status(404).json({
+          success: false,
+          message: `No event with the specified Id`,
+        });
       }
+      // Get image filenames from the product
+      const imageFilenames = event.images.map((image) => image.filename);
+
+      // Delete each image
+      for (const filename of imageFilenames) {
+        const imagePath = `uploads/${filename}`;
+        try {
+          // Check if file exists before attempting to delete it
+          fs.unlinkSync(imagePath);
+          console.log(`Deleted image: ${imagePath}`);
+        } catch (error) {
+          // Handle errors if any image deletion fails
+          console.error(`Error deleting image: ${imagePath}`, error);
+        }
+      }
+
+      await Event.findByIdAndRemove(id);
+
+      res.status(200).json({
+        success: true,
+        message: `Event deleted Successfully `,
+      });
+
       res.status(200).json({
         success: true,
         message: "Event deleted successfully",
@@ -185,13 +190,31 @@ router.delete(
     try {
       const id = req.params.id;
 
-      const event = await Event.findByIdAndDelete(id);
+      const event = await Event.findById(id);
+
       if (!event) {
         return res.status(404).json({
           success: false,
           message: `No event with the specified Id`,
         });
       }
+      // Get image filenames from the product
+      const imageFilenames = event.images.map((image) => image.filename);
+
+      // Delete each image
+      for (const filename of imageFilenames) {
+        const imagePath = `uploads/${filename}`;
+        try {
+          // Check if file exists before attempting to delete it
+          fs.unlinkSync(imagePath);
+          console.log(`Deleted image: ${imagePath}`);
+        } catch (error) {
+          // Handle errors if any image deletion fails
+          console.error(`Error deleting image: ${imagePath}`, error);
+        }
+      }
+
+      await Event.findByIdAndRemove(id);
 
       res.status(200).json({
         success: true,
