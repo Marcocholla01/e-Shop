@@ -12,7 +12,14 @@ require("dotenv").config({
 
 const port = process.env.PORT || 1002;
 
-app.use(cors());
+app.use(cors(
+ { origin: [
+    "https://shop0-bice.vercel.app",
+    "http://192.168.1.100:1001",
+    "http://localhost:1001",
+    "http://127.0.0.1:1001",
+  ],}
+));
 app.use(express.json());
 
 app.get(`/`, (req, res) => {
