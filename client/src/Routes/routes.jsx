@@ -21,6 +21,7 @@ import ShopHomePage from "../pages/seller/ShopHomePage";
 import ShopPreviewPage from "../pages/seller/ShopPreviewPage";
 import ShopDashboardPage from "../pages/seller/Layout/ShopDashboardPage";
 import ShopCreateProduct from "../pages/seller/ShopCreateProduct";
+import SellerEditProductPage from "../pages/seller/SellerEditProductPage";
 import ShopAllProducts from "../pages/seller/ShopAllProducts";
 import ShopOrderDetails from "../pages/seller/ShopOrderDetails";
 import ShopCreateEvent from "../pages/seller/ShopCreateEvent";
@@ -36,6 +37,10 @@ import ShopWithdrawMoneyPage from "../pages/seller/ShopWithdrawMoneyPage";
 import ShopChangePasswordPage from "../pages/seller/ShopChangePasswordPage";
 import PasswordResetPage from "../pages/App/PasswordResetPage ";
 import ResetPasswordPage from "../pages/seller/ResetPasswordPage";
+import ShopInboxPage from "../pages/seller/ShopInboxPage";
+import ContactPage from "../pages/App/ContactPage";
+
+
 
 export {
   LoginPage,
@@ -61,6 +66,7 @@ export {
   ShopPreviewPage,
   ShopDashboardPage,
   ShopCreateProduct,
+  SellerEditProductPage,
   ShopAllProducts,
   ShopOrderDetails,
   ShopCreateEvent,
@@ -76,4 +82,6 @@ export {
   ShopChangePasswordPage,
   PasswordResetPage,
   ResetPasswordPage,
+  ShopInboxPage,
+  ContactPage,
 };

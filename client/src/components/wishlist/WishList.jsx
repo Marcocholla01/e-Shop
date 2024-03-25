@@ -9,7 +9,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishList } from "../../redux/actions/wishList";
 import { toast } from "react-toastify";
-import WishListImage from "../../assets/images/wishlist.avif";
+import WishListImage from "../../assets/images/Checklist-pana.png";
 import { addToCart } from "../../redux/actions/cart";
 
 const WishList = ({ setOpenWishList }) => {

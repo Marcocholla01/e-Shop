@@ -9,9 +9,10 @@ const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
-const { isAuthenticated, isAdmin } = require("../middlewares/auth");
+const { isAuthenticated, isAdmin, isSeller } = require("../middlewares/auth");
 const crypto = require("crypto");
 const VerificationToken = require("../models/activationToken");
+// import { generateFromEmail, generateUsername } from "unique-username-generator";
 const {
   generateOTP,
   generateEmailtemplate,
@@ -252,6 +253,7 @@ router.post(
 
       try {
         await sendMail({
+          from: process.env.SMTP_MAIL,
           email: user.email,
           subject: "Activate Your User",
           html: generateEmailtemplate(activationUrl),
@@ -314,6 +316,73 @@ router.post(
       sendToken(user, 201, res);
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Google Oauth API
+router.post(
+  `/google`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (user) {
+        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        //   expiresIn: "1d",
+        // });
+
+        const { password: pass, ...restUserInfo } = user._doc;
+
+        sendToken(restUserInfo, 201, res);
+        // res
+        //   .cookie(`access_token`, token, { httpOnly: true, sameSite: "none" })
+        //   .status(200)
+        //   .json(restUserInfo);
+      } else {
+        // generate psaaword
+        // const generatedPassword = Math.random().toString(36).slice(-8);
+        // Hash Password
+        // const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+        //create the user
+        const username = req.body.name
+          ? req.body.name.split(" ").join("").toLowerCase() +
+            Math.random().toString(36).slice(-4)
+          : "username" + uuid.v4();
+
+        // const username = generateFromEmail(req.body.email, 4);
+        const fileId = uuid.v4();
+        const protocol = req.protocol;
+        const host = req.get("host");
+        const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
+
+        const newUser = new User({
+          username,
+          email: req.body.email,
+          avatar: {
+            public_id: fileId,
+            url: fileUrl,
+            filename: req.body.photo,
+          },
+          password,
+        });
+
+        //save the user on the DB
+        await newUser.save();
+
+        // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+        // console.log(token);
+        const { password: pass, ...restUserInfo } = newUser._doc;
+
+        sendToken(restUserInfo, 201, res);
+        //   res
+        //     .cookie(`access_token`, token, { httpOnly: true, sameSite: "none" })
+        //     .status(200)
+        //     .json(restUserInfo);
+      }
+    } catch (error) {
+      next(
+        new ErrorHandler(500, `Error during Google OAuth: ${error.message}`)
+      );
     }
   })
 );
@@ -482,8 +551,9 @@ router.post(
         const message = `Your password reset token is :- \n\n ${resetPasswordUrl}`;
 
         await sendMail({
+          from: process.env.SMTP_MAIL,
           email: user.email,
-          subject: `userO Password Recovery`,
+          subject: `user Password Recovery`,
           html: message,
         });
         // res.status(201).json({
@@ -982,72 +1052,17 @@ router.delete(
   })
 );
 
-//   // Generate the activation token
-//   const activationToken = createActivationToken(user);
+// find user information BY USER ID
+router.get(`/user-info/:id`, isSeller, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
 
-//   // Construct the activation URL
-//   const activationUrl = `http://localhost:1001/activation/${activationToken}`;
-
-//   try {
-//     await sendMail({
-//       email: user.email,
-//       subject: "Activate Your Account",
-//       message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
-//     });
-//     res.status(201).json({
-//       success: true,
-//       message: `Please check your email: ${user.email} to activate your account`,
-//     });
-//   } catch (error) {
-//     return next(new ErrorHandler(error.message, 400));
-//   }
-// } catch (error) {
-//   return next(new ErrorHandler(error.message, 500));
-// }
-// });
-
-// // Define a function to create an activation token
-// const createActivationToken = (user) => {
-//   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
-//     expiresIn: "5m",
-//   });
-// };
-
-// router.post(
-//   "/activation",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const { activation_token } = req.body;
-
-//       // Verify the activation token
-//       const newUser = jwt.verify(
-//         activation_token,
-//         process.env.ACTIVATION_SECRET
-//       );
-
-//       if (!newUser) {
-//         return next(new ErrorHandler("Invalid token", 400));
-//       }
-//       const { name, email, password, avatar } = newUser;
-
-//       let user = await User.findOne({ email });
-
-//       if (user) {
-//         return next(new ErrorHandler("User already exists", 400));
-//       }
-//       user = await User.create({
-//         name,
-//         email,
-//         avatar,
-//         password,
-//       });
-
-//       // Send the JWT token as a response
-//       sendToken(user, 201, res);
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-//);
-
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
 module.exports = router;

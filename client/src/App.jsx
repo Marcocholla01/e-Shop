@@ -32,6 +32,7 @@ import {
   ShopPreviewPage,
   ShopDashboardPage,
   ShopCreateProduct,
+  SellerEditProductPage,
   ShopAllProducts,
   ShopOrderDetails,
   ShopCreateEvent,
@@ -48,6 +49,8 @@ import {
   ShopChangePasswordPage,
   PasswordResetPage,
   ResetPasswordPage,
+  ShopInboxPage,
+  ContactPage
 } from "./Routes/routes";
 import {
   AdminDashboardPage,
@@ -162,6 +165,7 @@ function App() {
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/verify-user" element={<OtpPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route
                   path="/password/resset/:token"
                   element={<PasswordResetPage />}
@@ -194,7 +198,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-
+                
                 {/* <Route path="/order/success" element={<OrderSuccessPage />} /> */}
 
                 <Route
@@ -253,6 +257,22 @@ function App() {
                   element={
                     <SellerProtectedRoute>
                       <ShopCreateProduct />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard-edit-product/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <SellerEditProductPage />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard-messages"
+                  element={
+                    <SellerProtectedRoute>
+                      <ShopInboxPage />
                     </SellerProtectedRoute>
                   }
                 />

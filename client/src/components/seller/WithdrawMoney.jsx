@@ -9,7 +9,7 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { AiOutlineDelete } from "react-icons/ai";
 import { loadSeller } from "../../redux/actions/user";
-import EmptyAdderess from "../../assets/images/Address-bro.png";
+import PaymentMethod from "../../assets/images/Credit card-bro.png";
 
 const WithdrawMoney = () => {
   const dispatch = useDispatch();
@@ -253,7 +253,7 @@ const WithdrawMoney = () => {
           <>
             <div className="text-center items-center  justify-center flex flex-col">
               <img
-                src={EmptyAdderess}
+                src={PaymentMethod}
                 alt=""
                 className="w-[20%] h-min p-2 mb-2 object-cover"
               />

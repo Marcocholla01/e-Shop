@@ -29,6 +29,11 @@ const Categories = () => {
             ))}
         </div>
       </div>
+<div className="flex flex-col items-center mb-5">
+  <h1 className={`${styles.heading}`}>Featured Categories</h1>
+  <p className="text-lg mr-3 ml-3 text-center">Choose your necessary products from this feature categories.</p>
+</div>
+
       <div
         className={`${styles.section} bg-white p-6 rounded-lg mb-12`}
         id="categories"

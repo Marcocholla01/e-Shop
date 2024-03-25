@@ -3,41 +3,39 @@ import banner from "../../../assets/images/banner-1.jpg";
 import styles from "../../../styles/style";
 import { Link } from "react-router-dom";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
+import HeroSlider from "./HeroSlider/HeroSlider";
+import HeroCodes from "./HeroCouponCodes/HeroCodes";
 
 const Hero = () => {
   return (
-    <div
-      className={`relative min-h-[70vh] sm:min-h-[80vh] w-full bg-no-repeat ${styles.normalFlex}`}
-      style={{
-        backgroundImage: `url(${banner})`,
-      }}
+    <>
+      <div className={`${styles.section} flex flex-col mt-8`}>
+        <div className="sm:flex flex-row gap-8">
 
-      // style={{
-      //   backgroundImage:
-      //     "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
-      // }}
-    >
-      <div className={`${styles.section} w-[90%] sm:w-[60%]`}>
-        <h1 className="text-[35px] leading-[1.2] sm:text-[60px] text-[#3d3a3a] font-[600] capitalize">
-          Best collection for <br /> home decoration
-        </h1>
-        <p className="pt-5 text-[16px] font-[Poppins] font-[400] text-[#000000ba]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-          porta mauris id ante laoreet porttitor. <br /> Praesent varius
-          convallis dui. Sed lacus ligula, efficitur in neque quis, tempus
-          sodales urna. Vestibulum dictum, odio <br />
-          id elementum ornare, orci leo porta ipsum, rutrum iaculis lacus massa
-          nec ipsum.
-        </p>
-        <Link to="/products" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] font-[Poppins] text-[18px] flex items-center gap-3">
-              Shop Now <IoIosArrowDroprightCircle size={30} />
-            </span>
+          <div className="sm:w-3/5 w-full">
+            <HeroSlider />
           </div>
-        </Link>
+          <div className="sm:w-2/5 hidden sm:flex  bg-slate-300 rounded-lg border-[3px] border-orange-500 hover:border-blue-500">
+            <HeroCodes/>
+          </div>
+        
+        </div>
+        <div className="flex mt-6 ">
+          <div className="flex mt-3 p-5 bg-white rounded w-full justify-between">
+            <div >
+
+              <h1 className="text-[25px] font-[600] ">100% Natural Quality Organic Product</h1>
+              <p className="text-[#000000ae] mt-2">See Our latest discounted products from here and get a special discount product</p>
+            </div>
+            <div className={`${styles.button}  !rounded-[5px] text-white m-3`}>
+              Shop Now
+              <span className="text-white ml-2"><IoIosArrowDroprightCircle size={20}/> </span>
+            </div>
+
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

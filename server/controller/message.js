@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   `/create-new-message`,
   upload.array("images"),
-  catchAsyncErrors(async (res, req, next) => {
+  catchAsyncErrors(async (req, res, next) => {
     try {
       const messageData = req.body;
       const files = req.files;
@@ -30,12 +30,14 @@ router.post(
         });
         messageData.images = imageUrls;
       }
-      (messageData.conversationId = req.body.conversationId),
-        (messageData.sender = req.body.sender);
+      messageData.conversationId = req.body.conversationId;
+      messageData.sender = req.body.sender;
+      messageData.text = req.body.text;
 
       const message = await Message.create({
         conversationId: messageData.conversationId,
         sender: messageData.sender,
+        text: messageData.text,
         images: messageData.images ? messageData.images : undefined,
       });
 
@@ -44,6 +46,24 @@ router.post(
       res.status(200).json({
         success: true,
         message,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.response.message), 500);
+    }
+  })
+);
+
+// get all messages with conversation id
+router.get(
+  `/get-all-messages/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const messages = await Message.find({ conversationId: id });
+
+      res.status(200).json({
+        success: true,
+        messages,
       });
     } catch (error) {
       return next(new ErrorHandler(error.response.message), 500);

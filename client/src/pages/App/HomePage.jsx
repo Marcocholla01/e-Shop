@@ -9,6 +9,7 @@ import Sponsored from "../../components/Route/Sponsored/Sponsored.jsx";
 import Footer from "../../components/Layout/Footer.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../redux/actions/product.js";
+import DownloadApp from "../../components/DownloadApp/DownloadApp.jsx";
 
 function HomePage() {
   const [data, setData] = useState([]);
@@ -31,6 +32,7 @@ function HomePage() {
       <Events />
       <FeaturedProducts />
       <Sponsored />
+      <DownloadApp />
       <Footer />
     </div>
   );

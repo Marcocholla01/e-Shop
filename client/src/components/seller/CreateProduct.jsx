@@ -17,10 +17,29 @@ const CreateProduct = () => {
   const [name, setName] = useState("");
   const [description, setDescrtiption] = useState("");
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
+  // const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
+
+  const [tags, setTags] = useState([]);
+
+  function handleKeyDown(e) {
+    // If user did not press space bar key, return
+    if (e.key !== " ") return;
+    // Get the value of the input
+    const value = e.target.value;
+    // If the value is empty, return
+    if (!value.trim()) return;
+    // Add the value to the tags array
+    setTags([...tags, value]);
+    // Clear the input
+    e.target.value = "";
+  }
+
+  function removeTag(index) {
+    setTags(tags.filter((el, i) => i !== index));
+  }
 
   useEffect(() => {
     if (error) {
@@ -177,7 +196,26 @@ const CreateProduct = () => {
         <br />
         <div>
           <label className="pb-2">Tags</label>
-          <input
+          {/* <Tags value={tags} onChange={(e) => setTags(e.target.value)} /> */}
+
+          <div className="tags-input-container">
+            {tags &&
+              tags.map((tag, index) => (
+                <div className="tag-item" key={index}>
+                  <span className="text">{tag}</span>
+                  <span className="close" onClick={() => removeTag(index)}>
+                    &times;
+                  </span>
+                </div>
+              ))}
+            <input
+              onKeyDown={handleKeyDown}
+              type="text"
+              className="tags-input"
+              placeholder="Type something"
+            />
+          </div>
+          {/* <input
             type="text"
             name="tags"
             id="tags"
@@ -185,7 +223,7 @@ const CreateProduct = () => {
             placeholder="Enter your product's tags"
             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
-          />
+          /> */}
         </div>
         <br />
         <div className="block sm:flex items-center justify-between">
@@ -236,7 +274,11 @@ const CreateProduct = () => {
           />
           <div className="flex flex-wrap w-full items-center">
             <label htmlFor="upload">
-              <AiOutlinePlusCircle size={30} className="mt-3 cursor-pointer" color="#555" />
+              <AiOutlinePlusCircle
+                size={30}
+                className="mt-3 cursor-pointer"
+                color="#555"
+              />
             </label>
             {images &&
               images.map((image) => (

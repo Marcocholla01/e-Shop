@@ -20,12 +20,14 @@ import { toast } from "react-toastify";
 import { addToCart } from "../../../redux/actions/cart";
 import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
 import Ratings from "../Ratings/Ratings";
-import { backend_url } from "../../../config";
+import { BASE_URL, backend_url } from "../../../config";
+import axios from "axios";
 
 const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { wishList } = useSelector((state) => state.wishList);
   const { products } = useSelector((state) => state.product);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
@@ -40,8 +42,27 @@ const ProductDetails = ({ data }) => {
     dispatch(getAllProducts(id));
   }, []);
 
-  const handleMessageSubmit = () => {
-    navigate(`/inbox?conversation=uhvshjdu3455h8`);
+  const handleMessageSubmit = async () => {
+    if (!isAuthenticated) {
+      return toast.error(`Please login to send message`);
+    } else {
+      const groupTittle = data.product._id + user._id;
+      const userId = user._id;
+      const sellerId = data.product.shop._id;
+
+      await axios
+        .post(`${BASE_URL}/conversation/create-new-conversation`, {
+          groupTittle,
+          userId,
+          sellerId,
+        })
+        .then((response) => {
+          navigate(`/user/${user?._id}?${response.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const decrementCount = () => {

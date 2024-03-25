@@ -4,6 +4,7 @@ import Header from "../../components/Layout/Header";
 import Lottie from "react-lottie";
 import animationData from "../../assets/images/svg/animations/107043-success.json";
 import CheckoutSteps from "../../components/Checkout/CheckoutSteps";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const orderSuccessPage = () => {
   return (
@@ -16,6 +17,7 @@ const orderSuccessPage = () => {
       <Success />
       <br />
       <br />
+      <DownloadApp/>
       <Footer />
     </div>
   );

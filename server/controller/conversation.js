@@ -58,4 +58,50 @@ router.get(
     }
   })
 );
+
+// get user conversation
+router.get(
+  `/get-all-conversation-user/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const conversation = await Conversation.find({
+        members: {
+          $in: [req.params.id],
+        },
+      }).sort({ updatedAt: -1, craetedAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        conversation,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.response.data.message, 500));
+    }
+  })
+);
+
+// update last message
+router.put(
+  `/update-last-message/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const { lastMessage, lastMessageId } = req.body;
+
+      const conversation = await Conversation.findByIdAndUpdate(id, {
+        lastMessage,
+        lastMessageId,
+      });
+
+      res.status(200).json({
+        success: true,
+        conversation,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500)); // Using error.message for error handling
+    }
+  })
+);
+
 module.exports = router;

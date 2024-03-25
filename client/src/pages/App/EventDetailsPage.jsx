@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
+import DownloadApp from "../../components/DownloadApp/DownloadApp.jsx";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const ProductDetailsPage = () => {
       .catch((error) => {
         toast.error(error);
       });
-  }, []);
+  }, [allEvents]);
 
   // console.log(id);
 
@@ -39,6 +40,8 @@ const ProductDetailsPage = () => {
       <Header />
       <EventDetails data={data} />
       {/* {data && <SuggestedProducts data={data} />} */}
+
+      <DownloadApp/>
       <Footer />
     </div>
   );

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Header from "../../components/Layout/Header";
 import Footer from "../../components/Layout/Footer";
 import styles from "../../styles/style";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const FAQPage = () => {
   return (
     <div>
       <Header activeHeading={6} />
       <Faq />
+      <DownloadApp />
       <Footer />
     </div>
   );

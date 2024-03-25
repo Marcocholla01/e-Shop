@@ -222,6 +222,7 @@ router.post(
 
       try {
         await sendMail({
+          from: process.env.SMTP_MAIL,
           email: shop.email,
           subject: "Activate Your Shop",
           html: generateEmailtemplate(activationUrl),
@@ -602,6 +603,7 @@ router.post(
         const message = `Your password reset token is :- \n\n ${resetPasswordUrl}`;
 
         await sendMail({
+          from: process.env.SMTP_MAIL,
           email: seller.email,
           subject: `shopO Password Recovery`,
           html: message,
@@ -646,10 +648,11 @@ router.put(
       });
 
       if (!seller) {
-        res.status(400).json({
-          success: false,
-          message: `Reset password url invalid or exipred`,
-        });
+        sendmailfrom: process.env.SMTP_MAIL,
+          res.status(400).json({
+            success: false,
+            message: `Reset password url invalid or exipred`,
+          });
       }
       if (newPassword !== confirmPassword) {
         return next(
@@ -888,6 +891,20 @@ router.delete(
     }
   })
 );
+
+// find shop information BY USER ID
+router.get(`/shop-info/:id`, isAuthenticated, async (req, res, next) => {
+  try {
+    const shop = await Shop.findById(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      shop,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
 
 module.exports = router;
 

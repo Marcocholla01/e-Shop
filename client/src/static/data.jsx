@@ -15,6 +15,7 @@ import watch from "./images/watch.webp";
 import watch2 from "./images/watch2.jpg";
 import cloths from "./images/clothing-apparel.webp";
 import pet from "./images/pet-care.webp";
+import furniture from "./images/furniture.jpg";
 
 // navigation Data
 export const navItems = [
@@ -269,8 +270,14 @@ export const categoriesData = [
     subTitle: "",
     image_Url: musicAndGamming,
   },
+  // {
+  //   id: 10,
+  //   title: "Furnitures",
+  //   subTitle: "",
+  //   image_Url: furniture,
+  // },
   {
-    id: 10,
+    id: 11,
     title: "Others",
     subTitle: "",
     image_Url: others,

@@ -27,7 +27,7 @@ const ShopProfileData = ({ isOwner }) => {
   // const allReviews =
   //   products && products.map((product) => product.reviews.flat());
 
-  const ratings = products.map((product) => product.ratings);
+  // const ratings = products.map((product) => product.ratings);
 
   // console.log(allReviews);
   // console.log(events);

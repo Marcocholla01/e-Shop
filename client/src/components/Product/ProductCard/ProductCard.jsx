@@ -82,9 +82,9 @@ const ProductCard = ({ data }) => {
           <span
             className={`absolute top-2 left-2 rounded-md px-2 py-1 
     ${
-      discountPercentage > 20
+      discountPercentage >= 30
         ? "bg-red-500"
-        : discountPercentage >= 11
+        : discountPercentage >= 20
         ? "bg-green-500"
         : "bg-blue-500"
     }

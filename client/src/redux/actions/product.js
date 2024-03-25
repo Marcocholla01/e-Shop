@@ -28,6 +28,33 @@ export const createProduct = (newForm) => async (dispatch) => {
     });
   }
 };
+// edit product of a shop ---seller
+export const editProduct = (newForm, id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "editPrductRequest",
+    });
+
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const { data } = await axios.post(
+      `${BASE_URL}/product/eidt-product/${id}`,
+      newForm,
+      config,
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch({
+      type: "editPrductSuccess",
+      payload: data.product,
+    });
+  } catch (error) {
+    dispatch({
+      type: "editPrductFail",
+      payload: error.response.data.message,
+    });
+  }
+};
 
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
@@ -49,6 +76,26 @@ export const getAllProductsShop = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllProductsShopFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get a Product
+export const getProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getProductRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/product/${id}`);
+    dispatch({
+      type: "getProductSuccess",
+      payload: data.product,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getProductFailed",
       payload: error.response.data.message,
     });
   }

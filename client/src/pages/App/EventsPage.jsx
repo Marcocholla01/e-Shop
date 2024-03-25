@@ -4,6 +4,7 @@ import Footer from "../../components/Layout/Footer";
 import EventCard from "../../components/Route/Events/EventCard";
 import { useSelector } from "react-redux";
 import styles from "../../styles/style";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const EventsPage = () => {
   const { allEvents, isLoading } = useSelector((state) => state.event);
@@ -93,6 +94,8 @@ const EventsPage = () => {
           </ul>
         </nav>
       ) : null}
+
+      <DownloadApp/>
       <Footer />
     </div>
   );

@@ -1,12 +1,15 @@
 import React from "react";
 import Footer from "../../components/Layout/Footer";
 import Header from "../../components/Layout/Header";
+import About from "../../components/AppComponents/AboutUs/About";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const AboutUs = () => {
   return (
     <div>
       <Header activeHeading={5} />
-      <h1>About us</h1>
+      <About />
+      {/* <DownloadApp/> */}
       <Footer />
     </div>
   );

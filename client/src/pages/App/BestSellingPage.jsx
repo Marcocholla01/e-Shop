@@ -8,6 +8,7 @@ import Footer from "../../components/Layout/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../redux/actions/product";
 import Loader from "../../components/Layout/Loader";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const BestSellingPage = () => {
   const [data, setData] = useState([]);
@@ -43,6 +44,7 @@ const BestSellingPage = () => {
           </div>
         )}
       </>
+      <DownloadApp/>
       <Footer />
     </div>
   );

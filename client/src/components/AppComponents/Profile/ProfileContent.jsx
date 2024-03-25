@@ -22,10 +22,12 @@ import {
 } from "../../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { BASE_URL, backend_url } from "../../../config";
+import { BASE_URL, SOCKETSERVER, backend_url } from "../../../config";
 import { Country, State } from "country-state-city";
 import EmptyAdderess from "../../../assets/images/Address-bro.png";
 import { getAllOrdersOfUser } from "../../../redux/actions/order";
+import UserInbox from "../userInbox/UserInbox";
+
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -256,7 +258,11 @@ const ProfileContent = ({ active }) => {
         </div>
       )}
       {/* Order  */}
-      {active === 4 && <div>{/* <AllOrders /> */}</div>}
+      {active === 4 && (
+        <div>
+          <UserInbox />
+        </div>
+      )}
       {/* Track Order  */}
       {active === 5 && (
         <div>
@@ -1071,4 +1077,6 @@ const MyAddress = () => {
     </div>
   );
 };
+
+
 export default ProfileContent;

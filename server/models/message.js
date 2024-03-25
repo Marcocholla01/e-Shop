@@ -7,6 +7,9 @@ const messagesSchema = new mongoose.Schema({
   sender: {
     type: String,
   },
+  text: {
+    type: String,
+  },
   images: [
     {
       public_id: {

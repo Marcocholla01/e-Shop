@@ -8,7 +8,7 @@
 
 * {
   scroll-behavior: smooth;
-  user-select: none;
+  /* user-select: none; */
 }
 body {
   font-family: Poppins, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -46,4 +46,45 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+
+/* TAGS */
+.tags-input-container{
+  border: 1px solid rgb(209, 213, 219);
+  padding: .5em;
+  border-radius: 3px;
+  width: min(39vw);
+  margin-top: 1em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5em;
+}
+
+.tag-item{
+  background-color: rgb(218, 216, 216);
+  display: inline-block;
+  padding: .5em .75em;
+  border-radius: 20px;
+}
+.tag-item .close{
+  height: 20px;
+  width: 20px;
+  background-color: rgb(78, 79, 80);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: .5em;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.tags-input{
+  flex-grow: 1;
+  padding: .5em 0;
+  border: none;
+  outline: none;
 }

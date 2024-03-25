@@ -29,8 +29,8 @@ const AdminAllRefunds = () => {
         item.status === `Processing refund` || item.status === `Refund Success`
     );
 
-  const [open, setOpen] = useState();
-  const [productData, setProductData] = useState();
+  const [open, setOpen] = useState(false);
+  const [productData, setProductData] = useState("");
 
   const deleteOrder = async (e) => {
     e.preventDefault();

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../redux/actions/product";
 import Loader from "../../components/Layout/Loader";
 import Categories from "../../components/Route/Categoreis/Categories";
+import DownloadApp from "../../components/DownloadApp/DownloadApp";
 
 const ProductPage = () => {
   const [searchParams] = useSearchParams();
@@ -40,7 +41,7 @@ const ProductPage = () => {
       setData(d);
     }
     // window.scrollTo(0, 0);
-  }, [allProducts]);
+  }, []);
 
   return (
     <div>
@@ -49,7 +50,7 @@ const ProductPage = () => {
       <>
         <div>
           <br />
-        
+
           <div className={`${styles.section}`}>
             <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 mb-12">
               {CurrentlyDisplayedData &&
@@ -72,7 +73,7 @@ const ProductPage = () => {
           aria-label="Table navigation"
         >
           <p className="flex items-center  justify-center px-3 h-10 ms-0 leading-tight text-gray-500 bg-white border border-gray-300  dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400 rounded-lg ">
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400  block w-full md:w-auto">
               SHOWING{" "}
               <span className="font-semibold text-gray-900 dark:text-white">
                 {itemStartIndex}-{itemEndIndex}
@@ -127,6 +128,7 @@ const ProductPage = () => {
           </ul>
         </nav>
       ) : null}
+      <DownloadApp />
       <Footer />
     </div>
   );

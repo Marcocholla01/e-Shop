@@ -77,7 +77,7 @@ const ProfileSidebar = ({ active, setActive }) => {
       </div>
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
-        onClick={() => setActive(4) || navigate(`/inbox`)}
+        onClick={() => setActive(4)}
       >
         <AiOutlineMessage size={20} color={active === 4 ? "red" : ""} />
         <span
@@ -135,7 +135,7 @@ const ProfileSidebar = ({ active, setActive }) => {
         <Link to="/admin-dashboard">
           <div
             className="flex bg-white cursor-pointer items-center w-full mb-8"
-            onClick={() => setActive(8)}
+            onClick={() => setActive(9)}
           >
             <MdOutlineAdminPanelSettings
               size={20}
@@ -154,11 +154,13 @@ const ProfileSidebar = ({ active, setActive }) => {
 
       <div
         className="flex bg-white cursor-pointer items-center w-full mb-8"
-        onClick={() => setActive(9) || logoutHandler()}
+        onClick={() => setActive(10) || logoutHandler()}
       >
-        <AiOutlineLogin size={20} color={active === 9 ? "red" : ""} />
+        <AiOutlineLogin size={20} color={active === 10 ? "red" : ""} />
         <span
-          className={`pl-3 ${active === 9 ? "text-[red]" : ""} sm:block hidden`}
+          className={`pl-3 ${
+            active === 10 ? "text-[red]" : ""
+          } sm:block hidden`}
         >
           Log out
         </span>

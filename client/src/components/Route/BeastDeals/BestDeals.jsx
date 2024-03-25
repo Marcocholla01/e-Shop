@@ -31,9 +31,10 @@ const BestDeals = ({ data }) => {
         <Loader />
       ) : (
         <div className={`${styles.section}`}>
-          <div className={`${styles.heading}`}>
-            <h1>Best Deals</h1>
-          </div>
+          <div className="flex flex-col items-center mb-5">
+  <h1 className={`${styles.heading}`}>Latest Discounted Products</h1>
+  <p className="text-lg mr-3 ml-3 text-center sm:w-[50%] w-[80%]">See Our latest discounted products below. Choose your daily needs from here and get a special discount with free shipping.</p>
+</div>
           <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
             {/* {data && data.map((i, index) => <ProductCard data={i} key={index} />)} */}
             {data && data.length !== 0 && (
