@@ -3,6 +3,7 @@ import { AiOutlineFolderAdd, AiOutlineGift } from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
+import { GiTakeMyMoney } from "react-icons/gi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 import { MdOutlineLocalOffer, MdOutlineLockPerson } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
@@ -96,6 +97,19 @@ const DashboardSideBar = ({ active }) => {
             } hidden sm:block`}
           >
             Create Event
+          </h5>
+        </Link>
+      </div>
+
+      <div className={`w-full flex items-center p-4`}>
+        <Link to={`/dashboard-shop-sales`} className="w-full flex items-center">
+          <GiTakeMyMoney size={30} color={active === 13 ? "red" : "#555"} />
+          <h5
+            className={`pl-3 ${
+              active === 13 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
+            All Sales
           </h5>
         </Link>
       </div>

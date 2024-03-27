@@ -1,6 +1,9 @@
 const mongoose = require(`mongoose`);
 
 const orderSchema = new mongoose.Schema({
+  invoiceId: {
+    type: String,
+  },
   cart: {
     type: Array,
     required: true,

@@ -8,7 +8,7 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { SlPrinter } from "react-icons/sl";
 
-const AllOrders = () => {
+const SellerSale = () => {
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
@@ -18,26 +18,18 @@ const AllOrders = () => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch]);
 
+  const sales =
+ orders && orders.filter((item) => item.status === `Delivered`);
+
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Sale ID", minWidth: 150, flex: 0.7 },
 
     {
-      field: "status",
-      headerName: "Status",
+      field: "soldto",
+      headerName: "Sold To",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        const status = params.getValue(params.id, "status"); // Get the status value from the cell
-
-        // Apply Tailwind CSS classes directly based on the status
-        if (status === "Delivered" || "delivered") {
-          return "text-green-500";
-        } else if (status === "Processing" || "processing") {
-          return "text-blue-500";
-        } else {
-          return "text-red-500";
-        }
-      },
+      type: "number",
     },
     {
       field: "itemsQty",
@@ -49,7 +41,7 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Total Price",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -98,13 +90,13 @@ const AllOrders = () => {
 
   const row = [];
 
-  orders &&
-    orders.forEach((item) => {
+  sales &&
+    sales.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
         total: "KSHS " + item.totalPrice,
-        status: item.status,
+        soldto: item.user.name,
       });
     });
 
@@ -127,4 +119,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default SellerSale;

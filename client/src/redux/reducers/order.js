@@ -44,6 +44,19 @@ export const orderReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
+  // get order based on Id
+  OrderRequest: (state) => {
+    state.OrderLoading = true;
+  },
+  OrderSuccess: (state, action) => {
+    state.OrderLoading = false;
+    state.Order = action.payload;
+  },
+  OrderFailed: (state, action) => {
+    state.OrderLoading = false;
+    state.error = action.payload;
+  },
+
   clearErrors: (state) => {
     state.error = null;
   },

@@ -232,12 +232,17 @@ const AdminOrderDetails = () => {
         </select>
       )}
       <div
-        className={`${styles.button} mt-5 !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
+        className={`${
+          data?.status === "Delivered"
+            ? ` ${styles.button} mt-5 !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`
+            : `hidden`
+        } `}
         onClick={
           data?.status !== `Processing refund`
             ? orderUpdateHandler
             : refundOrderHandler
         }
+        disabled={data?.status === "Delivered"}
       >
         {" "}
         Update Status

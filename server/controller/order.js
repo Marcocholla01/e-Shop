@@ -39,6 +39,16 @@ router.post(
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
+        // Generate a random alphanumeric string of length 4
+        const randomAlphanumeric = Math.random().toString(36).substring(2, 6);
+
+        // Generate a random numeric value between 0 and 9999
+        const randomNumber = Math.floor(Math.random() * 10000);
+
+        // Combine the random alphanumeric string and the random numeric value
+        const invoiceId = randomAlphanumeric + randomNumber;
+
+        // Create the order with the generated invoiceId
         const order = await Order.create({
           cart: items,
           shippingAddress,
@@ -48,10 +58,10 @@ router.post(
           subTotalPrice,
           shippingCost,
           couponDiscount,
+          invoiceId, // Add invoiceId to the order
         });
         orders.push(order);
       }
-
       res.status(200).json({
         success: true,
         orders,
@@ -281,6 +291,24 @@ router.delete(
       res.status(200).json({
         success: true,
         message: `Order deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// get order bassed on OrderID
+router.get(
+  `/order/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    const id = req.params.id;
+
+    try {
+      const order = await Order.findById(id);
+      res.status(200).json({
+        success: true,
+        order,
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));

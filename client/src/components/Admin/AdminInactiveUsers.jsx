@@ -177,7 +177,7 @@ const AdminInactiveUsers = () => {
               <br />
               <Link
                 to={`/admin-active-users`}
-                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end !w-auto !p-2`}
               >
                 view Active users
               </Link>

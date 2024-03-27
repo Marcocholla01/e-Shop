@@ -178,7 +178,7 @@ const AdminActiveSellers = () => {
             <div className="w-full mt-6 justify-end flex gap-3">
               <Link
                 to={`/admin-inactive-sellers`}
-                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end !w-auto !p-2`}
               >
                 view Inactive shops
               </Link>

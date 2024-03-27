@@ -14,6 +14,8 @@ import AdminActiveSellersPage from "../../pages/Admin/AdminActiveSellersPage";
 import AdminAllOrderDetailsPage from "../../pages/Admin/AdminAllOrderDetailsPage";
 import AdminAllDiscountCodesPage from "../../pages/Admin/AdminAllDiscountCodesPage";
 import AdminAllRefundsPage from "../../pages/Admin/AdminAllRefundsPage";
+import AdminInvoicePage from "../../pages/Admin/AdminInvoicePage";
+import AdminAllSales from "../../pages/Admin/AdminAllSales";
 
 export {
   AdminDashboardPage,
@@ -32,4 +34,6 @@ export {
   AdminAllOrderDetailsPage,
   AdminAllDiscountCodesPage,
   AdminAllRefundsPage,
+  AdminInvoicePage,
+  AdminAllSales,
 };

@@ -50,7 +50,10 @@ import {
   PasswordResetPage,
   ResetPasswordPage,
   ShopInboxPage,
-  ContactPage
+  ContactPage,
+  SellerInvoicePage,
+  SellerSalesPage,
+  UserInvoicePage,
 } from "./Routes/routes";
 import {
   AdminDashboardPage,
@@ -69,6 +72,8 @@ import {
   AdminAllOrderDetailsPage,
   AdminAllDiscountCodesPage,
   AdminAllRefundsPage,
+  AdminInvoicePage,
+  AdminAllSales,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -198,7 +203,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                
+
                 {/* <Route path="/order/success" element={<OrderSuccessPage />} /> */}
 
                 <Route
@@ -206,6 +211,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/user/invoice/:id"
+                  element={
+                    <ProtectedRoute>
+                      <UserInvoicePage />
                     </ProtectedRoute>
                   }
                 />
@@ -274,6 +287,23 @@ function App() {
                     <SellerProtectedRoute>
                       <ShopInboxPage />
                     </SellerProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/shop/invoice/:id"
+                  element={
+                    <AdminProtectedRoute>
+                      <SellerInvoicePage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard-shop-sales"
+                  element={
+                    <AdminProtectedRoute>
+                      <SellerSalesPage />
+                    </AdminProtectedRoute>
                   }
                 />
 
@@ -489,6 +519,24 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminAllRefundsPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin/invoice/:id"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminInvoicePage />
+                    </AdminProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin-sales"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllSales />
                     </AdminProtectedRoute>
                   }
                 />

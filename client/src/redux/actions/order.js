@@ -69,3 +69,26 @@ export const getAllOrdersOfAdmin = () => async (dispatch) => {
     });
   }
 };
+
+// get order based on ID
+export const getOrderDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "OrderRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/order/${id}`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "OrderSuccess",
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: "OrderFailed",
+      payload: error.response.data.message,
+    });
+  }
+};

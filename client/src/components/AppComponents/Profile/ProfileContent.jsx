@@ -27,7 +27,7 @@ import { Country, State } from "country-state-city";
 import EmptyAdderess from "../../../assets/images/Address-bro.png";
 import { getAllOrdersOfUser } from "../../../redux/actions/order";
 import UserInbox from "../userInbox/UserInbox";
-
+import { SlPrinter } from "react-icons/sl";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -338,9 +338,28 @@ const AllOrders = () => {
       minWidth: 130,
       flex: 0.8,
     },
+    {
+      field: "  ",
+      flex: 0.5,
+      minWidth: 10,
+      headerName: "View Invoice",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/user/invoice/${params.id}`}>
+              <Button>
+                <SlPrinter size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
+    },
 
     {
-      field: " ",
+      field: "viewmore",
       flex: 1,
       minWidth: 150,
       headerName: "",
@@ -1077,6 +1096,5 @@ const MyAddress = () => {
     </div>
   );
 };
-
 
 export default ProfileContent;

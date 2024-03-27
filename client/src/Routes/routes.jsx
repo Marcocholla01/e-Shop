@@ -39,8 +39,9 @@ import PasswordResetPage from "../pages/App/PasswordResetPage ";
 import ResetPasswordPage from "../pages/seller/ResetPasswordPage";
 import ShopInboxPage from "../pages/seller/ShopInboxPage";
 import ContactPage from "../pages/App/ContactPage";
-
-
+import SellerInvoicePage from "../pages/seller/SellerInvoicePage";
+import SellerSalesPage from "../pages/seller/SellerSalesPage";
+import UserInvoicePage from "../pages/App/UserInvoicePage";
 
 export {
   LoginPage,
@@ -84,4 +85,7 @@ export {
   ResetPasswordPage,
   ShopInboxPage,
   ContactPage,
+  SellerInvoicePage,
+  SellerSalesPage,
+  UserInvoicePage,
 };

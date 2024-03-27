@@ -3,6 +3,7 @@ import { AiOutlineFolderAdd, AiOutlineGift } from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { BsHandbag } from "react-icons/bs";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
+import { GiTakeMyMoney } from "react-icons/gi";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { GrWorkshop } from "react-icons/gr";
 import { HiOutlineReceiptRefund, HiOutlineUserGroup } from "react-icons/hi";
@@ -63,7 +64,7 @@ const AdminSideBar = ({ active }) => {
               active === 4 ? "text-[red]" : ""
             } hidden sm:block`}
           >
-            All Users
+            All Customers
           </h5>
         </Link>
       </div>
@@ -109,21 +110,18 @@ const AdminSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-      {/* <div className={`w-full flex items-center p-4`}>
-        <Link
-          to={`/admin-dashboard-crate-event`}
-          className="w-full flex items-center"
-        >
-          <VscNewFile size={30} color={active === 6 ? "red" : "#555"} />
+      <div className={`w-full flex items-center p-4`}>
+        <Link to={`/admin-sales`} className="w-full flex items-center">
+          <GiTakeMyMoney size={30} color={active === 11 ? "red" : "#555"} />
           <h5
             className={`pl-3 ${
-              active === 6 ? "text-[red]" : ""
+              active === 11 ? "text-[red]" : ""
             } hidden sm:block`}
           >
-            Create Event
+            All Sales
           </h5>
         </Link>
-      </div> */}
+      </div>
       <div className={`w-full flex items-center p-4`}>
         <Link
           to={`/admin-withdraw-request`}

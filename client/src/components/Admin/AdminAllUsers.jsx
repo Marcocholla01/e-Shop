@@ -96,11 +96,11 @@ const AdminAllUsers = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "User ID", minWidth: 150, flex: 0.8 },
+    { field: "id", headerName: "Customer ID", minWidth: 150, flex: 0.8 },
 
     {
       field: "name",
-      headerName: "User Names",
+      headerName: "Customer Names",
       type: "text",
       minWidth: 100,
       flex: 0.8,
@@ -185,7 +185,7 @@ const AdminAllUsers = () => {
       ) : (
         <div className="w-full flex justify-center mt-3">
           <div className="w-[95%]">
-            <h3 className="text-[22px] font-Poppins pb-2">All Users</h3>
+            <h3 className="text-[22px] font-Poppins pb-2">All Customers</h3>
             <div className="w-full min-h-[45vh] bg-white rounded">
               <DataGrid
                 rows={row}
@@ -198,15 +198,15 @@ const AdminAllUsers = () => {
             <div className="w-full mt-6 justify-end flex gap-3">
               <Link
                 to={`/admin-active-users`}
-                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end !w-auto !p-2`}
               >
-                view Active users
+                view Active Customers
               </Link>
               <Link
                 to={`/admin-inactive-users`}
-                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end`}
+                className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end !w-auto !p-2`}
               >
-                view Inactive users
+                view Inactive Customers
               </Link>
             </div>{" "}
           </div>{" "}
@@ -252,7 +252,7 @@ const AdminAllUsers = () => {
                       className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
                       onClick={activateUser}
                     >
-                      Acivate User
+                      Acivate Customers
                     </div>
                   </div>
                   <div className=" w-full items-center flex flex-row mt-7">
@@ -266,7 +266,7 @@ const AdminAllUsers = () => {
                       className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
                       onClick={deactivateUser}
                     >
-                      Deactivate User
+                      Deactivate Customer
                     </div>
                   </div>
                   <div className=" w-full items-center flex flex-row mt-7">
@@ -280,7 +280,7 @@ const AdminAllUsers = () => {
                       className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer `}
                       onClick={deleteUser}
                     >
-                      Delete User
+                      Delete Customer
                     </div>
                   </div>
 

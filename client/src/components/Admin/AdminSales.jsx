@@ -11,13 +11,17 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 
-const AllOrders = () => {
+const AdminSales = () => {
   const { adminOrders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState();
   const [productData, setProductData] = useState();
 
+  const sales =
+    adminOrders && adminOrders.filter((item) => item.status === `Delivered`);
+
+  //   console.log(sales);
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
   }, []);
@@ -40,18 +44,14 @@ const AllOrders = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Sale ID", minWidth: 150, flex: 0.7 },
 
     {
-      field: "status",
-      headerName: "Status",
+      field: "soldto",
+      headerName: "Sold To",
+      type: "number",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
     },
     {
       field: "itemsQty",
@@ -63,14 +63,14 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Total Price",
       type: "number",
       minWidth: 130,
       flex: 0.8,
     },
 
     {
-      field: "invoice",
+      field: " ",
       flex: 0.5,
       minWidth: 10,
       headerName: "View Invoice",
@@ -90,10 +90,10 @@ const AllOrders = () => {
     },
 
     {
-      field: "delete",
+      field: "   ",
       flex: 0.5,
       minWidth: 10,
-      headerName: "Delete order",
+      headerName: "Delete sale",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -108,7 +108,7 @@ const AllOrders = () => {
     },
 
     {
-      field: "viewmore",
+      field: "    ",
       flex: 0.5,
       minWidth: 150,
       headerName: "View More",
@@ -128,21 +128,22 @@ const AllOrders = () => {
     },
   ];
 
+  //   console.log(adminOrders);
   const row = [];
 
-  adminOrders &&
-    adminOrders.forEach((item) => {
+  sales &&
+    sales.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
         total: "KSHS " + item.totalPrice,
-        status: item.status,
+        soldto: item.user.name,
       });
     });
   return (
     <div className="w-full flex justify-center mt-3">
       <div className="w-[95%]">
-        <h3 className="text-[22px] font-Poppins pb-2">All Orders</h3>
+        <h3 className="text-[22px] font-Poppins pb-2">All Sales</h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
           <DataGrid
             rows={row}
@@ -168,7 +169,7 @@ const AllOrders = () => {
               </div>
 
               <h1 className="text-center font-Poppins text-[25px]">
-                Are you sure you want to delete this Order Refund
+                Are you sure you want to delete this Sale
               </h1>
               <h4 className="text-center font-Poppins text-[20px] text-[#0000007a]">
                 {productData?.id}
@@ -200,4 +201,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default AdminSales;
