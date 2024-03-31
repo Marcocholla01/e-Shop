@@ -5,6 +5,8 @@ const cookieParser = require(`cookie-parser`);
 const bodyParser = require(`body-parser`);
 const cors = require(`cors`);
 const path = require("path");
+const cookieSession = require(`cookie-session`);
+const passport = require(`passport`)
 
 app.get(`/`, (req, res) => {
   res.send(`Hello From the Backend Server`);
@@ -12,6 +14,17 @@ app.get(`/`, (req, res) => {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["token"],
+    maxAge: 24 * 60 * 60 * 100,
+  })
+);
+
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(
   cors({
     origin: [

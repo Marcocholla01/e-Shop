@@ -177,6 +177,7 @@ const Header = ({ activeHeading }) => {
               ) : null}
             </div>
           </div>
+
           {/* Nav items */}
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />

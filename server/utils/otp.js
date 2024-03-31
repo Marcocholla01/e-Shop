@@ -28,6 +28,27 @@ exports.generatePasswordresetToken = () => {
   return { resetPasswordTime, resetPasswordToken };
 };
 
+// Specify the password requirements
+const passwordRegex = /^(?=.*[!@#$%^&()_+])(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,24}$/;
+
+// Function to generate a random password
+exports.generateRandomPassword = () => {
+  let password = "";
+  const characters = "!@#$%^&*()_+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+  // Generate a password that meets the requirements
+  while (!passwordRegex.test(password)) {
+    password = "";
+    for (let i = 0; i < 8; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters[randomIndex];
+    }
+  }
+
+  return password;
+};
+
+
 exports.generateEmailtemplate = (activationUrl) => {
   return `
     <!DOCTYPE html>

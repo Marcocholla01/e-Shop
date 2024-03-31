@@ -7,24 +7,24 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaLink } from "react-icons/fa6";
 import { FaSquareGithub } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
-import banner from "../../../assets/images/banner-1.jpg"
+import banner from "../../../assets/images/banner-1.jpg";
 
 const About = () => {
   return (
     <div className="w-full sm:flex  justify-between sm:flex-col">
       <div
-        className={`relative min-h-[30vh]  w-full bg-no-repeat ${styles.normalFlex}`}
-          style={{
-            backgroundImage: `url(${banner})`,
-          }}
-
+        className={`relative min-h-[20vh]  w-full bg-no-repeat ${styles.normalFlex}  bg-[#000] w-full bg-cover bg-center`}
         // style={{
-        //   backgroundImage:
-        //     "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
+        //   backgroundImage: `url(${banner})`,
         // }}
+
+        style={{
+          backgroundImage:
+            "url(https://img.freepik.com/free-photo/silhouette-business-people-discussion-meeting-cityscape-team-concept_53876-146187.jpg?w=1380&t=st=1711827124~exp=1711827724~hmac=17ee4f1ea435835857bee1c7f1c2c9576544f60e1e1b32973ebc9bba8866739c)",
+        }}
       >
-        <div className={` w-full`}>
-          <h1 className="text-[35px] leading-[1.2] sm:text-[40px] text-[#3d3a3a] font-[600] capitalize text-center">
+        <div className={`w-full`}>
+          <h1 className="text-[35px] leading-[1.2] sm:text-[40px] text-[#000] font-[600] capitalize text-center p-2 bg-[#00000011] w-full">
             ABOUT US
           </h1>
         </div>
@@ -126,7 +126,7 @@ const About = () => {
         </div>
 
         {/* About us team */}
-        <div className="w-full items-center flex flex-col m-[20px]">
+        {/* <div className="w-full items-center flex flex-col m-[20px]">
           <h1 className="uppercase mt-[20px] font-[600] text-[30px] text-[#000000c7]">
             Meet our team
           </h1>
@@ -140,36 +140,37 @@ const About = () => {
                   className="h-auto w-[400px] rounded-[10px] shadow object-cover"
                 />
                 <div className="items-center justify-center mt-[20px]">
-                  <h1 className="text-center font-semibold text-[#000000c2] text-xl">Paul Ocholla</h1>
-                  <p className="text-center text-[#000000c2] text-lg">Founder</p>
+                  <h1 className="text-center font-semibold text-[#000000c2] text-xl">
+                    Paul Ocholla
+                  </h1>
                   <p className="text-center text-[#000000c2] text-lg">
                     Founder
                   </p>
-                  <p className="text-center text-[#000000c2] text-lg">Founder</p>
+                  <p className="text-center text-[#000000c2] text-lg">
+                    Founder
+                  </p>
+                  <p className="text-center text-[#000000c2] text-lg">
+                    Founder
+                  </p>
                 </div>
 
                 <div className="flex mt-[20px] m-4 items-center justify-center gap-[10px]">
                   <a href="#" target="_balnk">
-                    
-                  <FaFacebookSquare size={30} className="text-blue-700" />
-                     </a>
+                    <FaFacebookSquare size={30} className="text-blue-700" />
+                  </a>
 
-                     <a href="#" target="_balnk">
-                  <FaXTwitter size={30} />
-                      
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaLink size={20} />
-
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaSquareGithub size={30} />
-
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaLinkedin size={30} className="text-blue-600" />
-
-                     </a>
+                  <a href="#" target="_balnk">
+                    <FaXTwitter size={30} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaLink size={20} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaSquareGithub size={30} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaLinkedin size={30} className="text-blue-600" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -182,42 +183,42 @@ const About = () => {
                   className="h-auto w-[400px] rounded-[10px] shadow object-cover"
                 />
                 <div className="items-center justify-center mt-[20px]">
-                  <h1 className="text-center font-semibold text-[#000000c2] text-xl">Paul Ocholla</h1>
-                  <p className="text-center text-[#000000c2] text-lg">Founder</p>
+                  <h1 className="text-center font-semibold text-[#000000c2] text-xl">
+                    Paul Ocholla
+                  </h1>
                   <p className="text-center text-[#000000c2] text-lg">
                     Founder
                   </p>
-                  <p className="text-center text-[#000000c2] text-lg">Founder</p>
+                  <p className="text-center text-[#000000c2] text-lg">
+                    Founder
+                  </p>
+                  <p className="text-center text-[#000000c2] text-lg">
+                    Founder
+                  </p>
                 </div>
 
                 <div className="flex mt-[20px] m-4 items-center justify-center gap-[10px]">
                   <a href="#" target="_balnk">
-                    
-                  <FaFacebookSquare size={30} className="text-blue-700" />
-                     </a>
+                    <FaFacebookSquare size={30} className="text-blue-700" />
+                  </a>
 
-                     <a href="#" target="_balnk">
-                  <FaXTwitter size={30} />
-                      
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaLink size={20} />
-
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaSquareGithub size={30} />
-
-                     </a>
-                     <a href="#" target="_balnk">
-                  <FaLinkedin size={30} className="text-blue-600" />
-
-                     </a>
+                  <a href="#" target="_balnk">
+                    <FaXTwitter size={30} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaLink size={20} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaSquareGithub size={30} />
+                  </a>
+                  <a href="#" target="_balnk">
+                    <FaLinkedin size={30} className="text-blue-600" />
+                  </a>
                 </div>
               </div>
             </div>
-        
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -4,6 +4,8 @@ const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const CouponCode = require("../models/couponCode");
+const { upload } = require("../multer");
+const uuid = require("uuid");
 
 const router = express.Router();
 
@@ -11,14 +13,16 @@ const router = express.Router();
 
 router.post(
   `/create-coupon-code`,
-  isSeller,
+  // isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
+      // console.log(req.body);
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
 
-      if (!shopId) {
-        return next(new ErrorHandler("Shop Id is invalid!", 400));
+      // Check if shopId is valid
+      if (!shop) {
+        return next(new ErrorHandler("Shop not found", 400));
       }
 
       const existingCouponCode = await CouponCode.find({
@@ -30,7 +34,6 @@ router.post(
           .status(400)
           .json({ success: false, message: "Coupon code already exists!" });
       }
-
       const couponCodeData = req.body;
       couponCodeData.shop = shop;
 
@@ -46,7 +49,24 @@ router.post(
   })
 );
 
-// Get all Products of a shop
+router.get(
+  `/code/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const couponCode = await CouponCode.findById(id);
+
+      res.status(200).json({
+        success: true,
+        couponCode,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// Get all CouponCodes of a shop
 router.get(
   `/all-couponCodes-shop/:id`,
   catchAsyncErrors(async (req, res, next) => {
@@ -123,6 +143,22 @@ router.get(
     }
   })
 );
+// Get all coupon codes
+router.get(
+  `/all-coupon-codes`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const couponCodes = await CouponCode.find().sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        couponCodes,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
 
 // delete withdraw ----Admin
 router.delete(
@@ -147,6 +183,64 @@ router.delete(
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+router.put(
+  `/edit-couponCode/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const {
+        name,
+        imageLink,
+        seasson,
+        value,
+        minAmount,
+        maxAmount,
+        startDate,
+        endDate,
+      } = req.body;
+
+      // console.log(
+      //   name,
+      //   name,
+      //   imageLink,
+      //   seasson,
+      //   value,
+      //   minAmount,
+      //   maxAmount,
+      //   startDate,
+      //   endDate,
+      // );
+
+      const couponCode = await CouponCode.findById(req.params.id);
+      // console.log(couponCode);
+      if (!couponCode) {
+        return res.status(404).json({
+          success: false,
+          message: "CouponCode with the id not found.",
+        });
+      }
+
+      couponCode.name = name;
+      couponCode.seasson = seasson;
+      couponCode.value = value;
+      couponCode.minAmount = minAmount;
+      couponCode.maxAmount = maxAmount;
+      couponCode.imageLink = imageLink;
+      couponCode.startDate = startDate;
+      couponCode.endDate = endDate;
+      couponCode.updatedAt = Date.now();
+
+      await couponCode.save();
+      res.status(201).json({
+        success: true,
+        message: `information updated successfully`,
+        couponCode,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

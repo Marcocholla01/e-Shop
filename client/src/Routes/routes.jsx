@@ -42,6 +42,16 @@ import ContactPage from "../pages/App/ContactPage";
 import SellerInvoicePage from "../pages/seller/SellerInvoicePage";
 import SellerSalesPage from "../pages/seller/SellerSalesPage";
 import UserInvoicePage from "../pages/App/UserInvoicePage";
+import SellerWithdrawalDetailsPage from "../pages/seller/SellerWithdrawalDetailsPage";
+import SellerAllWithdrwalsHistory from "../pages/seller/SellerAllWithdrwalsHistory";
+import Offers from "../pages/App/Offers";
+import TermsPage from "../pages/App/TermsPage";
+import PrivacyPage from "../pages/App/PrivacyPage";
+import CommingSoon from "../pages/App/CommingSoon";
+import SellerEditEventPage from "../pages/seller/SellerEditEventPage";
+import SellerEditDiscountCode from "../pages/seller/SellerEditDiscountCode";
+
+
 
 export {
   LoginPage,
@@ -88,4 +98,12 @@ export {
   SellerInvoicePage,
   SellerSalesPage,
   UserInvoicePage,
+  SellerWithdrawalDetailsPage,
+  SellerAllWithdrwalsHistory,
+  Offers,
+  TermsPage,
+  PrivacyPage,
+  CommingSoon,
+  SellerEditEventPage,
+  SellerEditDiscountCode,
 };

@@ -10,6 +10,7 @@ import { BASE_URL } from "../../config";
 import { AiOutlineDelete } from "react-icons/ai";
 import { loadSeller } from "../../redux/actions/user";
 import PaymentMethod from "../../assets/images/Credit card-bro.png";
+import { Link } from "react-router-dom";
 
 const WithdrawMoney = () => {
   const dispatch = useDispatch();
@@ -194,7 +195,13 @@ const WithdrawMoney = () => {
         </div>
         <br />
         <div className="flex w-full items-center justify-between">
-          <br />
+          <Link
+            to={`/dashbord-all-withdrawals/${seller._id}`}
+            className={`${styles.button} text-white !h-[42px] !rounded-[5px] !self-end !w-auto !p-2`}
+          >
+            view withdrawal history
+          </Link>
+
           {seller && seller.withdrawMethod ? (
             <div
               className={`${styles.button} !rounded-md !w-[250px] p-2`}

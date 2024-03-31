@@ -17,5 +17,7 @@ export default {
       "400px": "400px",
     },
   },
-  plugins: [],
+  plugins: [
+    require("flowbite/plugin"),
+  ],
 };

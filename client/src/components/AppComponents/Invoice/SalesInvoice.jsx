@@ -42,6 +42,8 @@ const SalesInvoice = () => {
   const options = { year: "numeric", month: "long", day: "numeric" };
   const normalDate = new Date(isoDate).toLocaleDateString(undefined, options);
 
+  const printedAt = new Date(Date.now()).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
   //   const subTotal =
   //     data &&
   //     data?.order?.reduce(
@@ -98,6 +100,7 @@ const SalesInvoice = () => {
         className="bg-white m-4 items-center justify-center"
       >
         <div className="max-w-4xl mx-auto border border-gray-500 p-8 rounded-sm mb-8 bg-neutral-200 sm:w--auto">
+        <div>{printedAt}</div>
           {/* Header */}
           <div className="flex flex-col justify-center">
             <h1 className="font-[500] text-3xl text-center  text-slate-700 font-Poppins italic">

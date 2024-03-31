@@ -26,3 +26,51 @@ export const adminGetAllWithdrawal = () => async (dispatch) => {
     });
   }
 };
+// get all withdrwawals ----- seller
+export const sellerGetAllWithdrawal = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "sellerGetAllWithdrawalRequest",
+    });
+
+    const { data } = await axios.get(
+      `${BASE_URL}/withdraw/seller-all-withdrawals/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    dispatch({
+      type: "sellerGetAllWithdrawalSuccess",
+      payload: data.withdrawals,
+    });
+  } catch (error) {
+    dispatch({
+      type: "sellerGetAllWithdrawalFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get order based on ID
+export const getwithdrawalDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "withdrawalRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/withdraw/withdrawal/${id}`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "withdrawalSuccess",
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: "withdrawalFailed",
+      payload: error.response.data.message,
+    });
+  }
+};

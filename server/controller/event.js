@@ -99,7 +99,7 @@ router.delete(
           message: `No event with the specified Id`,
         });
       }
-      // Get image filenames from the product
+      // Get image filenames from the event
       const imageFilenames = event.images.map((image) => image.filename);
 
       // Delete each image
@@ -222,6 +222,58 @@ router.delete(
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+router.put(
+  `/eidt-event/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const {
+        name,
+        description,
+        discountPrice,
+        originalPrice,
+        stock,
+        category,
+      } = req.body;
+
+      // console.log(
+      //   name,
+      //   description,
+      //   discountPrice,
+      //   originalPrice,
+      //   tags,
+      //   stock,
+      //   category
+      // );
+
+      const event = await Event.findById(req.params.id);
+      // console.log(event);
+      if (!event) {
+        return res.status(404).json({
+          success: false,
+          message: "Event with the id not found.",
+        });
+      }
+
+      event.name = name;
+      event.description = description;
+      event.category = category;
+      event.discountPrice = discountPrice;
+      event.originalPrice = originalPrice;
+      event.stock = stock;
+      event.updatedAt = Date.now();
+
+      await event.save();
+      res.status(201).json({
+        success: true,
+        message: `information updated successfully`,
+        event,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

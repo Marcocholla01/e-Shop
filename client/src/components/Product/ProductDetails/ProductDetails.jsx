@@ -22,6 +22,7 @@ import ProductDetailscard from "../ProductDetailscard/ProductDetailscard";
 import Ratings from "../Ratings/Ratings";
 import { BASE_URL, backend_url } from "../../../config";
 import axios from "axios";
+import { format } from "timeago.js";
 
 const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -36,6 +37,7 @@ const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
+  
 
   useEffect(() => {
     dispatch(getAllProductsShop(id));
@@ -230,6 +232,20 @@ const ProductDetails = ({ data }) => {
                     </h3>
                   </div>
                   <div className="flex items-center mt-12 justify-between pr-3">
+                    {data?.product?.tags ? (
+                      <>
+                  
+                        {" "}
+                        <p className="text-lg font-semibold">
+                          Tags
+                          <span className="text-red-600 ml-4 text-sm font-semibold p-3">
+                            {" "}
+                            {data?.product?.tags}
+                          </span>
+                        </p>
+                      </>
+                    ) : null}
+
                     {/* <div>
                       <button
                         className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
@@ -248,7 +264,6 @@ const ProductDetails = ({ data }) => {
                       </button>
                     </div> */}
                     <div>
-                      {data?.product?.tags}
                       {/* {click ? (
                         <AiFillHeart
                           size={22}
@@ -400,6 +415,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
                   <Ratings rating={item.rating} />
 
                   <p>{item.comment} </p>
+                  <p>{format(item.createdAt)} </p>
                 </div>
               </div>
             ))}

@@ -9,10 +9,10 @@ const SellerEditProductPage = () => {
       <DashboardHeader />
       <div className="w-full flex items-center justify-between">
         <div className="w-[80px] sm:w-[330px]">
-          <DashboardSideBar active={4} />
+          <DashboardSideBar />
         </div>
         <div className="w-full justify-center flex">
-         <EditProduct/>
+          <EditProduct />
         </div>
       </div>
     </div>

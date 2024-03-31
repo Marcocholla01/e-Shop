@@ -188,7 +188,7 @@ router.put(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { rating, user, comment, productId, orderId } = req.body;
+      const { rating, user, comment, productId, orderId, createdAt } = req.body;
 
       const product = await Product.findById(productId);
 
@@ -197,7 +197,14 @@ router.put(
         rating,
         comment,
         productId,
+        createdAt,
       };
+      if (!product) {
+        return res.status(400).json({
+          success: false,
+          message: "Product Already Deleted No Reviews allowed for it",
+        });
+      }
 
       const isReviewed = product.reviews.find(
         (rev) => rev.user._id === req.user._id
@@ -280,6 +287,60 @@ router.delete(
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+router.put(
+  `/eidt-product/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const {
+        name,
+        description,
+        discountPrice,
+        originalPrice,
+        tags,
+        stock,
+        category,
+      } = req.body;
+
+      // console.log(
+      //   name,
+      //   description,
+      //   discountPrice,
+      //   originalPrice,
+      //   tags,
+      //   stock,
+      //   category
+      // );
+
+      const product = await Product.findById(req.params.id);
+      // console.log(product);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: "Product with the id not found.",
+        });
+      }
+
+      product.name = name;
+      product.description = description;
+      product.category = category;
+      product.discountPrice = discountPrice;
+      product.originalPrice = originalPrice;
+      product.tags = tags;
+      product.stock = stock;
+      product.updatedAt = Date.now();
+
+      await product.save();
+      res.status(201).json({
+        success: true,
+        message: `information updated successfully`,
+        product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

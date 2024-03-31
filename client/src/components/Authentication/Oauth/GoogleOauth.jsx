@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { app } from "../../../firebase";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import {toast} from "react-toastify"
 
 function GoogleOauth() {
   const dispatch = useDispatch();
@@ -13,31 +14,50 @@ function GoogleOauth() {
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
-
+  
     const result = await signInWithPopup(auth, provider);
-
-    await fetch(`${BASE_URL}/user/google`, {
+  
+    // Send request to the server
+ await fetch(`${BASE_URL}/user/google`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: result.displayName,
+        name: result.user.displayName,
         email: result.user.email,
         photo: result.user.photoURL,
       }),
+    }).then((res) => {
+      if (res.data.success === true) {
+        navigate("/");
+        toast.success(res.data.message);
+        window.location.reload(true);
+      } else {
+        toast.error(res.data.message);
+      }
     })
-      .then((res) => {
-        if (res.data.success === true) {
-          navigate("/");
-          toast.success(res.data.message);
-          window.location.reload(true);
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a non-2xx status code
+        if (error.response.status === 404) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 400) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(`Server error: ${error.response.data.message}`);
         }
-      })
-      .catch((error) => {
-        console.log("could not sign in with Google", error);
-      });
-  };
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast.error("Network error. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an error
+        toast.error("Request failed. Please try again later.");
+      }
+    });
+};
 
   return (
     <FcGoogle

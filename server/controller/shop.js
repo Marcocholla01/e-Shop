@@ -167,7 +167,11 @@ router.post(
   upload.single(`file`),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password, address, phoneNumber, zipCode } = req.body;
+      const { name, email, password, address,  zipCode } = req.body;
+
+      if (phoneNumber.startsWith("0")) {
+        phoneNumber = "+254" + phoneNumber.slice(1);
+      }
       const shopEmail = await Shop.findOne({ email });
 
       if (shopEmail) {
@@ -470,8 +474,12 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { description, password, phoneNumber, name, zipCode, address } =
+      const { description, password, name, zipCode, address } =
         req.body;
+
+        if (phoneNumber.startsWith("0")) {
+          phoneNumber = "+254" + phoneNumber.slice(1);
+        }
 
       const seller = await Shop.findById(req.params.id).select(`+password`);
       // console.log(seller);
@@ -842,7 +850,7 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const existsUser = await User.findById(id);
+      const existsUser = await Shop.findById(id);
       const existsAvatarPath = `uploads/${existsUser.avatar.filename}`;
 
       // Check if file exists before attempting to unlink it

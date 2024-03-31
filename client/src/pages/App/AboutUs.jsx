@@ -7,9 +7,9 @@ import DownloadApp from "../../components/DownloadApp/DownloadApp";
 const AboutUs = () => {
   return (
     <div>
-      <Header activeHeading={5} />
+      <Header />
       <About />
-      {/* <DownloadApp/> */}
+      <DownloadApp/>
       <Footer />
     </div>
   );

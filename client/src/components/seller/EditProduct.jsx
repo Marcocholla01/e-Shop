@@ -1,38 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import styles from "../../styles/style";
 import { toast } from "react-toastify";
-import {
-  editProduct,
-  getAllProducts,
-  getAllProductsShop,
-} from "../../redux/actions/product";
+import { getAllProductsShop } from "../../redux/actions/product";
+import axios from "axios";
+import { BASE_URL, backend_url } from "../../config";
 
 const EditProduct = () => {
   const { seller } = useSelector((state) => state.seller);
-  const { isLoading, singleProduct, error } = useSelector(
-    (state) => state.product
-  );
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
+  const fileInputRef = useRef(null);
+
+  const [data, setData] = useState(null);
   const [images, setImages] = useState([]);
-  const [name, setName] = useState(singleProduct && singleProduct.name);
-  const [description, setDescrtiption] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
 
-  useEffect(() => {}, []);
+  const [tags, setTags] = useState([]);
 
-  console.log(singleProduct);
+  function handleKeyDown(e) {
+    // If user did not press space bar key, return
+    if (e.key !== " ") return;
+    // Get the value of the input
+    const value = e.target.value;
+    // If the value is empty, return
+    if (!value.trim()) return;
+    // Add the value to the tags array
+    setTags([...tags, value]);
+    // Clear the input
+    e.target.value = "";
+  }
 
+  function removeTag(index) {
+    setTags(tags.filter((el, i) => i !== index));
+  }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    axios
+      .get(`${BASE_URL}/product/${id}`)
+      .then((res) => {
+        const productData = res.data.product;
+        // console.log(productData);
+
+        setData(productData);
+        setName(productData.name);
+        setDescription(productData.description);
+        setCategory(productData.category);
+        setTags(productData.tags);
+        setOriginalPrice(productData.originalPrice);
+        setDiscountPrice(productData.discountPrice);
+        setStock(productData.stock);
+        dispatch(getAllProductsShop(id));
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  }, [dispatch, id]);
+
+  // console.log(data);
   const handleImageChange = (e) => {
     e.preventDefault();
 
@@ -40,7 +76,7 @@ const EditProduct = () => {
     setImages((prevImages) => [...prevImages, ...files]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Check if any  field is empty
     if (!name) {
@@ -70,35 +106,35 @@ const EditProduct = () => {
       return; // Do not proceed with form submission
     }
 
-    // Check if images are less than 3
-    if (images.length < 1) {
-      toast.error("Please select at least an images");
-      return;
-    }
-    // Check if images are less than 3
-    if (images.length > 4) {
-      toast.error("You can only upload 4 images");
-      return;
-    }
+    await axios
+      .put(
+        `${BASE_URL}/product/eidt-product/${id}`,
+        {
+          name,
+          description,
+          discountPrice,
+          originalPrice,
+          tags,
+          stock,
+          category,
+        },
 
-    const newForm = new FormData();
-
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-
-    dispatch(editProduct(newForm));
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        dispatch(getAllProductsShop(seller._id));
+        navigate(`/dashboard-products`);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   };
+
   return (
-    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[70vh] rounded-[4px]">
+    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[90vh] rounded-[4px]">
       <h5 className="text-center font-Poppins text-[30px]">Edit Product</h5>
       {/* craete product form */}
 
@@ -112,7 +148,7 @@ const EditProduct = () => {
             type="text"
             name="name"
             id="name"
-            placeholder="Enter your product name..."
+            placeholder={name}
             value={name}
             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setName(e.target.value)}
@@ -130,7 +166,7 @@ const EditProduct = () => {
             value={description}
             placeholder="Enter your product's description..."
             className="appearance-none block w-full h-[200px] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDescrtiption(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <br />
@@ -174,7 +210,35 @@ const EditProduct = () => {
         <br />
         <div>
           <label className="pb-2">Tags</label>
-          <input
+          {/* <Tags value={tags} onChange={(e) => setTags(e.target.value)} /> */}
+
+          <div className="tags-input-container border border-gray-300 p-2 rounded-md w-min-40 mt-4 flex items-center flex-wrap gap-2">
+            {tags &&
+              tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="tag-item bg-gray-200 rounded-full px-3 py-1 flex items-center w-auto"
+                >
+                  <span className="text-gray-700 mr-1">{tag}</span>
+                  <button
+                    onClick={() => removeTag(index)}
+                    className="close w-5 h-5  text-white rounded-full flex justify-center items-center text-xs cursor-pointer"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            <input
+              onKeyDown={handleKeyDown}
+              type="text"
+              // value={tags}
+              // onChange={(e) => setTags(e.target.value)}
+              className="tags-input flex-grow bg-gray-10 border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:ring focus:border-blue-500"
+              placeholder="Enter your product's tags..."
+            />
+          </div>
+
+          {/* <input
             type="text"
             name="tags"
             id="tags"
@@ -182,7 +246,7 @@ const EditProduct = () => {
             placeholder="Enter your product's tags"
             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
-          />
+          /> */}
         </div>
         <br />
         <div className="block sm:flex items-center justify-between">
@@ -219,11 +283,12 @@ const EditProduct = () => {
         <br />
 
         <br />
-        <div>
+
+        {/* image upload */}
+        {/* <div>
           <label className="pb-2">
             Upload Images <span className="text-red-500">*</span>
           </label>
-
           <input
             type="file"
             name="productImages"
@@ -241,16 +306,62 @@ const EditProduct = () => {
               />
             </label>
             {images &&
-              images.map((image) => (
-                <img
-                  src={URL.createObjectURL(image)}
-                  key={image.name}
-                  alt={`product image ${image.name}`}
-                  className="h-[120px] w-[120px] object-cover m-2 rounded-[7px]"
-                />
+              images.map((image, index) => (
+                <div
+                  className="relative inline-block mr-4 mb-4 mt-4"
+                  key={index}
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`product image ${index}`}
+                    className="h-[120px] w-[120px] object-cover rounded-[7px]"
+                  />
+                  <button
+                    onClick={() => handleImageRemove(index)}
+                    className="absolute top-0 right-0 -mt-1 -mr-1 text-white bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+                  >
+                    &times;
+                  </button>
+                </div>
               ))}
           </div>
-        </div>
+        </div> */}
+
+        {/* Existing images */}
+        {/* <div>
+          {data?.images &&
+            data?.images.map((image, index) => (
+              <div key={index} className="relative m-2">
+                <img
+                  src={
+                    image instanceof File
+                      ? URL.createObjectURL(image)
+                      : `${backend_url}/uploads/${image.filename}`
+                  }
+                  alt={`product image ${index}`}
+                  className="h-[120px] w-[120px] object-cover rounded-[7px]"
+                />
+                <div className="absolute top-0 right-0 flex">
+                  <button
+                    className="p-1 bg-red-500 rounded-full text-white text-xs mr-1"
+                    onClick={() => handleRemoveImage(index)}
+                  >
+                    Remove
+                  </button>
+                  <label className="p-1 bg-blue-500 rounded-full text-white text-xs cursor-pointer">
+                    Replace
+                    {/* Trigger file input when clicked
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageReplace(e, index)}
+                    />
+                  </label>
+                </div>
+              </div>
+            ))}
+        </div> */}
         <button
           type="submit"
           className={`${styles.button} !w-full !-h[42px] !rounded-[5px]`}

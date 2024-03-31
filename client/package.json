@@ -24,6 +24,7 @@
     "country-state-city": "^3.1.2",
     "dotenv": "^16.4.5",
     "firebase": "^10.9.0",
+    "flowbite-react": "^0.7.6",
     "iso-3166-1": "^2.1.1",
     "js-cookie": "^3.0.1",
     "nuka-carousel": "^7.0.0",

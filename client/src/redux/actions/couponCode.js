@@ -25,3 +25,22 @@ export const adminGetAllCouponCodes = () => async (dispatch) => {
     });
   }
 };
+// get all events
+export const GetAllCouponCodes = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "GetAllCouponCodesRequest",
+    });
+
+    const { data } = await axios.get(`${BASE_URL}/couponCode/all-coupon-codes`);
+    dispatch({
+      type: "GetAllCouponCodesSuccess",
+      payload: data.couponCodes,
+    });
+  } catch (error) {
+    dispatch({
+      type: "GetAllCouponCodesFailed",
+      payload: error.response.data.message,
+    });
+  }
+};

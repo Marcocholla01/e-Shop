@@ -17,6 +17,7 @@ const {
   generateOTP,
   generateEmailtemplate,
   generatePasswordresetToken,
+  generateRandomPassword,
 } = require("../utils/otp");
 const { isValidObjectId } = require("mongoose");
 const path = require("path");
@@ -198,7 +199,14 @@ router.post(
   upload.single(`file`),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password, address, phoneNumber, zipCode } = req.body;
+      const { name, email, password, address, zipCode } = req.body;
+
+      let { phoneNumber } = req.body;
+
+      if (phoneNumber.startsWith("0")) {
+        phoneNumber = "+254" + phoneNumber.slice(1);
+      }
+
       const userEmail = await User.findOne({ email });
 
       if (userEmail) {
@@ -325,64 +333,48 @@ router.post(
   `/google`,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const user = await User.findOne({ email: req.body.email });
-      if (user) {
-        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        //   expiresIn: "1d",
-        // });
+      const { name, email, photo } = req.body;
 
-        const { password: pass, ...restUserInfo } = user._doc;
-
-        sendToken(restUserInfo, 201, res);
-        // res
-        //   .cookie(`access_token`, token, { httpOnly: true, sameSite: "none" })
-        //   .status(200)
-        //   .json(restUserInfo);
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        // Send token for existing user
+        sendToken(existingUser, 200, res);
       } else {
-        // generate psaaword
-        // const generatedPassword = Math.random().toString(36).slice(-8);
-        // Hash Password
-        // const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-        //create the user
-        const username = req.body.name
-          ? req.body.name.split(" ").join("").toLowerCase() +
-            Math.random().toString(36).slice(-4)
-          : "username" + uuid.v4();
+        // Generate a random password that complies with the specified password requirements
+        const generatedPassword = generateRandomPassword();
 
-        // const username = generateFromEmail(req.body.email, 4);
+        // Create the new user
         const fileId = uuid.v4();
-        const protocol = req.protocol;
-        const host = req.get("host");
-        const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
-
         const newUser = new User({
-          username,
-          email: req.body.email,
+          name,
+          email,
           avatar: {
             public_id: fileId,
-            url: fileUrl,
-            filename: req.body.photo,
+            url: photo,
+            filename: null,
           },
-          password,
+          password: generatedPassword,
         });
 
-        //save the user on the DB
+        // Save the user to the database
         await newUser.save();
 
-        // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-        // console.log(token);
-        const { password: pass, ...restUserInfo } = newUser._doc;
+        // Send an email to the user containing the auto-generated password
 
-        sendToken(restUserInfo, 201, res);
-        //   res
-        //     .cookie(`access_token`, token, { httpOnly: true, sameSite: "none" })
-        //     .status(200)
-        //     .json(restUserInfo);
+        sendMail({
+          from: process.env.SMTP_MAIL,
+          email: email,
+          subject: "Your Auto-Generated Password",
+          html: `Dear ${name},<br><br>Your auto-generated password is: <strong>${generatedPassword}</strong>.<br>You may use this password to log in with email and password.`,
+        });
+
+        // Send token for new user
+        sendToken(newUser, 201, res);
       }
     } catch (error) {
-      next(
-        new ErrorHandler(500, `Error during Google OAuth: ${error.message}`)
-      );
+      console.error("Error during Google OAuth:", error);
+      return next(error);
     }
   })
 );
@@ -411,43 +403,6 @@ router.post(
             "Invalid credentials. Please provide the correct information!!!",
         });
       }
-
-      // TODO make otp re-generated when user trys to login when acount email not verified
-
-      // if (!user.isVerified) {
-      //   const owner = await VerificationToken.findOne(user._id);
-      //   if (!owner) {
-      //     const OTP = generateOTP();
-      //     const verificationToken = new VerificationToken({
-      //       owner: user._id,
-      //       token: OTP,
-      //     });
-
-      //     await verificationToken.updateOne();
-      //   }
-
-      //   const OTP = generateOTP();
-      //   const verificationToken = new VerificationToken({
-      //     owner: user._id,
-      //     token: OTP,
-      //   });
-
-      //   await verificationToken.save();
-
-      //   await sendMail({
-      //     // from: "accounts@user0.com",
-      //     from: process.env.SMTP_MAIL,
-      //     email: user.email,
-      //     subject: "Activate Your Account",
-      //     html: generateEmailtemplate(OTP),
-      //   });
-
-      //   return res.status(404).json({
-      //     success: false,
-      //     errorCode: 600,
-      //     message: "Account not verified please check you email to verify.",
-      //   });
-      // }
 
       if (!user.isActive) {
         const message = `Hello ${user.name} your account was deactivated kindly contact us via our support page`;
@@ -638,7 +593,12 @@ router.put(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { email, password, name, phoneNumber } = req.body;
+      const { email, password, name } = req.body;
+      let { phoneNumber } = req.body;
+
+      if (phoneNumber.startsWith("0")) {
+        phoneNumber = "+254" + phoneNumber.slice(1);
+      }
 
       const user = await User.findById(req.user.id).select(`+password`);
       // console.log(user);

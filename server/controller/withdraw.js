@@ -6,6 +6,7 @@ const { isSeller, isAdmin, isAuthenticated } = require("../middlewares/auth");
 const Shop = require("../models/shop");
 const sendMail = require("../utils/sendMail");
 const { generateEmailtemplate } = require("../utils/otp");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
@@ -58,6 +59,51 @@ router.post(
         success: true,
         message: `Withdrwal Request sent succesfully !! Kindly check your mail for more information`,
         withdraw,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// get withdrawal details based on ID
+router.get(
+  `/withdrawal/:id`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const withdraw = await Withdraw.findById(id);
+
+      if (!withdraw) {
+        // If no withdrawal is found with the provided ID, return an error
+        return next(new ErrorHandler("Withdrawal not found", 404));
+      }
+
+      res.status(200).json({
+        success: true,
+        withdraw,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
+
+// get all withdrawals -----seller by seller id in Withdrwal document
+router.get(
+  `/seller-all-withdrawals/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      // Query the Withdraw collection to find all withdrawals by seller ID
+      const withdrawals = await Withdraw.find({ "seller._id":id }).sort({
+        createdAt: -1,
+      });
+
+      res.status(200).json({
+        success: true,
+        withdrawals,
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
@@ -143,6 +189,31 @@ router.put(
   })
 );
 
+// delete withdraw ----Admin
+router.delete(
+  `/seller-delete-withdraw/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const withdraw = await Withdraw.findByIdAndDelete(id);
+      if (!withdraw) {
+        return res.status(404).json({
+          success: false,
+          message: `No withdraw with the specified Id`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Withdrawal deleted Successfully `,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
+  })
+);
 // delete withdraw ----Admin
 router.delete(
   `/delete-withdraw/:id`,

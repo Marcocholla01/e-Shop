@@ -8,6 +8,7 @@ const defaultAvatarUrl =
     ? "http://localhost:1000/uploads/default-avatar.png"
     : "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
 
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -67,7 +68,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     public_id: {
-      type: String,
+      type: String,    
       // required: true,
     },
     url: {
@@ -77,6 +78,7 @@ const userSchema = new mongoose.Schema({
     },
     filename: {
       type: String,
+      default: "default-avatar.png",
     },
   },
   resetPasswordToken: String,

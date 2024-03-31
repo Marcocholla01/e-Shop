@@ -17,4 +17,16 @@ export const couponCodeReducer = createReducer(initialState, {
     state.adminCouponCodeloading = false;
     state.error = action.payload;
   },
+  // get all coupon codes
+  GetAllCouponCodesRequest: (state) => {
+    state.CouponCodeloading = true;
+  },
+  GetAllCouponCodesSuccess: (state, action) => {
+    state.CouponCodeloading = false;
+    state.CouponCode = action.payload;
+  },
+  GetAllCouponCodesFailed: (state, action) => {
+    state.CouponCodeloading = false;
+    state.error = action.payload;
+  },
 });

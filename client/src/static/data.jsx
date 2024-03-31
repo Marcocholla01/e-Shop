@@ -36,17 +36,17 @@ export const navItems = [
     url: "/events",
   },
   {
-    title: "About Us",
-    url: "/about-us",
+    title: "Offers",
+    url: "/offers",
   },
-  {
-    title: "FAQ",
-    url: "/faq",
-  },
-  {
-    title: "Contact",
-    url: "/contact",
-  },
+  // {
+  //   title: "FAQ",
+  //   url: "/faq",
+  // },
+  // {
+  //   title: "Contact",
+  //   url: "/contact",
+  // },
 ];
 
 // branding data

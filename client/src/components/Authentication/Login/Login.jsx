@@ -10,6 +10,8 @@ import FacebookOauth from "../Oauth/FacebookOauth";
 import GoogleOauth from "../Oauth/GoogleOauth";
 import AppleOauth from "../Oauth/AppleOauth";
 import { RxCross1 } from "react-icons/rx";
+import { loadUser } from "../../../redux/actions/user";
+import {useDispatch} from "react-redux"
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -18,6 +20,7 @@ function Login() {
   const [visible, setVisible] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   // const [userId, setUserId] = useState("");
   // const [otp, setOtp] = useState(["", "", "", ""]);
@@ -87,7 +90,8 @@ function Login() {
         if (res.data.success === true) {
           navigate("/");
           toast.success(res.data.message);
-          window.location.reload(true);
+          dispatch(loadUser())
+          // window.location.reload(true);
         } else {
           toast.error(res.data.message);
         }
@@ -296,14 +300,14 @@ function Login() {
                 LOGIN
               </button>
             </div>
-            <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
+            {/* <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
               -- OR --
             </div>
             <div className="flex justify-center space-x-6 w-full">
               <FacebookOauth />
               <GoogleOauth />
-              {/* <AppleOauth /> */}
-            </div>
+              {/* <AppleOauth /> 
+            </div> */}
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative font-Poppins w-full flex justify-center">
                 Do not have an account? Register as

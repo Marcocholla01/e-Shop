@@ -5,7 +5,7 @@ import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import styles from "../../styles/style";
 import { toast } from "react-toastify";
-import { createProduct } from "../../redux/actions/product";
+import { createProduct, getAllProductsShop } from "../../redux/actions/product";
 
 const CreateProduct = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -48,7 +48,8 @@ const CreateProduct = () => {
     if (isProduct) {
       toast.success(`Product created successfully!`);
       // dispatch(clearProductState()); // Reset isProduct state
-      navigate(`/dashboard`); // Make sure this line is only executed on successful product creation
+      dispatch(getAllProductsShop(seller._id));
+      navigate(`/dashboard-products`); // Make sure this line is only executed on successful product creation
       window.location.reload(true);
     }
 
@@ -119,8 +120,16 @@ const CreateProduct = () => {
 
     dispatch(createProduct(newForm));
   };
+
+  function handleImageRemove(index) {
+    // Filter out the image at the specified index
+    const updatedImages = images.filter((img, i) => i !== index);
+    // Update the state with the filtered images
+    setImages(updatedImages);
+  }
+
   return (
-    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[70vh] rounded-[4px]">
+    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[90vh] rounded-[4px]">
       <h5 className="text-center font-Poppins text-[30px]">Create Product</h5>
       {/* craete product form */}
 
@@ -198,23 +207,30 @@ const CreateProduct = () => {
           <label className="pb-2">Tags</label>
           {/* <Tags value={tags} onChange={(e) => setTags(e.target.value)} /> */}
 
-          <div className="tags-input-container">
+          <div className="tags-input-container border border-gray-300 p-2 rounded-md w-min-40 mt-4 flex items-center flex-wrap gap-2">
             {tags &&
               tags.map((tag, index) => (
-                <div className="tag-item" key={index}>
-                  <span className="text">{tag}</span>
-                  <span className="close" onClick={() => removeTag(index)}>
+                <div
+                  key={index}
+                  className="tag-item bg-gray-200 rounded-full px-3 py-1 flex items-center w-auto"
+                >
+                  <span className="text-gray-700 mr-1">{tag}</span>
+                  <button
+                    onClick={() => removeTag(index)}
+                    className="close w-5 h-5  text-white rounded-full flex justify-center items-center text-xs cursor-pointer"
+                  >
                     &times;
-                  </span>
+                  </button>
                 </div>
               ))}
             <input
               onKeyDown={handleKeyDown}
               type="text"
-              className="tags-input"
-              placeholder="Type something"
+              className="tags-input flex-grow bg-gray-10 border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:ring focus:border-blue-500"
+              placeholder="Enter your product's tags..."
             />
           </div>
+
           {/* <input
             type="text"
             name="tags"
@@ -280,14 +296,25 @@ const CreateProduct = () => {
                 color="#555"
               />
             </label>
+
             {images &&
-              images.map((image) => (
-                <img
-                  src={URL.createObjectURL(image)}
-                  key={image.name}
-                  alt={`product image ${image.name}`}
-                  className="h-[120px] w-[120px] object-cover m-2 rounded-[7px]"
-                />
+              images.map((image, index) => (
+                <div
+                  className="relative inline-block mr-4 mb-4 mt-4"
+                  key={index}
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`product image ${index}`}
+                    className="w-20 h-20 object-cover rounded-lg"
+                  />
+                  <button
+                    onClick={() => handleImageRemove(index)}
+                    className="absolute top-0 right-0 -mt-1 -mr-1 text-white bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+                  >
+                    &times;
+                  </button>
+                </div>
               ))}
           </div>
         </div>

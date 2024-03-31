@@ -7,6 +7,22 @@ const couponCodeSchema = new mongoose.Schema({
     required: [true, "Please enter your CouponCode  name!"],
   },
 
+  seasson: {
+    type: String,
+  },
+  // images: {
+  //   public_id: {
+  //     type: String,
+  //     // required: true,
+  //   },
+  //   filename: {
+  //     type: String,
+  //   },
+  // },
+
+  imageLink: {
+    type: String,
+  },
   value: {
     type: Number,
     required: true,
@@ -20,17 +36,17 @@ const couponCodeSchema = new mongoose.Schema({
   selectedProduct: {
     type: String,
   },
-  start_date: {
+  startDate: {
     type: Date,
     required: true,
   },
-  finish_date: {
+  endDate: {
     type: Date,
     required: true,
   },
   status: {
     type: String,
-    default: "Running",
+    default: "Active",
   },
   shopId: {
     type: String,

@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import Loader from "../Layout/Loader";
 import { toast } from "react-toastify";
+import { BiEdit } from "react-icons/bi";
 
 const AllEvents = () => {
   const { events, isLoading } = useSelector((state) => state.event);
@@ -39,6 +40,12 @@ const AllEvents = () => {
     {
       field: "status",
       headerName: "Status",
+      minWidth: 70,
+      flex: 0.5,
+    },
+    {
+      field: "stock",
+      headerName: "Stock",
       minWidth: 70,
       flex: 0.5,
     },
@@ -79,6 +86,27 @@ const AllEvents = () => {
       },
     },
     {
+      field: "Edit",
+      flex: 0.5,
+      minWidth: 40,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/dashboard-edit-event/${params.id}`}>
+              <Button
+              // onClick={() => setOpen(true) || setProductData(params.row)}
+              >
+                <BiEdit size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
+    },
+    {
       field: "Delete",
       flex: 0.5,
       minWidth: 40,
@@ -103,6 +131,7 @@ const AllEvents = () => {
     events.forEach((item) => {
       row.push({
         id: item._id,
+        stock:item.stock,
         name: item.name,
         status: item.status,
         start_date: item?.start_date ? item.start_date.slice(0, 10) : null,

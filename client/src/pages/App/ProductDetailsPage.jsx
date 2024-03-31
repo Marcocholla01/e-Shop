@@ -31,9 +31,9 @@ const ProductDetailsPage = () => {
         dispatch(getProduct(id));
       })
       .catch((error) => {
-        toast.error(error);
+        toast.error(error.message);
       });
-  }, []);
+  }, [allProducts]);
 
   // useEffect(() => {
   //   dispatch(getProduct(id));
@@ -46,7 +46,7 @@ const ProductDetailsPage = () => {
       <Header />
       <ProductDetails data={data} />
       {data && <SuggestedProducts data={data} />}
-      <DownloadApp/>
+      <DownloadApp />
       <Footer />
     </div>
   );

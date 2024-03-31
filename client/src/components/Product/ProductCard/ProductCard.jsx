@@ -73,8 +73,8 @@ const ProductCard = ({ data }) => {
     ); // Calculate the discount percentage
   }
 
-  const d = data.name;
-  const product_name = d.replace(/\$+/g, "-");
+  // const d = data.name;
+  // const product_name = d.replace(/\$+/g, "-");
   return (
     <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative   items-center">
       <div className="relative">
@@ -109,7 +109,7 @@ const ProductCard = ({ data }) => {
           </Link>
           <Link to={`/product/${data?._id}`}>
             <h4 className="pb-3 font-[500]">
-              {data.name.length > 50
+              {data?.name?.length > 50
                 ? data.name.slice(0, 50) + "..."
                 : data.name}
             </h4>

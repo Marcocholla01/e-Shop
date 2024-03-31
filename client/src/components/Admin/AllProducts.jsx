@@ -153,7 +153,7 @@ const AllProducts = () => {
                 Are you sure you want to delete this product
               </h1>
               <h4 className="text-center font-Poppins text-[20px] text-[#0000007a]">
-                {productData.name.slice(0, 30)}...
+                {productData?.name?.slice(0, 30)}...
               </h4>
 
               <div className="w-full items-center flex  justify-center flex-row gap-10">

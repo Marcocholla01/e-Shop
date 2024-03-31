@@ -111,8 +111,16 @@ const CreateEvent = () => {
 
     dispatch(createEvent(newForm));
   };
+
+  function handleImageRemove(index) {
+    // Filter out the image at the specified index
+    const updatedImages = images.filter((img, i) => i !== index);
+    // Update the state with the filtered images
+    setImages(updatedImages);
+  }
+
   return (
-    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[70vh] rounded-[4px]">
+    <div className="w-[90%] sm:w-[50%] bg-white shadow p-3 overflow-y-scroll h-[90vh] rounded-[4px]">
       <h5 className="text-center font-Poppins text-[30px]">Create An Event</h5>
       {/* craete event form */}
 
@@ -271,13 +279,23 @@ const CreateEvent = () => {
               />
             </label>
             {images &&
-              images.map((image) => (
-                <img
-                  src={URL.createObjectURL(image)}
-                  key={image.name}
-                  alt={`event image ${image.name}`}
-                  className="h-[120px] w-[120px] object-cover m-2 rounded-[7px]"
-                />
+              images.map((image, index) => (
+                <div
+                  className="relative inline-block mr-4 mb-4 mt-4"
+                  key={index}
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`Event image ${index}`}
+                    className="w-20 h-20 object-cover rounded-lg"
+                  />
+                  <button
+                    onClick={() => handleImageRemove(index)}
+                    className="absolute top-0 right-0 -mt-1 -mr-1 text-white bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+                  >
+                    &times;
+                  </button>
+                </div>
               ))}
           </div>
         </div>

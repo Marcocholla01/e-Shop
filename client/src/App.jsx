@@ -54,6 +54,14 @@ import {
   SellerInvoicePage,
   SellerSalesPage,
   UserInvoicePage,
+  SellerWithdrawalDetailsPage,
+  SellerAllWithdrwalsHistory,
+  Offers,
+  TermsPage,
+  PrivacyPage,
+  CommingSoon,
+  SellerEditEventPage,
+  SellerEditDiscountCode,
 } from "./Routes/routes";
 import {
   AdminDashboardPage,
@@ -74,6 +82,10 @@ import {
   AdminAllRefundsPage,
   AdminInvoicePage,
   AdminAllSales,
+  AdminWithdrwaldashboardPage,
+  AdminIncompletedWithdrawals,
+  AdminCompletedWithdrawals,
+  AdminPaymentDetailsPage,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -171,6 +183,10 @@ function App() {
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/verify-user" element={<OtpPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/offers" element={<Offers />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/comming-soon" element={<CommingSoon />} />
                 <Route
                   path="/password/resset/:token"
                   element={<PasswordResetPage />}
@@ -282,6 +298,22 @@ function App() {
                   }
                 />
                 <Route
+                  path="/dashboard-edit-event/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <SellerEditEventPage />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard-edit-discount-code/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <SellerEditDiscountCode />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
                   path="/dashboard-messages"
                   element={
                     <SellerProtectedRoute>
@@ -373,6 +405,22 @@ function App() {
                   }
                 />
                 <Route
+                  path="/seller/withdrawal-details/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <SellerWithdrawalDetailsPage />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashbord-all-withdrawals/:id"
+                  element={
+                    <SellerProtectedRoute>
+                      <SellerAllWithdrwalsHistory />
+                    </SellerProtectedRoute>
+                  }
+                />
+                <Route
                   path="dashboard-orders"
                   element={
                     <SellerProtectedRoute>
@@ -446,6 +494,38 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminWithdrawPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-withdraw-request-dashboard"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminWithdrwaldashboardPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-incompleted-withdraw"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminIncompletedWithdrawals />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-completed-withdraw"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminCompletedWithdrawals />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/withdrawal-details/:id"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminPaymentDetailsPage />
                     </AdminProtectedRoute>
                   }
                 />

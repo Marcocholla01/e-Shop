@@ -10,6 +10,7 @@ import Footer from "../../components/Layout/Footer.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../redux/actions/product.js";
 import DownloadApp from "../../components/DownloadApp/DownloadApp.jsx";
+import WelcomePopup from "../../components/WelcomePopUp/WelcomePopup.jsx";
 
 function HomePage() {
   const [data, setData] = useState([]);
@@ -23,8 +24,51 @@ function HomePage() {
     setData(firstFive);
   }, [dispatch]);
   // console.log(allProducts);
+
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+
+  // Function to set a cookie
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  // Function to get a cookie
+  const getCookie = (name) => {
+    const cookieName = `${name}=`;
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName) === 0) {
+        return cookie.substring(cookieName.length, cookie.length);
+      }
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    // Check if the welcome message has been shown before
+    const welcomeShown = getCookie("welcomeShown");
+    if (!welcomeShown) {
+      setShowWelcomeModal(true);
+      // Set a cookie to remember that the welcome message has been shown
+      setCookie("welcomeShown", "true", 365); // Cookie expires in 365 days
+    }
+  }, []);
+
+  const handleCloseModal = () => {
+    setShowWelcomeModal(false);
+  };
+
   return (
     <div>
+      <div>
+        {/* Render other components of your app here */}
+        {/* The WelcomePopup will be rendered conditionally based on showWelcomeModal state */}
+        <WelcomePopup isOpen={showWelcomeModal} onClose={handleCloseModal} />
+      </div>
+
       <Header activeHeading={1} />
       <Hero />
       <Categories />

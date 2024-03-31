@@ -20,6 +20,7 @@ import ProductDetailscard from "../../Product/ProductDetailscard/ProductDetailsc
 const EventDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { wishList } = useSelector((state) => state.wishList);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
@@ -33,10 +34,6 @@ const EventDetails = ({ data }) => {
     dispatch(getAllEvents(id));
     // dispatch(getAllProductsShop(id));
   }, []);
-
-  const handleMessageSubmit = () => {
-    navigate(`/inbox?conversation=uhvshjdu3455h8`);
-  };
 
   const decrementCount = () => {
     if (count > 1) {
@@ -78,6 +75,29 @@ const EventDetails = ({ data }) => {
       const cartData = { ...data, qty: count };
       dispatch(addToCart(cartData));
       toast.success(`Item added to cart successfully`);
+    }
+  };
+
+  const handleMessageSubmit = async () => {
+    if (!isAuthenticated) {
+      return toast.error(`Please login to send message`);
+    } else {
+      const groupTittle = data?.event?._id + user._id;
+      const userId = user._id;
+      const sellerId = data?.event?.shop._id;
+
+      await axios
+        .post(`${BASE_URL}/conversation/create-new-conversation`, {
+          groupTittle,
+          userId,
+          sellerId,
+        })
+        .then((response) => {
+          navigate(`/user/${user?._id}?${response.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 
@@ -261,14 +281,14 @@ const EventDetails = ({ data }) => {
                         </h5>
                       </div>
                     </div>
-                    <div
+                    {/* <div
                       className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11 ml-9`}
                       onClick={handleMessageSubmit}
                     >
                       <span className="text-white flex items-center">
                         Send Message <AiOutlineMessage className="ml-2" />
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

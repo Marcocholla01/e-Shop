@@ -10,7 +10,7 @@ const AdminWithdrawPage = () => {
       <div className="w-full flex">
         <div className="w-full flex items-start justify-between">
           <div className="w-[80px] sm:w-[330px]">
-            <AdminSideBar active={7} />
+            <AdminSideBar />
           </div>
           <AllWithdrawals />
         </div>

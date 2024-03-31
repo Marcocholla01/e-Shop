@@ -10,6 +10,7 @@ import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
+import { SlPrinter } from "react-icons/sl";
 
 const AdminAllRefunds = () => {
   const { adminOrders, adminOrderLoading } = useSelector(
@@ -84,7 +85,26 @@ const AdminAllRefunds = () => {
       flex: 0.8,
     },
     {
-      field: "   ",
+      field: "invoice",
+      flex: 0.5,
+      minWidth: 10,
+      headerName: "View Invoice",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/admin/invoice/${params.id}`}>
+              <Button>
+                <SlPrinter size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
+    },
+    {
+      field: "delete",
       flex: 0.5,
       minWidth: 10,
       headerName: "Delete order",
@@ -102,10 +122,10 @@ const AdminAllRefunds = () => {
     },
 
     {
-      field: " ",
-      flex: 1,
-      minWidth: 150,
-      headerName: "",
+      field: "viewmore",
+      flex: 0.5,
+      minWidth: 50,
+      headerName: "View More",
       type: "number",
       sortable: false,
       renderCell: (params) => {

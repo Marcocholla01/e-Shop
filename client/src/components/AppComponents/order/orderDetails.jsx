@@ -12,7 +12,7 @@ import axios from "axios";
 
 const UserOrderDetails = () => {
   const { orders, isLoading } = useSelector((state) => state.order);
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -52,9 +52,6 @@ const UserOrderDetails = () => {
 
   const data = orders && orders.find((item) => item._id === id);
 
-  const handleMessageSubmit = (e) => {
-    e.preventDefault();
-  };
   const reviewHandler = async () => {
     await axios
       .put(
@@ -65,6 +62,7 @@ const UserOrderDetails = () => {
           comment,
           productId: selectedItem._id,
           orderId: id,
+          createdAt: Date.now()
         },
         { withCredentials: true }
       )
@@ -76,8 +74,31 @@ const UserOrderDetails = () => {
         setOpen(false);
       })
       .catch((error) => {
-        toast.error(error.message);
+        toast.error(error.response.data.message);
       });
+  };
+
+  const handleMessageSubmit = async () => {
+    if (!isAuthenticated) {
+      return toast.error(`Please login to send message`);
+    } else {
+      const groupTittle = data.product._id + user._id;
+      const userId = user._id;
+      const sellerId = data.product.shop._id;
+
+      await axios
+        .post(`${BASE_URL}/conversation/create-new-conversation`, {
+          groupTittle,
+          userId,
+          sellerId,
+        })
+        .then((response) => {
+          navigate(`/user/${user?._id}?${response.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    }
   };
 
   const refundHandler = async () => {
@@ -285,11 +306,15 @@ const UserOrderDetails = () => {
       </div>
       <br />
       <div className="flex justify-between">
-        <Link className={`${styles.button} w-auto p-5`}>
+        <br />
+        {/* <div
+          className={`${styles.button} w-auto p-5 `}
+          onClick={handleMessageSubmit}
+        >
           <span className="text-white flex items-center">
             Send Message <AiOutlineMessage className="ml-2" />
           </span>
-        </Link>
+        </div> */}
 
         {data?.status === "Delivered" && (
           <div

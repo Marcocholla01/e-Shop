@@ -71,7 +71,8 @@ input[type="number"] {
 .tag-item .close{
   height: 20px;
   width: 20px;
-  background-color: rgb(78, 79, 80);
+  /* background-color: rgb(78, 79, 80); */
+  background-color: rgb(59 130 246);
   color: #fff;
   border-radius: 50%;
   display: inline-flex;

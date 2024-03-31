@@ -29,32 +29,32 @@ export const createProduct = (newForm) => async (dispatch) => {
   }
 };
 // edit product of a shop ---seller
-export const editProduct = (newForm, id) => async (dispatch) => {
-  try {
-    dispatch({
-      type: "editPrductRequest",
-    });
+// export const editProduct = (newForm, id) => async (dispatch) => {
+//   try {
+//     dispatch({
+//       type: "editPrductRequest",
+//     });
 
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const { data } = await axios.post(
-      `${BASE_URL}/product/eidt-product/${id}`,
-      newForm,
-      config,
-      {
-        withCredentials: true,
-      }
-    );
-    dispatch({
-      type: "editPrductSuccess",
-      payload: data.product,
-    });
-  } catch (error) {
-    dispatch({
-      type: "editPrductFail",
-      payload: error.response.data.message,
-    });
-  }
-};
+//     const config = { headers: { "Content-Type": "multipart/form-data" } };
+//     const { data } = await axios.post(
+//       `${BASE_URL}/product/eidt-product/${id}`,
+//       newForm,
+//       config,
+//       {
+//         withCredentials: true,
+//       }
+//     );
+//     dispatch({
+//       type: "editPrductSuccess",
+//       payload: data.product,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: "editPrductFail",
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
 
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
@@ -93,6 +93,8 @@ export const getProduct = (id) => async (dispatch) => {
       type: "getProductSuccess",
       payload: data.product,
     });
+
+    console.log(payload);
   } catch (error) {
     dispatch({
       type: "getProductFailed",

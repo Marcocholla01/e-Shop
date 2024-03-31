@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSellers } from "../../redux/actions/seller";
 import { DataGrid } from "@material-ui/data-grid";
-import { AiOutlineArrowRight } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import Loader from "../Layout/Loader";
@@ -18,6 +18,7 @@ const AdminAllSellers = () => {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getAllSellers());
@@ -83,23 +84,21 @@ const AdminAllSellers = () => {
       });
   };
   // console.log(sellers);
-  const deleteUser = async (e) => {
+  const deleteShop = async (e) => {
     e.preventDefault();
-
     await axios
       .delete(`${BASE_URL}/shop/delete-shop/${userData.id}`, {
         withCredentials: true,
       })
       .then((response) => {
         toast.success(response.data.message);
-        setOpen(false);
+        setDeleteOpen(false);
         dispatch(getAllSellers());
       })
       .catch((error) => {
         toast.error(error.response.data.message);
       });
   };
-
   const columns = [
     { field: "id", headerName: "Seller ID", minWidth: 150, flex: 0.8 },
 
@@ -159,6 +158,26 @@ const AdminAllSellers = () => {
         );
       },
     },
+
+    {
+      field: "Delete",
+      flex: 0.5,
+      minWidth: 40,
+      headerName: "Delete Shop",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Button
+              onClick={() => setDeleteOpen(true) || setUserData(params.row)}
+            >
+              <AiOutlineDelete size={20} />
+            </Button>
+          </>
+        );
+      },
+    },
   ];
 
   const row = [];
@@ -209,6 +228,50 @@ const AdminAllSellers = () => {
         </div>
       )}
 
+      {deleteOpen && (
+        <>
+          <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
+            <div
+              className={`sm:w-[40%] w-[95%] bg-white shadow rounded min-h-[25vh] p-3`}
+            >
+              <div className="w-full flex justify-end">
+                <RxCross1
+                  size={25}
+                  className="cursor-pointer mr-3"
+                  onClick={() => setDeleteOpen(false)}
+                />
+              </div>
+
+              <h1 className="text-center font-Poppins text-[25px]">
+                Are you sure you want to delete this User
+              </h1>
+              <h4 className="text-center font-Poppins text-[20px] text-[#0000007a]">
+                {userData.name.slice(0, 30)}...
+              </h4>
+
+              <div className="w-full items-center flex  justify-center flex-row gap-10">
+                <div className="flex items-center  ">
+                  <button
+                    className="mt-7 group w-[100px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-red-700 hover:bg-red-600 uppercase"
+                    onClick={() => setDeleteOpen(false)}
+                  >
+                    no
+                  </button>
+                </div>
+                <div className="flex items-center  ">
+                  <button
+                    className="mt-7 group w-[100px] h-[40px]  py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-green-700 hover:bg-green-600 uppercase"
+                    onClick={deleteShop}
+                  >
+                    yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {open && (
         <>
           <div className="w-full fixed top-0 left-0 items-center flex bg-[#0000004e] h-screen z-[9999] justify-center">
@@ -228,7 +291,7 @@ const AdminAllSellers = () => {
                 </h1>
 
                 <form
-                  className="w-[80%] items-center flex flex-col "
+                  className="w-[80%] h-auto items-center flex flex-col"
                   onSubmit={updateUserSubmitHandler}
                 >
                   {/* <img
@@ -237,48 +300,36 @@ const AdminAllSellers = () => {
                     srcset=""
                     className="w-[100px] h-[100px] rounded-full self-center m-3"
                   /> */}
-
-                  <div className=" w-full items-center flex flex-row">
-                    {/* <IoPersonCircleOutline
-                        className="absolute "
-                        size={35}
-                        color="gray"
-                      /> */}
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
-                      onClick={activateUser}
-                    >
-                      Acivate Shop
+                  {userData && userData.status === false ? (
+                    <div className=" w-full items-center flex flex-row mt-7">
+                      {/* <IoPersonCircleOutline
+      className="absolute "
+      size={35}
+      color="gray"
+    /> */}
+                      <div
+                        className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
+                        onClick={activateUser}
+                      >
+                        Acivate Shop
+                      </div>
                     </div>
-                  </div>
-                  <div className=" w-full items-center flex flex-row mt-7">
-                    {/* <IoMailOutline
+                  ) : (
+                    <div className=" w-full items-center flex flex-row mt-7">
+                      {/* <IoMailOutline
                         className="absolute"
                         size={35}
                         color="gray"
                       /> */}
 
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer`}
-                      onClick={deactivateUser}
-                    >
-                      Deactivate Shop
+                      <div
+                        className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7 cursor-pointer`}
+                        onClick={deactivateUser}
+                      >
+                        Deactivate Shop
+                      </div>
                     </div>
-                  </div>
-                  <div className=" w-full items-center flex flex-row mt-7">
-                    {/* <IoMailOutline
-                        className="absolute"
-                        size={35}
-                        color="gray"
-                      /> */}
-
-                    <div
-                      className={`group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase mt-7  cursor-pointer`}
-                      onClick={deleteUser}
-                    >
-                      Delete Shop
-                    </div>
-                  </div>
+                  )}
                 </form>
               </div>
             </div>

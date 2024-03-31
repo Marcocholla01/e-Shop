@@ -13,10 +13,12 @@ const productSchema = new mongoose.Schema({
     type: String,
     // required: [true, "Please choose your product category!"],
   },
-  tags: {
-    type: String,
-    // required: [true, "Please enter your product tags!"],
-  },
+  tags: [
+    {
+      type: String,
+      // required: [true, "Please enter your product tags!"],
+    },
+  ],
   originalPrice: {
     type: Number,
   },
@@ -56,6 +58,10 @@ const productSchema = new mongoose.Schema({
       },
       productid: {
         type: String,
+      },
+      createdAt: {
+        type: Date,
+        Default: Date.now(),
       },
     },
   ],

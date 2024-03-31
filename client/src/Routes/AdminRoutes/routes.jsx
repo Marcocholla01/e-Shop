@@ -16,6 +16,11 @@ import AdminAllDiscountCodesPage from "../../pages/Admin/AdminAllDiscountCodesPa
 import AdminAllRefundsPage from "../../pages/Admin/AdminAllRefundsPage";
 import AdminInvoicePage from "../../pages/Admin/AdminInvoicePage";
 import AdminAllSales from "../../pages/Admin/AdminAllSales";
+import AdminWithdrwaldashboardPage from "../../pages/Admin/AdminWithdrwaldashboardPage";
+import AdminIncompletedWithdrawals from "../../pages/Admin/AdminIncompletedWithdrawals";
+import AdminCompletedWithdrawals from "../../pages/Admin/AdminCompletedWithdrawals";
+import AdminPaymentDetailsPage from "../../pages/Admin/AdminPaymentDetailsPage";
+
 
 export {
   AdminDashboardPage,
@@ -36,4 +41,9 @@ export {
   AdminAllRefundsPage,
   AdminInvoicePage,
   AdminAllSales,
+  AdminWithdrwaldashboardPage,
+  AdminIncompletedWithdrawals,
+  AdminCompletedWithdrawals,
+  AdminPaymentDetailsPage,
+
 };

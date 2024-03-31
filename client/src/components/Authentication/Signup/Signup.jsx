@@ -20,12 +20,20 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [isTerms, setIsTerms] = useState(false);
+  const [isPrivacy, setIsPrivacy] = useState(false);
 
   // const [userId, setUserId] = useState(user && user._id);
   // const [otp, setOtp] = useState(["", "", "", ""]);
   // const [open, setOpen] = useState(false);
 
   // const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const handlePrivacyChange = () => {
+    setIsPrivacy(!isPrivacy);
+  };
+  const handleTermsChange = () => {
+    setIsTerms(!isTerms);
+  };
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -84,6 +92,12 @@ function Signup() {
     }
     if (!avatar) {
       return toast.error(`Please select an image`);
+    }
+    if (!isTerms) {
+      return toast.error("You must agree to the terms and conditions.");
+    }
+    if (!isPrivacy) {
+      return toast.error("You must agree to our privacy and policies.");
     }
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
@@ -291,6 +305,58 @@ function Signup() {
               </label>
             </div>
             <div>
+              <div className={`${styles.normalFlex} justify-between`}>
+                <div className={`${styles.normalFlex}`}>
+                  <input
+                    type="checkbox"
+                    checked={isTerms}
+                    onChange={handleTermsChange}
+                    name="terms-conditions"
+                    id="terms-conditions"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="terms-conditions"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
+                    I agree to ShopO’s{" "}
+                    <Link
+                      to={`/terms&cookies`}
+                      className="underline hover:text-blue-400"
+                    >
+                      {" "}
+                      Terms and Conditions
+                    </Link>{" "}
+                    .
+                  </label>
+                </div>
+              </div>
+              <div className={`${styles.normalFlex} justify-between mt-2 mb-4`}>
+                <div className={`${styles.normalFlex}`}>
+                  <input
+                    type="checkbox"
+                    checked={isPrivacy}
+                    onChange={handlePrivacyChange}
+                    name="privacy-policy"
+                    id="privacy-policy"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                  />
+                  <label
+                    htmlFor="privacy-policy"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
+                    I agree to ShopO’s{" "}
+                    <Link
+                      to={`/privacy&policy`}
+                      className="underline hover:text-blue-400"
+                    >
+                      {" "}
+                      Privacy and Cookie Policy
+                    </Link>{" "}
+                    .
+                  </label>
+                </div>
+              </div>
               <button
                 type="submit"
                 className="group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -298,14 +364,14 @@ function Signup() {
                 REGISTER
               </button>
             </div>
-            <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
+            {/* <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
               -- OR --
             </div>
             <div className="flex justify-center space-x-6 w-full">
               <FacebookOauth />
               <GoogleOauth />
-              {/* <AppleOauth /> */}
-            </div>
+              {/* <AppleOauth /> 
+            </div> */}
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full flex justify-center font-Poppins">
                 Already have an account? Login as
