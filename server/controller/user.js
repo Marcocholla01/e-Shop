@@ -255,7 +255,7 @@ router.post(
       const activationToken = createActivationToken(user);
 
       // Construct the activation URL
-      const activationUrl = `${process.env.FRONTEND_URL}/user/user-activation/${activationToken}`;
+      const activationUrl = `https://shop0-bice.vercel.app/user/user-activation/${activationToken}`;
 
       console.log(activationUrl);
 

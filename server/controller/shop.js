@@ -167,7 +167,7 @@ router.post(
   upload.single(`file`),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password, address,  zipCode } = req.body;
+      const { name, email, password, address, zipCode } = req.body;
 
       if (phoneNumber.startsWith("0")) {
         phoneNumber = "+254" + phoneNumber.slice(1);
@@ -220,7 +220,7 @@ router.post(
       const activationToken = createActivationToken(shop);
 
       // Construct the activation URL
-      const activationUrl = `${process.env.FRONTEND_URL}/shop/shop-activation/${activationToken}`;
+      const activationUrl = `https://shop0-bice.vercel.app/shop/shop-activation/${activationToken}`;
 
       console.log(activationUrl);
 
@@ -474,12 +474,11 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { description, password, name, zipCode, address } =
-        req.body;
+      const { description, password, name, zipCode, address } = req.body;
 
-        if (phoneNumber.startsWith("0")) {
-          phoneNumber = "+254" + phoneNumber.slice(1);
-        }
+      if (phoneNumber.startsWith("0")) {
+        phoneNumber = "+254" + phoneNumber.slice(1);
+      }
 
       const seller = await Shop.findById(req.params.id).select(`+password`);
       // console.log(seller);
