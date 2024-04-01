@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../../styles/style";
-import { BASE_URL } from "../../config";
+import { BASE_URL, backend_url } from "../../config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, useParams } from "react-router-dom";
@@ -47,14 +47,14 @@ const ShopInfo = ({ isOwner }) => {
     );
   const averageRating = (totalRatings / totalReviewsLength).toFixed(2) || 0;
 
-  console.log(averageRating);
+  // console.log(averageRating);
   return (
     <>
       <div>
         <div className="w-full py-5">
           <div className="w-full flex items-center justify-center">
             <img
-              src={data?.avatar?.url}
+              src={`${backend_url}/uploads/${data.avatar.filename}`}
               alt="Shop Profile Image"
               className={`w-[150px] h-[150px] object-cover rounded-full`}
             />
