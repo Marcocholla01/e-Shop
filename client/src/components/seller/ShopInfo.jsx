@@ -75,8 +75,8 @@ const ShopInfo = ({ isOwner }) => {
           <div className="text-[#000000a6] flex flex-col">
             <h5 className="font-[600]">Main Number: </h5>
             <p>{data?.phoneNumber?.[0]}</p>
-            <h5 className="font-[600]">Other Number:</h5>
-            <p>{data?.phoneNumber?.[1]}</p>
+            {/* <h5 className="font-[600]">Other Number:</h5>
+            <p>{data?.phoneNumber?.[1]}</p> */}
           </div>
         </div>
         <div className="p-3">
