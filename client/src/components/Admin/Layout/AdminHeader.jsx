@@ -6,6 +6,7 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { backend_url } from "../../../config";
 
 const AdminHeader = () => {
   const { user } = useSelector((state) => state.user);
@@ -68,7 +69,7 @@ const AdminHeader = () => {
             </Link>
             <Link to={`/user/${user._id}`}>
               <img
-                src={`${user.avatar.url}`}
+                src={`${backend_url}/uploads/${user.avatar.filename}`}
                 alt=""
                 className={`rounded-full w-[50px] h-[50px] object-cover`}
               />
