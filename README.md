@@ -17,7 +17,7 @@ Welcome to ShopO, a multi-vendor e-commerce platform that caters to administrato
 
 ## Overview
 
-![ShopO Logo](/client/public/shopO.svg)
+![ShopO Logo](/client/src/assets/images/svg/logo.svg)
 
 ShopO is a comprehensive multi-vendor e-commerce platform designed to provide a seamless shopping experience for users while offering powerful management tools for administrators and sellers. Built with the latest technologies, ShopO facilitates secure transactions, efficient order management, and customizable user experiences.
 
@@ -141,7 +141,9 @@ cd server
 npm i
 ```
 
-3. Start the development server:
+3. Create a _`dotenv` file_ inside the **config folder**, copy the content in the _`.env.example` file_ and the required secrets
+
+4. Start the development server:
 
 ```bash
 npm run dev
