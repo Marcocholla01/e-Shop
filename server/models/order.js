@@ -45,6 +45,18 @@ const orderSchema = new mongoose.Schema({
     method: {
       type: String,
     },
+    phoneNumber: {
+      type: String,
+    },
+    transactionId: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    CheckoutRequestID: {
+      type: String,
+    },
   },
   paidAt: {
     type: Date,

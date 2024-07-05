@@ -6,7 +6,7 @@ const bodyParser = require(`body-parser`);
 const cors = require(`cors`);
 const path = require("path");
 const cookieSession = require(`cookie-session`);
-const passport = require(`passport`)
+const passport = require(`passport`);
 
 app.get(`/`, (req, res) => {
   res.send(`Hello From the Backend Server`);
@@ -22,8 +22,8 @@ app.use(
   })
 );
 
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
   cors({

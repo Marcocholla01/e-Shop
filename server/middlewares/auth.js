@@ -6,6 +6,7 @@ const Shop = require("../models/shop");
 
 exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
+  // console.log(`Token is: ${token}`);
 
   if (!token) {
     return res.status(401).json({ message: "Please login to continue" });
@@ -81,11 +82,9 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
 exports.isAdmin = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return res
-        .status(500)
-        .json({
-          message: `Operation not permitted to ${req.user.role} ..Access denied`,
-        });
+      return res.status(500).json({
+        message: `Operation not permitted to ${req.user.role} ..Access denied`,
+      });
     }
     next();
   };

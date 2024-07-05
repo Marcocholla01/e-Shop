@@ -11,9 +11,10 @@ import {
 } from "@stripe/react-stripe-js";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
-import { BASE_URL } from "../../config";
+import { BASE_URL, LIPIA_ONLINE_REQUEST_URL } from "../../config";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { clearCart } from "../../redux/actions/cart";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
@@ -219,7 +220,7 @@ const Payment = () => {
         toast.success(res.data.message);
         localStorage.setItem(`CartItems`, JSON.stringify([]));
         localStorage.setItem(`latestOrder`, JSON.stringify([]));
-        // window.location.reload(true);
+        window.location.reload(true);
       })
       .catch((error) => {
         if (error.response) {
@@ -243,6 +244,87 @@ const Payment = () => {
       });
   };
 
+  // Function to format the phone number
+  const formatPhoneNumber = (phoneNumber) => {
+    phoneNumber = String(phoneNumber); // Ensure phoneNumber is a string
+    if (phoneNumber.startsWith("0")) {
+      return phoneNumber;
+    } else if (phoneNumber.startsWith("7")) {
+      return "0" + phoneNumber;
+    } else if (phoneNumber.startsWith("254")) {
+      return "0" + phoneNumber.slice(3);
+    } else if (phoneNumber.startsWith("+254")) {
+      return "0" + phoneNumber.slice(4);
+    } else {
+      console.error(`Invalid phone number format: ${phoneNumber}`);
+      throw new Error("Invalid phone number format");
+    }
+  };
+
+  const lipaNaMpesaPaymentHandler = async (e) => {
+    e.preventDefault();
+    const apiKey = import.meta.env.VITE_LIPIA_ONLINE_API_KEY;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    };
+
+    let responseData;
+    let phoneNumber = user.phoneNumber;
+
+    // Convert phone number
+    phoneNumber = formatPhoneNumber(phoneNumber);
+
+    try {
+      const data = {
+        phone: phoneNumber,
+        amount: 1,
+        // amount: Math.ceil(order.totalPrice),
+      };
+
+      const response = await axios.post(
+        `${LIPIA_ONLINE_REQUEST_URL}`,
+        data,
+        config
+      );
+      responseData = response.data.data;
+      // console.log(responseData);
+      toast.info(`Waiting for payment validation...`);
+    } catch (error) {
+      console.error(error?.response?.data);
+      toast.error(error?.response?.data || `Error in processing payments`);
+      return;
+    }
+
+    order.paymentInfo = {
+      method: `Mpesa Payment`,
+      amount: responseData.amount,
+      transactionId: responseData.refference,
+      phoneNumber: responseData.phone,
+      CheckoutRequestID: responseData.CheckoutRequestID,
+    };
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/order/create-order`,
+        order,
+        { withCredentials: true }
+      );
+
+      setOpen(false);
+      navigate(`/order/success`);
+      toast.success(response.data.message);
+      disptch(clearCart());
+      // localStorage.setItem("CartItems", JSON.stringify([]));
+      localStorage.setItem("latestOrder", JSON.stringify([]));
+      // window.location.reload(true);
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] sm:w-[70%] block sm:flex">
@@ -255,6 +337,7 @@ const Payment = () => {
             createOrder={createOrder}
             paymentHandler={paymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
+            lipaNaMpesaPaymentHandler={lipaNaMpesaPaymentHandler}
           />
         </div>
         <div className="w-full sm:w-[35%] sm:mt-0 mt-8">
@@ -273,6 +356,7 @@ const PaymentInfo = ({
   createOrder,
   paymentHandler,
   cashOnDeliveryHandler,
+  lipaNaMpesaPaymentHandler,
 }) => {
   const [select, setSelect] = useState(1);
 
@@ -426,8 +510,7 @@ const PaymentInfo = ({
                   </div>
                   <PayPalScriptProvider
                     options={{
-                      "client-id":
-                        "AQ1tK8kfYvhM6c6PNFCXN-YJcv3UfIENGkDfnpeyLHz-m-p_xYj2Gi_bUMU9bq1O28HIwUtAKSdth_1y",
+                      "client-id": import.meta.env.VITE_PAY_PAL_CLIENT_ID,
                     }}
                   >
                     <PayPalButtons
@@ -471,6 +554,43 @@ const PaymentInfo = ({
               />
             </form>
           </div>
+        ) : null}
+      </div>
+
+      <br />
+      {/* pay with mpesa */}
+      <div>
+        <div className="flex w-full pb-5 border-b mb-2">
+          <div
+            className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
+            onClick={() => setSelect(4)}
+          >
+            {select === 4 ? (
+              <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
+            ) : null}
+          </div>
+          <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
+            Pay with mpesa
+          </h4>
+        </div>
+
+        {/* pay with mpesa */}
+        {select === 4 ? (
+          <form className="w-full flex" onSubmit={lipaNaMpesaPaymentHandler}>
+            <div className="w-full">
+              <input
+                type="text"
+                value={user.phoneNumber}
+                readOnly
+                className="w-full mb-3 p-2 border rounded"
+              />
+              <input
+                type="submit"
+                value="Confirm"
+                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+              />
+            </div>
+          </form>
         ) : null}
       </div>
     </div>

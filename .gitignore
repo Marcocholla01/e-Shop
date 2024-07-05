@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 client/node_modules
+client/.env
 server/node_modules
 socket/node_modules
 server/config/.env
