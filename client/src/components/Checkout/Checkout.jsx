@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/style";
 import { Country, State, City } from "country-state-city";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import EmptyAdderess from "../../assets/images/Address-bro.png";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { setLatestOrder } from "../../redux/actions/order";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [userInfo, setUserInfo] = useState(false);
   const [city, setCity] = useState(``);
@@ -33,8 +35,7 @@ const Checkout = () => {
     if (!address1 || !address2 || zipCode === null || !city || !country) {
       toast.error(`Please choose your delivery address`);
     } else {
-      
-      const shippingAddress = { address1, address2, zipCode, city, country };
+       const shippingAddress = { address1, address2, zipCode, city, country };
       const orderData = {
         cart,
         totalPrice,
@@ -45,9 +46,8 @@ const Checkout = () => {
         user,
       };
 
-      // update local storage with updated orders array
-
-      localStorage.setItem(`latestOrder`, JSON.stringify(orderData));
+      // Dispatch the action to update the Redux state
+      dispatch(setLatestOrder(orderData));
       navigate(`/payment`);
     }
   };

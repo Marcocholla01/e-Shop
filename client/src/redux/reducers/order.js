@@ -2,6 +2,9 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
+  latestOrder: localStorage.getItem("latestOrder")
+    ? JSON.parse(localStorage.getItem("latestOrder"))
+    : null,
 };
 
 export const orderReducer = createReducer(initialState, {
@@ -55,6 +58,18 @@ export const orderReducer = createReducer(initialState, {
   OrderFailed: (state, action) => {
     state.OrderLoading = false;
     state.error = action.payload;
+  },
+
+  setLatestOrder: (state, action) => {
+    state.latestOrder = action.payload;
+    localStorage.setItem("latestOrder", JSON.stringify(action.payload));
+  },
+
+  clearOrder: (state) => {
+    return {
+      ...state,
+      latestOrder: [],
+    };
   },
 
   clearErrors: (state) => {

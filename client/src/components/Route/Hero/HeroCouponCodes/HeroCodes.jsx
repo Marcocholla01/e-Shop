@@ -8,16 +8,16 @@ import { GetAllCouponCodes } from "../../../../redux/actions/couponCode";
 const HeroCodes = () => {
   const { CouponCode } = useSelector((state) => state.couponCode);
   const [data, setData] = useState([]);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(GetAllCouponCodes())
+    dispatch(GetAllCouponCodes());
     if (CouponCode) {
       // Use slice to get the first two elements
       const slicedData = CouponCode.slice(0, 2);
       setData(slicedData);
     }
-  }, [CouponCode]);
+  }, [dispatch, CouponCode]);
 
   // console.log(data)
 

@@ -10,15 +10,17 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL, LIPIA_ONLINE_REQUEST_URL } from "../../config";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { clearCart } from "../../redux/actions/cart";
+import { clearOrder } from "../../redux/actions/order";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
   const { user } = useSelector((state) => state.user);
+  const disptch = useDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -83,9 +85,11 @@ const Payment = () => {
         setOpen(false);
         navigate(`/order/success`);
         toast.success(res.data.message);
-        localStorage.setItem(`CartItems`, JSON.stringify([]));
-        localStorage.setItem(`latestOrder`, JSON.stringify([]));
-        window.location.reload(true);
+        disptch(clearCart());
+        disptch(clearOrder());
+        //  localStorage.setItem(`CartItems`, JSON.stringify([]));
+        // localStorage.setItem(`latestOrder`, JSON.stringify([]));
+        // window.location.reload(true);
       })
       .catch((error) => {
         if (error.response) {
@@ -166,9 +170,11 @@ const Payment = () => {
               setOpen(false);
               navigate(`/order/success`);
               toast.success(res.data.message);
-              localStorage.setItem(`CartItems`, JSON.stringify([]));
-              localStorage.setItem(`latestOrder`, JSON.stringify([]));
-              window.location.reload(true);
+              disptch(clearCart());
+              disptch(clearOrder());
+              //  localStorage.setItem(`CartItems`, JSON.stringify([]));
+              // localStorage.setItem(`latestOrder`, JSON.stringify([]));
+              // window.location.reload(true);
             })
             .catch((error) => {
               if (error.response) {
@@ -218,9 +224,11 @@ const Payment = () => {
         setOpen(false);
         navigate(`/order/success`);
         toast.success(res.data.message);
-        localStorage.setItem(`CartItems`, JSON.stringify([]));
-        localStorage.setItem(`latestOrder`, JSON.stringify([]));
-        window.location.reload(true);
+        disptch(clearCart());
+        disptch(clearOrder());
+        //  localStorage.setItem(`CartItems`, JSON.stringify([]));
+        // localStorage.setItem(`latestOrder`, JSON.stringify([]));
+        // window.location.reload(true);
       })
       .catch((error) => {
         if (error.response) {
@@ -316,11 +324,11 @@ const Payment = () => {
       navigate(`/order/success`);
       toast.success(response.data.message);
       disptch(clearCart());
-      // localStorage.setItem("CartItems", JSON.stringify([]));
-      localStorage.setItem("latestOrder", JSON.stringify([]));
-      // window.location.reload(true);
+      disptch(clearOrder());
+      //  localStorage.setItem(`CartItems`, JSON.stringify([]));
+      // localStorage.setItem("latestOrder", JSON.stringify([]));
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };

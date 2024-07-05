@@ -92,3 +92,17 @@ export const getOrderDetails = (id) => async (dispatch) => {
     });
   }
 };
+
+export const setLatestOrder = (orderData) => ({
+  type: "setLatestOrder",
+  payload: orderData,
+});
+
+// clear latest Order
+export const clearOrder = () => (dispatch, getState) => {
+  dispatch({
+    type: "clearOrder",
+  });
+
+  localStorage.setItem("latestOrder", JSON.stringify([]));
+};
