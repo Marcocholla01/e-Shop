@@ -297,7 +297,7 @@ router.post(
       }
 
       // Extract user details from activation token
-      const { name, email, password, address, avatar } = newUser;
+      const { name, email, password, address, avatar, phoneNumber } = newUser;
       const fileId = avatar.public_id;
       const fileUrl = avatar.url;
 
@@ -312,6 +312,7 @@ router.post(
         name,
         email,
         address,
+        phoneNumber,
         avatar: {
           public_id: fileId,
           url: fileUrl,

@@ -25,6 +25,7 @@ function SellerRegister() {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [isTerms, setIsTerms] = useState(false);
   const [isPrivacy, setIsPrivacy] = useState(false);
@@ -71,6 +72,7 @@ function SellerRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!name) {
       return toast.error(`Please input your shop's name`);
     }
@@ -130,6 +132,8 @@ function SellerRegister() {
     newForm.append("address", address);
     newForm.append("zipCode", zipCode);
     newForm.append("password", password);
+
+    setLoading(true);
     axios
       .post(`${BASE_URL}/shop/create-shop`, newForm, config)
       .then((response) => {
@@ -139,10 +143,12 @@ function SellerRegister() {
         setPassword("");
         setAvatar(null);
         setOpen(true);
+        setLoading(false);
         // navigate("/seller-login");
       })
       .catch((error) => {
         toast.error(error.response.data.message); // Display error toast for network issues or unexpected errors
+        setLoading(false);
       });
   };
 
@@ -444,9 +450,13 @@ function SellerRegister() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                className={`${
+                  loading
+                    ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                    : `bg-blue-600 hover:bg-blue-700`
+                } group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white `}
               >
-                REGISTER
+                {loading ? `Loading....` : `REGISTER`}
               </button>
             </div>
             {/* <div className="  flex justify-center text-lg font-bold text-gray-700 ">

@@ -11,16 +11,17 @@ import GoogleOauth from "../Oauth/GoogleOauth";
 import AppleOauth from "../Oauth/AppleOauth";
 import { RxCross1 } from "react-icons/rx";
 import { loadUser } from "../../../redux/actions/user";
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [passwordResset, setPasswordResset] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // const [userId, setUserId] = useState("");
   // const [otp, setOtp] = useState(["", "", "", ""]);
@@ -77,6 +78,7 @@ function Login() {
       return toast.error("Password does not meet the requirements");
     }
 
+    setLoading(true);
     axios
       .post(
         `${BASE_URL}/user/login-user`,
@@ -90,10 +92,12 @@ function Login() {
         if (res.data.success === true) {
           navigate("/");
           toast.success(res.data.message);
-          dispatch(loadUser())
+          dispatch(loadUser());
+          setLoading(false);
           // window.location.reload(true);
         } else {
           toast.error(res.data.message);
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -118,6 +122,7 @@ function Login() {
           // Something happened in setting up the request that triggered an error
           toast.error("Request failed. Please try again later.");
         }
+        setLoading(false);
       });
   };
 
@@ -182,7 +187,7 @@ function Login() {
     } else if (!emailRegex.test(passwordResset)) {
       return toast.error(`Invalid email address`);
     }
-
+    setLoading(true);
     axios
       .post(
         `${BASE_URL}/user/password/forgot-password`,
@@ -192,9 +197,11 @@ function Login() {
       .then((res) => {
         toast.success(res.data.message);
         setForgotPassword(false);
+        setLoading(false);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
+        setLoading(false);
       });
   };
 
@@ -295,9 +302,13 @@ function Login() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                className={`${
+                  loading
+                    ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                    : `bg-blue-600 hover:bg-blue-700`
+                } group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white `}
               >
-                LOGIN
+                {loading ? `Loading....` : `LOGIN`}
               </button>
             </div>
             {/* <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
@@ -364,10 +375,14 @@ function Login() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mt-7 h-[42px]"
                   />
                   <button
-                    className="mt-7 group w-[200px] h-[40px]  px-3 py-2 border border-transparent text-md font-medium rounded-md text-white bg-blue-700 hover:bg-blue-600 uppercase "
                     onClick={handlePasswordResetRequest}
+                    className={`${
+                      loading
+                        ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                        : `bg-blue-600 hover:bg-blue-700`
+                    } mt-7 group w-[200px] h-[40px]  px-3 py-2 border border-transparent text-md font-medium rounded-md text-white uppercase`}
                   >
-                    submit
+                    {loading ? `Loading....` : `submit`}
                   </button>
                 </div>
               </div>

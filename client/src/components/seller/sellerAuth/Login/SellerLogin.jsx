@@ -11,6 +11,8 @@ import FacebookOauth from "../../../Authentication/Oauth/FacebookOauth";
 import GoogleOauth from "../../../Authentication/Oauth/GoogleOauth";
 import AppleOauth from "../../../Authentication/Oauth/AppleOauth";
 import { RxCross1 } from "react-icons/rx";
+import { useDispatch } from "react-redux";
+import { loadSeller } from "../../../../redux/actions/user";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -18,7 +20,9 @@ function Login() {
   const [visible, setVisible] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [passwordResset, setPasswordResset] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // const [sellerId, setSellerId] = useState("");
   // const [otp, setOtp] = useState(["", "", "", ""]);
@@ -50,6 +54,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Check if email is empty or doesn't match the expected format
     if (!email) {
       return toast.error(`Please input your email`);
@@ -72,7 +77,7 @@ function Login() {
       // Password does not meet the requirements
       return toast.error("Password does not meet the requirements");
     }
-
+    setLoading(true);
     axios
       .post(
         `${BASE_URL}/shop/login-shop`,
@@ -86,10 +91,13 @@ function Login() {
         if (res.data.success === true) {
           toast.success(res.data.message || "Login success!");
           navigate("/dashboard");
-          window.location.reload(true);
+          dispatch(loadSeller());
+          // window.location.reload(true);
         } else {
           toast.error(res.data.message || "Login failed. Please try again.");
         }
+
+        setLoading(false);
       })
       .catch((error) => {
         if (error.response) {
@@ -114,6 +122,8 @@ function Login() {
           // Something happened in setting up the request that triggered an error
           toast.error("Request failed. Please try again later.");
         }
+
+        setLoading(false);
       });
   };
 
@@ -123,7 +133,7 @@ function Login() {
     } else if (!emailRegex.test(passwordResset)) {
       return toast.error(`Invalid email address`);
     }
-
+    setLoading(true);
     axios
       .post(
         `${BASE_URL}/shop/password/forgot-password`,
@@ -133,9 +143,11 @@ function Login() {
       .then((res) => {
         toast.success(res.data.message);
         setForgotPassword(false);
+        setLoading(false);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
+        setLoading(false);
       });
   };
 
@@ -361,10 +373,14 @@ function Login() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mt-7 h-[42px]"
                   />
                   <button
-                    className="mt-7 group w-[200px] h-[40px]  px-3 py-2 border border-transparent text-md font-medium rounded-md text-white bg-blue-700 hover:bg-blue-600 uppercase "
                     onClick={handlePasswordResetRequest}
+                    className={`${
+                      loading
+                        ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                        : `bg-blue-600 hover:bg-blue-700`
+                    } mt-7 group w-[200px] h-[40px]  px-3 py-2 border border-transparent text-md font-medium rounded-md text-white uppercase `}
                   >
-                    submit
+                    {loading ? `Loading....` : `submit`}
                   </button>
                 </div>
               </div>

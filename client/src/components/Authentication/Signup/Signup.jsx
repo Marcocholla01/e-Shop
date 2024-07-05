@@ -13,15 +13,17 @@ import AppleOauth from "../Oauth/AppleOauth";
 import { useSelector } from "react-redux";
 
 function Signup() {
-  const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  // const { user } = useSelector((state) => state.user);
+  // const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [isTerms, setIsTerms] = useState(false);
   const [isPrivacy, setIsPrivacy] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // const [userId, setUserId] = useState(user && user._id);
   // const [otp, setOtp] = useState(["", "", "", ""]);
@@ -49,6 +51,7 @@ function Signup() {
     "Should have atleast 1 special letter @!>",
     "Should have atleast 1 uppercase letter",
     "Should have atleast 1 lowercase letter",
+    "Should have atleast 1 Number Character",
   ];
   // Generate the list markup
   const CustomToast = ({ items }) => (
@@ -67,6 +70,12 @@ function Signup() {
     e.preventDefault();
     if (!name) {
       return toast.error(`Please input your full names`);
+    }
+    if (!phoneNumber) {
+      return toast.error(`Please input your Phone Number`);
+    }
+    if (phoneNumber.length < 10 || phoneNumber.length > 13) {
+      return toast.error(`Please input a valid Phone Number`);
     }
     // Check if email is empty or doesn't match the expected format
     if (!email) {
@@ -99,7 +108,7 @@ function Signup() {
     if (!isPrivacy) {
       return toast.error("You must agree to our privacy and policies.");
     }
-
+    setLoading(true);
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const newForm = new FormData();
 
@@ -107,6 +116,7 @@ function Signup() {
     newForm.append("name", name);
     newForm.append("email", email);
     newForm.append("password", password);
+    newForm.append("phoneNumber", phoneNumber);
 
     axios
       .post(`${BASE_URL}/user/create-user`, newForm, config)
@@ -115,13 +125,16 @@ function Signup() {
         toast.success(response.data.message); // Display success toast
         setName("");
         setEmail("");
-        setPassword("");
         setAvatar(null);
+        setPassword("");
+        setPhoneNumber("");
+        setLoading(false);
         // setOpen(true);
         // navigate("/verify-user");
       })
       .catch((error) => {
         toast.error(error.response.data.message); // Display error toast
+        setLoading(false);
       });
   };
 
@@ -213,6 +226,26 @@ function Signup() {
                   placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="number"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number
+              </label>
+              <div className="mt-1">
+                <input
+                  type="number"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  autoComplete="number"
+                  placeholder="Enter your phone number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -321,7 +354,7 @@ function Signup() {
                   >
                     I agree to ShopO’s{" "}
                     <Link
-                      to={`/terms&cookies`}
+                      to={`/terms`}
                       className="underline hover:text-blue-400"
                     >
                       {" "}
@@ -359,9 +392,13 @@ function Signup() {
               </div>
               <button
                 type="submit"
-                className="group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                className={`${
+                  loading
+                    ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                    : `bg-blue-600 hover:bg-blue-700`
+                } group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white `}
               >
-                REGISTER
+                {loading ? `Loading....` : `REGISTER`}
               </button>
             </div>
             {/* <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
