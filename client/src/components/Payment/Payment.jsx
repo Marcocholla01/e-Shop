@@ -18,12 +18,12 @@ import { clearCart } from "../../redux/actions/cart";
 import { clearOrder } from "../../redux/actions/order";
 
 const Payment = () => {
-  const [orderData, setOrderData] = useState([]);
   const { user } = useSelector((state) => state.user);
-  const disptch = useDispatch();
 
   const [open, setOpen] = useState(false);
+  const [orderData, setOrderData] = useState([]);
 
+  const disptch = useDispatch();
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
@@ -33,7 +33,35 @@ const Payment = () => {
     setOrderData(orderData);
   }, []);
 
-  const createOrder = async (data, actions) => {
+  // Order data
+  const order = {
+    cart: orderData?.cart,
+    shippingAddress: orderData?.shippingAddress,
+    user: user && user,
+    totalPrice: orderData?.totalPrice,
+    couponDiscount: orderData?.discountPrice,
+    shippingCost: orderData?.shipping,
+    subTotalPrice: orderData?.subTotalPrice,
+  };
+
+  // Function to format the phone number
+  const formatPhoneNumber = (phoneNumber) => {
+    phoneNumber = String(phoneNumber); // Ensure phoneNumber is a string
+    if (phoneNumber.startsWith("0")) {
+      return phoneNumber;
+    } else if (phoneNumber.startsWith("7")) {
+      return "0" + phoneNumber;
+    } else if (phoneNumber.startsWith("254")) {
+      return "0" + phoneNumber.slice(3);
+    } else if (phoneNumber.startsWith("+254")) {
+      return "0" + phoneNumber.slice(4);
+    } else {
+      console.error(`Invalid phone number format: ${phoneNumber}`);
+      throw new Error("Invalid phone number format");
+    }
+  };
+
+  const createOrderPaypal = async (data, actions) => {
     return actions.order
       .create({
         purchase_units: [
@@ -54,7 +82,7 @@ const Payment = () => {
       });
   };
 
-  const onApprove = async (data, actions) => {
+  const onApprovePaypal = async (data, actions) => {
     return actions.order.capture().then(function (details) {
       const { payer } = details;
 
@@ -112,22 +140,12 @@ const Payment = () => {
         }
       });
   };
-  const paymentData = {
-    amount: Math.round(orderData?.totalPrice * 100),
-  };
 
-  const order = {
-    cart: orderData?.cart,
-    shippingAddress: orderData?.shippingAddress,
-    user: user && user,
-    totalPrice: orderData?.totalPrice,
-    couponDiscount: orderData?.discountPrice,
-    shippingCost: orderData?.shipping,
-    subTotalPrice: orderData?.subTotalPrice,
-  };
-
-  const paymentHandler = async (e) => {
+  const stripePaymentHandler = async (e) => {
     e.preventDefault();
+    const paymentData = {
+      amount: Math.round(orderData.totalPrice * 100),
+    };
     try {
       const config = {
         headers: {
@@ -252,23 +270,6 @@ const Payment = () => {
       });
   };
 
-  // Function to format the phone number
-  const formatPhoneNumber = (phoneNumber) => {
-    phoneNumber = String(phoneNumber); // Ensure phoneNumber is a string
-    if (phoneNumber.startsWith("0")) {
-      return phoneNumber;
-    } else if (phoneNumber.startsWith("7")) {
-      return "0" + phoneNumber;
-    } else if (phoneNumber.startsWith("254")) {
-      return "0" + phoneNumber.slice(3);
-    } else if (phoneNumber.startsWith("+254")) {
-      return "0" + phoneNumber.slice(4);
-    } else {
-      console.error(`Invalid phone number format: ${phoneNumber}`);
-      throw new Error("Invalid phone number format");
-    }
-  };
-
   const lipaNaMpesaPaymentHandler = async (e) => {
     e.preventDefault();
     const apiKey = import.meta.env.VITE_LIPIA_ONLINE_API_KEY;
@@ -306,6 +307,7 @@ const Payment = () => {
     }
 
     order.paymentInfo = {
+      status: `succeeded`,
       method: `Mpesa Payment`,
       amount: responseData.amount,
       transactionId: responseData.refference,
@@ -341,9 +343,9 @@ const Payment = () => {
             user={user}
             open={open}
             setOpen={setOpen}
-            onApprove={onApprove}
-            createOrder={createOrder}
-            paymentHandler={paymentHandler}
+            onApprovePaypal={onApprovePaypal}
+            createOrderPaypal={createOrderPaypal}
+            stripePaymentHandler={stripePaymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
             lipaNaMpesaPaymentHandler={lipaNaMpesaPaymentHandler}
           />
@@ -360,9 +362,9 @@ const PaymentInfo = ({
   user,
   open,
   setOpen,
-  onApprove,
-  createOrder,
-  paymentHandler,
+  onApprovePaypal,
+  createOrderPaypal,
+  stripePaymentHandler,
   cashOnDeliveryHandler,
   lipaNaMpesaPaymentHandler,
 }) => {
@@ -389,7 +391,7 @@ const PaymentInfo = ({
         {/* pay with card */}
         {select === 1 ? (
           <div className="w-full flex border-b">
-            <form className="w-full " onSubmit={paymentHandler}>
+            <form className="w-full " onSubmit={stripePaymentHandler}>
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
                   <label className="block pb-2">Name On Card</label>
@@ -523,8 +525,8 @@ const PaymentInfo = ({
                   >
                     <PayPalButtons
                       style={{ layout: "vertical" }}
-                      onApprove={onApprove}
-                      createOrder={createOrder}
+                      onApprovePaypal={onApprovePaypal}
+                      createOrderPaypal={createOrderPaypal}
                     />
                   </PayPalScriptProvider>
                 </div>

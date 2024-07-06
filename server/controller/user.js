@@ -205,6 +205,8 @@ router.post(
 
       if (phoneNumber.startsWith("0")) {
         phoneNumber = "+254" + phoneNumber.slice(1);
+      } else if (phoneNumber.startsWith("254")) {
+        phoneNumber = "+" + phoneNumber;
       }
 
       const userEmail = await User.findOne({ email });
@@ -255,7 +257,7 @@ router.post(
       const activationToken = createActivationToken(user);
 
       // Construct the activation URL
-      const activationUrl = `https://shop0-bice.vercel.app/user/user-activation/${activationToken}`;
+      const activationUrl = `${process.env.FRONTEND_URL}/user/user-activation/${activationToken}`;
 
       console.log(activationUrl);
 
@@ -324,6 +326,7 @@ router.post(
       // Send the JWT token as a response
       sendToken(user, 201, res);
     } catch (error) {
+      console.log(error);
       return next(new ErrorHandler(error.message, 500));
     }
   })
@@ -353,7 +356,7 @@ router.post(
           avatar: {
             public_id: fileId,
             url: photo,
-            filename: null,
+            // filename: null,
           },
           password: generatedPassword,
         });
@@ -375,7 +378,58 @@ router.post(
       }
     } catch (error) {
       console.error("Error during Google OAuth:", error);
-      return next(error);
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Facebook Oauth API
+router.post(
+  `/facebook`,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { name, email, photo } = req.body;
+
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        // Send token for existing user
+        sendToken(existingUser, 200, res);
+      } else {
+        // Generate a random password that complies with the specified password requirements
+        const generatedPassword = generateRandomPassword();
+
+        // Create the new user
+        const fileId = uuid.v4();
+        const newUser = new User({
+          name,
+          email,
+          avatar: {
+            public_id: fileId,
+            url: photo,
+            // filename: null,
+          },
+          password: generatedPassword,
+        });
+
+        // Save the user to the database
+        await newUser.save();
+
+        // Send an email to the user containing the auto-generated password
+
+        sendMail({
+          from: process.env.SMTP_MAIL,
+          email: email,
+          subject: "Your Auto-Generated Password",
+          html: `Dear ${name},<br><br>Your auto-generated password is: <strong>${generatedPassword}</strong>.<br>You may use this password to log in with email and password.`,
+        });
+
+        // Send token for new user
+        sendToken(newUser, 201, res);
+      }
+    } catch (error) {
+      console.error("Error during Facebook OAuth:", error);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
@@ -948,7 +1002,7 @@ router.put(
         message: `User status changed successfully to Inactive `,
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 500));
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

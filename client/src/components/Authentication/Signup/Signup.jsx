@@ -401,14 +401,14 @@ function Signup() {
                 {loading ? `Loading....` : `REGISTER`}
               </button>
             </div>
-            {/* <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
+            <div className="  flex justify-center  text-lg font-bold text-gray-700 ">
               -- OR --
             </div>
             <div className="flex justify-center space-x-6 w-full">
               <FacebookOauth />
               <GoogleOauth />
-              {/* <AppleOauth /> 
-            </div> */}
+              <AppleOauth />
+            </div>
             <div className={`${styles.normalFlex} w-full`}>
               <h4 className="relative w-full flex justify-center font-Poppins">
                 Already have an account? Login as
