@@ -1,69 +1,72 @@
 const express = require("express");
+const cloudinary = require("cloudinary").v2;
 const Event = require("../models/event");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const { upload } = require("../multer");
+const { upload } = require("../config/multer");
 const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAdmin, isAuthenticated } = require("../middlewares/auth");
 const fs = require(`fs`);
-const uuid = require("uuid");
 
 const router = express.Router();
 
-// create event Api
-
+// Route to create an event
 router.post(
-  `/create-event`,
-  upload.array("images"),
-  catchAsyncErrors(async (req, res, next) => {
+  "/create-event",
+  upload.array("images"), // Handle multiple files with the name 'images'
+  async (req, res, next) => {
     try {
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
 
-      if (!shopId) {
+      if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
-      } else {
-        // const files = req.files;
-        // const imageUrls = files.map((file) => `${file.filename}`);
-        // const eventData = req.body;
-        // eventData.images = imageUrls;
-        // eventData.shop = shop;
+      }
 
-        // const event = await Event.create(eventData);
-        // res.status(201).json({
-        //   success: true,
-        //   event,
-        // });
+      // Check if files were uploaded
+      if (req.files && req.files.length > 0) {
+        // Map uploaded files to Cloudinary upload promises
+        const uploadPromises = req.files.map((file) =>
+          cloudinary.uploader.upload(file.path, {
+            upload_preset: "ShopO",
+            folder: "events", // Folder in Cloudinary to store event images
+          })
+        );
 
-        const files = req.files;
-        const imageUrls = files.map((file) => {
-          const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
-          const protocol = req.protocol;
-          const host = req.get("host");
-          const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
+        // Execute all upload promises concurrently
+        const results = await Promise.all(uploadPromises);
 
-          return {
-            public_id: fileId,
-            url: fileUrl,
-            filename: file.filename,
-          };
-        });
+        // Map results to get image URLs from Cloudinary
+        const imagesLinks = results.map((result) => ({
+          public_id: result.public_id,
+          url: result.secure_url,
+          filename: result.original_filename, // Optionally store original filename
+        }));
 
-        const eventData = req.body;
-        eventData.images = imageUrls;
-        eventData.shop = shop;
+        // Create event data object with image URLs and shop reference
+        const eventData = {
+          ...req.body, // Include other event data from req.body
+          images: imagesLinks, // Assign uploaded image URLs
+          shop: shop, // Assign shop reference
+        };
 
+        // Create the event in the database
         const event = await Event.create(eventData);
 
+        // Respond with success message and event data
         res.status(201).json({
           success: true,
-          event,
+          event: event,
         });
+      } else {
+        return next(new ErrorHandler("No files uploaded!", 400));
       }
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      // Handle errors
+      console.error("Error creating event:", error);
+      return next(new ErrorHandler(error.message, 400));
     }
-  })
+  }
 );
 
 // Get all events of a shop

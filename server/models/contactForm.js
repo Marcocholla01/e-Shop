@@ -15,7 +15,7 @@ const contactFormSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Proccessing",
+    default: "pending",
   },
 });
 

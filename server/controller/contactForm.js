@@ -13,7 +13,7 @@ router.post(
     try {
       const { name, email, subject, message } = req.body;
 
-      const contactForm = await ContactForm.create({
+      await ContactForm.create({
         name,
         email,
         message,
@@ -22,7 +22,6 @@ router.post(
       res.status(200).json({
         succces: true,
         message: `Form submitted successfully`,
-      
       });
     } catch (error) {
       return next(new ErrorHandler(error, 500));
@@ -75,7 +74,7 @@ router.get(
 
 // delet form ========Admin
 router.delete(
-  `/get-form/:id`,
+  `/delete-form/:id`,
   isAuthenticated,
   isAdmin(`Admin`),
   catchAsyncErrors(async (req, res, next) => {
@@ -104,7 +103,7 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { status } = req.body;
-      const id = req.pqrqms.id;
+      const id = req.params.id;
 
       const form = await ContactForm.findById(id);
 
@@ -121,7 +120,7 @@ router.put(
         form,
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 500));
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

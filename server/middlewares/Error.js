@@ -1,4 +1,4 @@
-const ErrorHandler = require(`./ErrorHandler`);
+const ErrorHandler = require(`../utils/ErrorHandler`);
 
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
@@ -24,6 +24,19 @@ module.exports = (err, req, res, next) => {
   // if jwt expired
   if (err.name === `TokenExpiredError`) {
     const message = `Your URL has expired. Please try again later`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // Nodemailer Errors
+  // SMTP server error
+  if (err.syscall === `getaddrinfo`) {
+    const message = `Mailing system currently down... please try again latter`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // SMT connection error
+  if (err.syscall === `connect`) {
+    const message = `Mailing system connection error... please try again latter`;
     err = new ErrorHandler(message, 400);
   }
 

@@ -1,69 +1,78 @@
 const express = require(`express`);
+const cloudinary = require("cloudinary").v2;
 const router = express.Router();
 const Product = require("../models/Product");
 const Shop = require("../models/shop");
 const Order = require(`../models/order`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { upload } = require("../multer");
-const uuid = require("uuid");
+const { upload } = require("../config/multer");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const fs = require(`fs`);
 
 // create product Api
 
+// Route to create a product
 router.post(
-  `/create-product`,
+  "/create-product",
   upload.array("images"),
-  catchAsyncErrors(async (req, res, next) => {
+  async (req, res, next) => {
     try {
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
 
-      if (!shopId) {
+      if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
-      } else {
-        // const files = req.files;
-        // const imageUrls = files.map((file) => `${file.filename}`);
-        // const prodactData = req.body;
-        // prodactData.images = imageUrls;
-        // prodactData.shop = shop;
+      }
 
-        // const product = await Product.create(prodactData);
-        // res.status(201).json({
-        //   success: true,
-        //   product,
-        // });
+      // Handle images array correctly
+      let images = [];
 
-        const files = req.files;
-        const imageUrls = files.map((file) => {
-          const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
-          const protocol = req.protocol;
-          const host = req.get("host");
-          const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
+      if (req.files && req.files.length > 0) {
+        // Map uploaded files to Cloudinary upload promises
+        const uploadPromises = req.files.map((file) =>
+          cloudinary.uploader.upload(file.path, {
+            upload_preset: "ShopO",
+            folder: "products",
+          })
+        );
 
-          return {
-            public_id: fileId,
-            url: fileUrl,
-            filename: file.filename,
-          };
-        });
+        // Execute all upload promises concurrently
+        const results = await Promise.all(uploadPromises);
 
-        const productData = req.body;
-        productData.images = imageUrls;
-        productData.shop = shop;
+        // Extract public_id and secure_url from Cloudinary results
+        images = results.map((result) => ({
+          public_id: result.public_id,
+          url: result.secure_url,
+        }));
 
-        const product = await Product.create(productData);
-
-        res.status(201).json({
-          success: true,
-          product,
+        // Remove temporary files after upload
+        req.files.forEach((file) => {
+          fs.unlinkSync(file.path);
         });
       }
+
+      // Create new product data with images and shop
+      const productData = {
+        ...req.body,
+        images: images,
+        shop: shop,
+      };
+
+      // Create the product in the database
+      const product = await Product.create(productData);
+
+      // Respond with success message and product data
+      res.status(201).json({
+        success: true,
+        product: product,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      // Handle errors
+      console.error("Error creating product:", error);
+      return next(new ErrorHandler(error.message, 400));
     }
-  })
+  }
 );
 
 // Get all Products of a shop
@@ -85,7 +94,7 @@ router.get(
 
 // Delete product of a shop
 router.delete(
-  `/delete-shop-product/:id`,
+  "/delete-shop-product/:id",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
@@ -99,10 +108,18 @@ router.delete(
         });
       }
 
+      // Delete images from Cloudinary
+      const deletePromises = product.images.map((image) =>
+        cloudinary.uploader.destroy(image.public_id)
+      );
+
+      // Wait for all deletion promises to resolve
+      await Promise.all(deletePromises);
+
       // Get image filenames from the product
       const imageFilenames = product.images.map((image) => image.filename);
 
-      // Delete each image
+      // Delete each local image file (optional, if stored locally)
       for (const filename of imageFilenames) {
         const imagePath = `uploads/${filename}`;
         try {
@@ -123,7 +140,8 @@ router.delete(
         message: "Product deleted successfully",
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      console.error("Error deleting product:", error);
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
@@ -262,10 +280,18 @@ router.delete(
         });
       }
 
+      // Delete images from Cloudinary
+      const deletePromises = product.images.map((image) =>
+        cloudinary.uploader.destroy(image.public_id)
+      );
+
+      // Wait for all deletion promises to resolve
+      await Promise.all(deletePromises);
+
       // Get image filenames from the product
       const imageFilenames = product.images.map((image) => image.filename);
 
-      // Delete each image
+      // Delete each local image file (optional, if stored locally)
       for (const filename of imageFilenames) {
         const imagePath = `uploads/${filename}`;
         try {
@@ -286,7 +312,8 @@ router.delete(
         message: "Product and associated images deleted successfully",
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 500));
+      console.error("Error deleting product:", error);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

@@ -1,10 +1,10 @@
 const express = require(`express`);
+const cloudinary = require("cloudinary").v2;
 const router = express.Router();
 const User = require(`../models/user`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
-const { upload } = require(`../multer`);
+const { upload } = require(`../config/multer`);
 const fs = require(`fs`);
-const uuid = require("uuid");
 const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
@@ -22,6 +22,7 @@ const {
 const { isValidObjectId } = require("mongoose");
 const path = require("path");
 const { promisify } = require("util");
+const { generateUUID } = require("../utils/helperFunctions");
 const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
@@ -51,7 +52,7 @@ const unlinkAsync = promisify(fs.unlink);
 //         return next(new ErrorHandler(`User already exists`, 400));
 //       }
 
-//       const fileId = uuid.v4();
+//       const fileId = generateUUID();
 //       const protocol = req.protocol;
 //       const host = req.get("host");
 //       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
@@ -195,20 +196,13 @@ const unlinkAsync = promisify(fs.unlink);
 // );
 
 router.post(
-  `/create-user`,
-  upload.single(`file`),
+  "/create-user",
+  upload.single("file"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password, address, zipCode } = req.body;
+      const { name, email, password } = req.body;
 
-      let { phoneNumber } = req.body;
-
-      if (phoneNumber.startsWith("0")) {
-        phoneNumber = "+254" + phoneNumber.slice(1);
-      } else if (phoneNumber.startsWith("254")) {
-        phoneNumber = "+" + phoneNumber;
-      }
-
+      // Check if user with the same email already exists
       const userEmail = await User.findOne({ email });
 
       if (userEmail) {
@@ -225,26 +219,25 @@ router.post(
           .json({ success: false, message: `User already exists` });
       }
 
-      const fileId = uuid.v4();
-      const protocol = req.protocol;
-      const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
+      // Upload avatar image to Cloudinary
+      const myCloud = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: "ShopO",
+        folder: "avatars",
+      });
 
+      // Create the user object with Cloudinary details
       const user = {
         name,
-        phoneNumber,
         email,
-        address,
-        zipCode,
-        avatar: {
-          public_id: fileId,
-          url: fileUrl,
-          filename: req.file.filename, // Use req.file.filename
-        },
         password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
       };
 
-      // console.log(user);
+      // Save the user to the database (if needed)
+      // await user.save();
 
       // Define a function to create an activation token
       const createActivationToken = (user) => {
@@ -259,28 +252,92 @@ router.post(
       // Construct the activation URL
       const activationUrl = `${process.env.FRONTEND_URL}/user/user-activation/${activationToken}`;
 
-      console.log(activationUrl);
+      // Send activation email
+      await sendMail({
+        from: process.env.SMTP_MAIL,
+        email: user.email,
+        subject: "Activate Your User",
+        html: generateEmailtemplate(activationUrl),
+      });
 
-      try {
-        await sendMail({
-          from: process.env.SMTP_MAIL,
-          email: user.email,
-          subject: "Activate Your User",
-          html: generateEmailtemplate(activationUrl),
-        });
-        res.status(201).json({
-          success: true,
-          message: `Account verification pending please check your email ${user.email} to activate your account `,
-        });
-      } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
-      }
-      // Other code for sending activation email and creating activation token
+      // Respond with success message
+      res.status(201).json({
+        success: true,
+        message: `Account verification pending. Please check your email ${user.email} to activate your account.`,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
+      console.error(error);
+      return next(new ErrorHandler(error.message, error.http_code || 500));
     }
   })
 );
+
+// router.post(
+//   `/create-user`,
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const { name, email, password, file } = req.body;
+//       let { phoneNumber } = req.body;
+//       console.log(req.body.name);
+
+//       // if (phoneNumber.startsWith("0")) {
+//       //   phoneNumber = "+254" + phoneNumber.slice(1);
+//       // } else if (phoneNumber.startsWith("254")) {
+//       //   phoneNumber = "+" + phoneNumber;
+//       // }
+
+//       const userEmail = await User.findOne({ email });
+
+//       if (userEmail) {
+//         return next(new ErrorHandler("User already exists", 400));
+//       }
+
+//       // Upload avatar image to Cloudinary
+//       const myCloud = await cloudinary.uploader.upload(file, {
+//         upload_preset: "ShopO",
+//         folder: "avatars",
+//       });
+
+//       // Create the user object with Cloudinary details
+//       const user = new User({
+//         name,
+//         email,
+//         password,
+//         phoneNumber,
+//         avatar: {
+//           public_id: myCloud.public_id,
+//           url: myCloud.secure_url,
+//         },
+//       });
+
+//       // Save the user to the database
+//       // await user.save();
+
+//       // Generate the activation token
+//       const activationToken = await createActivationToken(user);
+
+//       // Construct the activation URL
+//       const activationUrl = `${process.env.FRONTEND_URL}/user/user-activation/${activationToken}`;
+
+//       // Send activation email
+//       await sendMail({
+//         from: process.env.SMTP_MAIL,
+//         email: user.email,
+//         subject: "Activate Your User",
+//         html: generateEmailtemplate(activationUrl),
+//       });
+
+//       // Respond with success message
+//       res.status(201).json({
+//         success: true,
+//         message: `Account verification pending. Please check your email ${user.email} to activate your account.`,
+//       });
+//     } catch (error) {
+//       console.log(error);
+//       return next(new ErrorHandler(error.message, 400));
+//     }
+//   })
+// );
 
 router.post(
   "/user-activation",
@@ -299,7 +356,7 @@ router.post(
       }
 
       // Extract user details from activation token
-      const { name, email, password, address, avatar, phoneNumber } = newUser;
+      const { name, email, password, address, avatar } = newUser;
       const fileId = avatar.public_id;
       const fileUrl = avatar.url;
 
@@ -314,7 +371,6 @@ router.post(
         name,
         email,
         address,
-        phoneNumber,
         avatar: {
           public_id: fileId,
           url: fileUrl,
@@ -326,7 +382,7 @@ router.post(
       // Send the JWT token as a response
       sendToken(user, 201, res);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       return next(new ErrorHandler(error.message, 500));
     }
   })
@@ -349,14 +405,14 @@ router.post(
         const generatedPassword = generateRandomPassword();
 
         // Create the new user
-        const fileId = uuid.v4();
+        const fileId = generateUUID();
         const newUser = new User({
           name,
           email,
           avatar: {
             public_id: fileId,
             url: photo,
-            // filename: null,
+            filename: null,
           },
           password: generatedPassword,
         });
@@ -400,7 +456,7 @@ router.post(
         const generatedPassword = generateRandomPassword();
 
         // Create the new user
-        const fileId = uuid.v4();
+        const fileId = generateUUID();
         const newUser = new User({
           name,
           email,
@@ -694,41 +750,47 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const existsUser = await User.findById(req.user.id);
-      const existsAvatarPath = `uploads/${existsUser.avatar.filename}`;
+      console.log(existsUser);
 
-      // Check if file exists before attempting to unlink it
-      try {
-        await accessAsync(existsAvatarPath, fs.constants.F_OK);
-
-        // File exists, proceed with deletion
-        await unlinkAsync(existsAvatarPath);
-        // console.log("File deleted successfully:", existsAvatarPath);
-      } catch (error) {
-        // File does not exist or cannot be accessed
-        // console.log( "File does not exist or cannot be accessed:",existsAvatarPath);
-
-        res.status(400).json({
+      if (!existsUser) {
+        return res.status(404).json({
           success: false,
-          message: `File does not exist or cannot be accessed: ${existsAvatarPath}`,
+          message: "User not found",
         });
       }
 
-      // Update avatar URL in the database
-      const fileId = uuid.v4();
-      const protocol = req.protocol;
-      const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
-      const file = path.join(req.file.filename);
-      const user = await User.findByIdAndUpdate(req.user.id, {
-        avatar: { public_id: fileId, filename: file, url: fileUrl },
+      // Upload new avatar image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: "ShopO",
+        folder: "avatars",
       });
+
+      // If there's an existing avatar, delete it from Cloudinary
+      if (existsUser.avatar.public_id) {
+        await cloudinary.uploader.destroy(existsUser.avatar.public_id);
+      }
+
+      // Update avatar URL in the database
+      existsUser.avatar = {
+        public_id: result.public_id,
+        filename: req.file.filename,
+        url: result.secure_url,
+      };
+
+      console.log(existsUser.avatar);
+
+      await existsUser.save();
+
+      // Delete local file after upload to Cloudinary
+      fs.unlinkSync(req.file.path);
 
       res.status(200).json({
         success: true,
-        message: `Avatar updated successfully`,
-        user,
+        message: "Avatar updated successfully",
+        seller: existsUser,
       });
     } catch (error) {
+      console.error("Error updating avatar:", error);
       return next(new ErrorHandler(error.message, 500));
     }
   })

@@ -4,8 +4,7 @@ const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const CouponCode = require("../models/couponCode");
-const { upload } = require("../multer");
-const uuid = require("uuid");
+const { upload } = require("../config/multer");
 
 const router = express.Router();
 

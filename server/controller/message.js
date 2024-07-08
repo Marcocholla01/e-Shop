@@ -3,7 +3,8 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Message = require("../models/message");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
-const { upload } = require("../multer");
+const { upload } = require("../config/multer");
+const { generateUUID } = require("../utils/helperFunctions");
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.post(
       const files = req.files;
       if (files) {
         const imageUrls = files.map((file) => {
-          const fileId = uuid.v4() + ".png"; // Generate a unique ID for the image
+          const fileId = generateUUID() + ".png"; // Generate a unique ID for the image
           const protocol = req.protocol;
           const host = req.get("host");
           const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;

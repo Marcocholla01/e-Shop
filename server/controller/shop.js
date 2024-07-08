@@ -1,10 +1,10 @@
 const express = require(`express`);
+const cloudinary = require("cloudinary").v2;
 const router = express.Router();
 const Shop = require(`../models/shop`);
 const ErrorHandler = require(`../utils/ErrorHandler`);
-const { upload } = require(`../multer`);
+const { upload } = require(`../config/multer`);
 const fs = require(`fs`);
-const uuid = require("uuid");
 const jwt = require(`jsonwebtoken`);
 const sendMail = require(`../utils/sendMail`);
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
@@ -18,6 +18,7 @@ const {
 } = require("../utils/otp");
 const { isValidObjectId } = require("mongoose");
 const sendToken = require("../utils/jwtToken");
+const { generateUUID } = require("../utils/helperFunctions");
 const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
@@ -47,7 +48,7 @@ const unlinkAsync = promisify(fs.unlink);
 //         return next(new ErrorHandler(`Shop already exists`, 400));
 //       }
 
-//       const fileId = uuid.v4();
+//       const fileId = generateUUID();
 //       const protocol = req.protocol;
 //       const host = req.get("host");
 //       const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
@@ -168,6 +169,7 @@ router.post(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { name, email, password, address, zipCode } = req.body;
+      let { phoneNumber } = req.body;
 
       if (phoneNumber.startsWith("0")) {
         phoneNumber = "+254" + phoneNumber.slice(1);
@@ -188,10 +190,11 @@ router.post(
           .json({ success: false, message: `Shop already exists` });
       }
 
-      const fileId = uuid.v4();
-      const protocol = req.protocol;
-      const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.originalname}`;
+      // Upload avatar image to Cloudinary
+      const myCloud = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: "ShopO",
+        folder: "Shop-Avatars",
+      });
 
       const shop = {
         name,
@@ -200,9 +203,8 @@ router.post(
         address,
         zipCode,
         avatar: {
-          public_id: fileId,
-          url: fileUrl,
-          filename: req.file.filename, // Use req.file.filename
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
         },
         password,
       };
@@ -220,9 +222,9 @@ router.post(
       const activationToken = createActivationToken(shop);
 
       // Construct the activation URL
-      const activationUrl = `https://shop0-bice.vercel.app/shop/shop-activation/${activationToken}`;
+      const activationUrl = `${process.env.FRONTEND_URL}/shop/shop-activation/${activationToken}`;
 
-      console.log(activationUrl);
+      // console.log(activationUrl);
 
       try {
         await sendMail({
@@ -420,94 +422,54 @@ router.get(
   })
 );
 
-//update shop avatar
+// update seller information
 router.put(
-  `/update-avatar/:id`,
+  "/update-avatar/:id",
   isSeller,
-  upload.single(`image`),
+  upload.single("image"),
   catchAsyncErrors(async (req, res, next) => {
     try {
       const existsShop = await Shop.findById(req.params.id);
-      const existsAvatarPath = `uploads/${existsShop.avatar.filename}`;
 
-      // Check if file exists before attempting to unlink it
-      try {
-        await accessAsync(existsAvatarPath, fs.constants.F_OK);
-
-        // File exists, proceed with deletion
-        await unlinkAsync(existsAvatarPath);
-        // console.log("File deleted successfully:", existsAvatarPath);
-      } catch (error) {
-        // File does not exist or cannot be accessed
-        // console.log( "File does not exist or cannot be accessed:",existsAvatarPath);
-
-        res.status(400).json({
+      if (!existsShop) {
+        return res.status(404).json({
           success: false,
-          message: `File does not exist or cannot be accessed: ${existsAvatarPath}`,
+          message: "Shop not found",
         });
+      }
+
+      // Upload new avatar image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: "ShopO",
+        folder: "Shop-Avatars",
+      });
+
+      // If there's an existing avatar, delete it from Cloudinary
+      if (existsShop.avatar.public_id) {
+        await cloudinary.uploader.destroy(existsShop.avatar.public_id);
       }
 
       // Update avatar URL in the database
-      const fileId = uuid.v4();
-      const protocol = req.protocol;
-      const host = req.get("host");
-      const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
-      const file = path.join(req.file.filename);
-      const seller = await Shop.findByIdAndUpdate(req.params.id, {
-        avatar: { public_id: fileId, filename: file, url: fileUrl },
-      });
+      existsShop.avatar = {
+        public_id: result.public_id,
+        filename: req.file.filename,
+        url: result.secure_url,
+      };
+
+      console.log(existsShop.avatar);
+
+      await existsShop.save();
+
+      // Delete local file after upload to Cloudinary
+      fs.unlinkSync(req.file.path);
 
       res.status(200).json({
         success: true,
-        message: `Avatar updated successfully`,
-        seller,
+        message: "Avatar updated successfully",
+        seller: existsShop,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
-
-// update seller information
-router.put(
-  `/update-shop-info/:id`,
-  isSeller,
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { description, password, name, zipCode, address } = req.body;
-
-      if (phoneNumber.startsWith("0")) {
-        phoneNumber = "+254" + phoneNumber.slice(1);
-      }
-
-      const seller = await Shop.findById(req.params.id).select(`+password`);
-      // console.log(seller);
-      if (!seller) {
-        return res.status(404).json({
-          success: false,
-          message: "Shop not found. Please check your credentials.",
-        });
-      }
-      const isPasswordValid = await seller.comparePassword(password);
-      if (!isPasswordValid) {
-        return res.status(401).json({
-          success: false,
-          message: "Invalid password!!, Kindly input your current password ",
-        });
-      }
-      seller.name = name;
-      seller.description = description;
-      seller.address = address;
-      seller.zipCode = zipCode;
-      seller.phoneNumber = phoneNumber;
-
-      await seller.save();
-      res.status(201).json({
-        success: true,
-        message: `information updated successfully`,
-        seller,
-      });
-    } catch (error) {
+      console.error("Error updating avatar:", error);
       return next(new ErrorHandler(error.message, 500));
     }
   })
@@ -602,10 +564,7 @@ router.post(
           resetPasswordToken: resetToken.resetPasswordToken,
         });
 
-        const resetPasswordUrl = `${process.env.FRONTEND_URL}/seller/password/resset/${resetToken.resetPasswordToken}`;
-        // const resetPasswordUrl = `${(req, protocol)}://${req.get(
-        //   `host`
-        // )}/password/resset/${resetToken}`;
+        const resetPasswordUrl = `${process.env.FRONTEND_URL}}/seller/password/resset/${resetToken.resetPasswordToken}`;
 
         const message = `Your password reset token is :- \n\n ${resetPasswordUrl}`;
 
