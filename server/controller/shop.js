@@ -438,6 +438,12 @@ router.put(
         });
       }
 
+      // Ensure the uploads directory exists
+      const uploadsDir = path.join(__dirname, "../uploads");
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
       // Upload new avatar image to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path, {
         upload_preset: "ShopO",
