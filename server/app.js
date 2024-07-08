@@ -1,46 +1,24 @@
 const express = require(`express`);
-const ErrorHandler = require("./utils/ErrorHandler");
+const errorHandler = require("./middlewares/Error");
 const app = express();
 const cookieParser = require(`cookie-parser`);
 const bodyParser = require(`body-parser`);
 const cors = require(`cors`);
 const path = require("path");
-const cookieSession = require(`cookie-session`);
-const passport = require(`passport`);
+const corsOptions = require(`./utils/corsOptions`);
 
-app.get(`/`, (req, res) => {
-  res.send(`Hello From the Backend Server`);
-});
+app.use(cors(corsOptions));
+
+app.use(cookieParser());
 
 app.use(express.json());
-app.use(cookieParser());
-app.use(
-  cookieSession({
-    name: "session",
-    keys: ["token"],
-    maxAge: 24 * 60 * 60 * 100,
-  })
-);
+app.use(bodyParser.json());
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(
-  cors({
-    origin: [
-      "https://shop0-bice.vercel.app",
-      "http://192.168.1.100:1001",
-      "http://localhost:1001",
-      "http://127.0.0.1:1001",
-    ],
-
-    credentials: true,
-  })
-);
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Importing routes
 const user = require(`./controller/user`);
@@ -67,11 +45,15 @@ app.use(`/api/v2/conversation`, conversation);
 app.use(`/api/v2/message`, message);
 app.use(`/api/v2/contactForm`, contactForm);
 
+app.get(`/`, (req, res) => {
+  res.send(`Hello From the Backend Server`);
+});
+
 // not found route
 app.all("*", (req, res) => {
   res.status(404).send("This Page is not found");
 });
 // For error handling
-app.use(ErrorHandler);
+app.use(errorHandler);
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const app = require(`./app`);
+const cloudinaryConfig = require("./config/cloudinary");
 const connectDatabase = require("./db/database");
-
 
 // Handle Uncaught Exception
 process.on(`uncaughtException`, (error) => {
@@ -14,8 +14,12 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
     path: "config/.env",
   });
 }
+
+// Initialize Cloudinary
+cloudinaryConfig();
+
 // Database Connection
- connectDatabase();
+connectDatabase();
 
 // create server
 const server = app.listen(process.env.PORT, () => {
