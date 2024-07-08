@@ -29,12 +29,14 @@ exports.generatePasswordresetToken = () => {
 };
 
 // Specify the password requirements
-const passwordRegex = /^(?=.*[!@#$%^&()_+])(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,24}$/;
+const passwordRegex =
+  /^(?=.*[!@#$%^&()_+])(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,24}$/;
 
 // Function to generate a random password
 exports.generateRandomPassword = () => {
   let password = "";
-  const characters = "!@#$%^&*()_+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  const characters =
+    "!@#$%^&*()_+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
   // Generate a password that meets the requirements
   while (!passwordRegex.test(password)) {
@@ -47,7 +49,6 @@ exports.generateRandomPassword = () => {
 
   return password;
 };
-
 
 exports.generateEmailtemplate = (activationUrl) => {
   return `
