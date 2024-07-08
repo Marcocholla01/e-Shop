@@ -209,7 +209,7 @@ const AdminActiveUsers = () => {
                   onSubmit={updateUserSubmitHandler}
                 >
                   {/* <img
-                    src={`${backend_url}/uploads/${activeUsers?.avatar?.filename}`}
+                    src={`${activeUsers?.avatar?.url}`}
                     alt=""
                     srcset=""
                     className="w-[100px] h-[100px] rounded-full self-center m-3"

@@ -97,9 +97,7 @@ const ProductCard = ({ data }) => {
           <Link to={`/product/${data?._id}`}>
             {/* window.location.reload(true); */}
             <img
-              src={`${backend_url}/uploads/${
-                data?.images && data?.images[0]?.filename
-              }`}
+              src={`${data?.images && data?.images[0]?.url}`}
               alt=""
               className=" h-[135px] object-contain rounded-md self-center"
             />

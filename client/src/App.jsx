@@ -86,6 +86,8 @@ import {
   AdminIncompletedWithdrawals,
   AdminCompletedWithdrawals,
   AdminPaymentDetailsPage,
+  AdminAllGrivancesPage,
+  AdminSupportDetailsPage,
 } from "./Routes/AdminRoutes/routes";
 import { BASE_URL, backend_url } from "./config";
 import axios from "axios";
@@ -617,6 +619,22 @@ function App() {
                   element={
                     <AdminProtectedRoute>
                       <AdminAllSales />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-support"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminAllGrivancesPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-support/:supportId"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminSupportDetailsPage />
                     </AdminProtectedRoute>
                   }
                 />

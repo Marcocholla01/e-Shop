@@ -8,6 +8,7 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +32,7 @@ const Contact = () => {
       message,
       subject,
     };
-
+    setLoading(true);
     await axios
       .post(`${BASE_URL}/contactForm/create-new-form`, form)
       .then((response) => {
@@ -40,9 +41,11 @@ const Contact = () => {
         setEmail("");
         setMessage("");
         setSubject("");
+        setLoading(false);
       })
       .catch((error) => {
         error.response.data.message;
+        setLoading(false);
       });
   };
 
@@ -284,9 +287,13 @@ const Contact = () => {
                   <div>
                     <button
                       type="submit"
-                      className="group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 uppercase"
+                      className={`${
+                        loading
+                          ? `bg-slate-600 hover:bg-slate-700 cursor-not-allowed`
+                          : `bg-blue-600 hover:bg-blue-700`
+                      } group relative w-full h-[42px] flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white  uppercase`}
                     >
-                      send now
+                      {loading ? `Loading....` : `send now`}
                     </button>
                   </div>
                 </div>

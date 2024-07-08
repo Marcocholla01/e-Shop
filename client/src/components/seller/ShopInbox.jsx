@@ -261,7 +261,7 @@ const MessageList = ({
       >
         <div className="relative">
           <img
-            src={`${backend_url}/uploads/${userData?.avatar.filename}`}
+            src={`${userData?.avatar.url}`}
             alt=""
             className="w-[50px] h-[50px] rounded-full"
           />
@@ -312,7 +312,7 @@ const ChatBox = ({
         {/* message header */}
         <div className="w-full flex">
           <img
-            src={`${backend_url}/uploads/${userData?.avatar.filename}`}
+            src={`${userData?.avatar.url}`}
             alt=""
             className="w-[60px] h-[60px] rounded-full"
           />
@@ -340,7 +340,7 @@ const ChatBox = ({
                 >
                   {item.sender !== sellerId && (
                     <img
-                      src={`${backend_url}/uploads/${userData?.avatar.filename}`}
+                      src={`${userData?.avatar.url}`}
                       alt=""
                       className="w-[40px] h-[40px] rounded-full mr-3"
                     />

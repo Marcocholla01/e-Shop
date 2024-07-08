@@ -20,7 +20,8 @@ import AdminWithdrwaldashboardPage from "../../pages/Admin/AdminWithdrwaldashboa
 import AdminIncompletedWithdrawals from "../../pages/Admin/AdminIncompletedWithdrawals";
 import AdminCompletedWithdrawals from "../../pages/Admin/AdminCompletedWithdrawals";
 import AdminPaymentDetailsPage from "../../pages/Admin/AdminPaymentDetailsPage";
-
+import AdminAllGrivancesPage from "../../pages/Admin/AdminAllGrivancesPage";
+import AdminSupportDetailsPage from "../../pages/Admin/AdminSupportDetailsPage";
 
 export {
   AdminDashboardPage,
@@ -45,5 +46,6 @@ export {
   AdminIncompletedWithdrawals,
   AdminCompletedWithdrawals,
   AdminPaymentDetailsPage,
-
+  AdminAllGrivancesPage,
+  AdminSupportDetailsPage,
 };

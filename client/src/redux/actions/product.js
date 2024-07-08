@@ -24,7 +24,7 @@ export const createProduct = (newForm) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "createPrductFail",
-      payload: error.response.data.message,
+      payload: error?.response?.data?.message || error.message,
     });
   }
 };

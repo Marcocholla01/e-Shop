@@ -1,6 +1,6 @@
 import React from "react";
 import { AiOutlineFolderAdd, AiOutlineGift } from "react-icons/ai";
-import { BiMessageSquareDetail } from "react-icons/bi";
+import { BiMessageSquareDetail, BiSupport } from "react-icons/bi";
 import { BsHandbag } from "react-icons/bs";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { GiTakeMyMoney } from "react-icons/gi";
@@ -182,6 +182,18 @@ const AdminSideBar = ({ active }) => {
             } hidden sm:block`}
           >
             All Refunds
+          </h5>
+        </Link>
+      </div>
+      <div className={`w-full flex items-center p-4`}>
+        <Link to={`/admin-support`} className="w-full flex items-center">
+          <BiSupport size={30} color={active === 12 ? "red" : "#555"} />
+          <h5
+            className={`pl-3 ${
+              active === 12 ? "text-[red]" : ""
+            } hidden sm:block`}
+          >
+            Support
           </h5>
         </Link>
       </div>

@@ -336,7 +336,7 @@ const EditProduct = () => {
                   src={
                     image instanceof File
                       ? URL.createObjectURL(image)
-                      : `${backend_url}/uploads/${image.filename}`
+                      : `${image.url}`
                   }
                   alt={`product image ${index}`}
                   className="h-[120px] w-[120px] object-cover rounded-[7px]"

@@ -135,7 +135,7 @@ const ProductDetails = ({ data }) => {
             <div className="block w-full sm:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={`${backend_url}/uploads/${data?.product?.images[select].filename}`}
+                  src={`${data?.product?.images[select].url}`}
                   alt=""
                   className="w-[80%] h-[450px] object-contain overflow-hidden rounded-md m-5"
                 />
@@ -163,7 +163,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={`${backend_url}/uploads/${data?.product?.images[0].filename}`}
+                      src={`${data?.product?.images[0]?.url}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(0)}
@@ -177,7 +177,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={`${backend_url}/uploads/${data?.product?.images[1].filename}`}
+                      src={`${data?.product?.images[1]?.url}`}
                       alt=""
                       className=" h-[200px] overflow-hidden  rounded-md"
                       onClick={() => setSelect(1)}
@@ -191,7 +191,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={`${backend_url}/uploads/${data?.product?.images[2].filename}`}
+                      src={`${data?.product?.images[2]?.url}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(2)}
@@ -205,7 +205,7 @@ const ProductDetails = ({ data }) => {
                     } cursor-pointer mr-4 mt-4`}
                   >
                     <img
-                      src={`${backend_url}/uploads/${data?.product?.images[3]?.filename}`}
+                      src={`${data?.product?.images[3]?.url}`}
                       alt=""
                       className="h-[200px] overflow-hidden  rounded-md "
                       onClick={() => setSelect(3)}
@@ -303,7 +303,7 @@ const ProductDetails = ({ data }) => {
                       <div>
                         <Link to={`/shop/preview/${data?.product?.shop?._id}`}>
                           <img
-                            src={`${backend_url}/uploads/${data?.product?.shop?.avatar?.filename}`}
+                            src={`${data?.product?.shop?.avatar?.url}`}
                             alt=""
                             className="w-[50px] h-[50px] rounded-full mr-2 object-contain bg-slate-500"
                           />
@@ -404,7 +404,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
             data?.product?.reviews?.map((item, index) => (
               <div className="w-full flex my-2">
                 <img
-                  src={`${backend_url}/uploads/${item.user.avatar.filename}`}
+                  src={`${item.user.avatar.url}`}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />
@@ -432,7 +432,7 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
             <div className="flex items-center">
               <Link to={`/shop/preview/${data.product.shop._id}`}>
                 <img
-                  src={`${backend_url}/uploads/${data?.product?.shop?.avatar?.filename}`}
+                  src={`${data?.product?.shop?.avatar?.url}`}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />

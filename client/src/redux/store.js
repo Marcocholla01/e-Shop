@@ -8,6 +8,7 @@ import { cartReducer } from "./reducers/cart";
 import { wishListReducer } from "./reducers/wishlist";
 import { withdrawReducer } from "./reducers/withdrawals";
 import { couponCodeReducer } from "./reducers/couponCode";
+import { supportReducer } from "./reducers/support";
 
 const Store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const Store = configureStore({
     order: orderReducer,
     withdraw: withdrawReducer,
     couponCode: couponCodeReducer,
+    support: supportReducer,
   },
 });
 

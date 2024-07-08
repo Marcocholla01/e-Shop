@@ -213,7 +213,7 @@ const Header = ({ activeHeading }) => {
                 {isAuthenticated ? (
                   <Link to={`/user/${user._id}`}>
                     <img
-                      src={`${backend_url}/uploads/${user.avatar.filename}`}
+                      src={`${user.avatar.url}`}
                       alt=""
                       className="w-[40px] h-[40px] object-cover rounded-full"
                     />
@@ -387,7 +387,7 @@ const Header = ({ activeHeading }) => {
                     <div className="pb-2">
                       <Link to={`/user/${user._id}`}>
                         <img
-                          src={`${backend_url}/uploads/${user.avatar.filename}`}
+                          src={`${user.avatar.url}`}
                           alt=""
                           className="h-[80px] w-[80px] object-cover rounded-full border-[3px] border-[#3ad132]"
                         />

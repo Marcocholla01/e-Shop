@@ -11,7 +11,7 @@ export const eventReducer = createReducer(initialState, {
   },
   createEventSuccess: (state, action) => {
     state.isLoading = false;
-    state.event = action.payload;
+    state.events = action.payload;
     state.isEvent = true;
   },
   createEventFail: (state, action) => {
@@ -59,18 +59,18 @@ export const eventReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-    // get all Events -----Admin
-    adminGetAllEventsRequest: (state) => {
-      state.adminEventsloading = true;
-    },
-    adminGetAllEventsSuccess: (state, action) => {
-      state.adminEventsloading = false;
-      state.adminEvents = action.payload;
-    },
-    adminGetAllEventsFailed: (state, action) => {
-      state.adminEventsloading = false;
-      state.error = action.payload;
-    },
+  // get all Events -----Admin
+  adminGetAllEventsRequest: (state) => {
+    state.adminEventsloading = true;
+  },
+  adminGetAllEventsSuccess: (state, action) => {
+    state.adminEventsloading = false;
+    state.adminEvents = action.payload;
+  },
+  adminGetAllEventsFailed: (state, action) => {
+    state.adminEventsloading = false;
+    state.error = action.payload;
+  },
 
   // clearEventState: (state) => {
   //   // Add any necessary state clearing logic here

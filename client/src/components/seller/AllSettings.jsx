@@ -120,7 +120,7 @@ const AllSettings = () => {
                   src={
                     avatar
                       ? URL.createObjectURL(avatar)
-                      : `${backend_url}/uploads/${seller.avatar.filename}`
+                      : `${seller.avatar.url}`
                   }
                   className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
                   alt=""
