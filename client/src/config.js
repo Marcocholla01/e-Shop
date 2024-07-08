@@ -14,4 +14,4 @@ export const LIPIA_ONLINE_REQUEST_URL = `https://lipia-api.kreativelabske.com/ap
 // export const LIPIA_ONLINE_REQUEST_URL = import.meta.env
 //   .VITE_LIPIA_ONLINE_REQUEST_URL;
 
-// console.log(import.meta.env);
+console.log(import.meta.env);
