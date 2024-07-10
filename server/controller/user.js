@@ -197,32 +197,26 @@ const unlinkAsync = promisify(fs.unlink);
 
 router.post(
   "/create-user",
-  upload.single("file"),
+  // upload.single("file"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, avatar } = req.body;
+      const fileName = generateUUID();
 
       // Check if user with the same email already exists
       const userEmail = await User.findOne({ email });
 
       if (userEmail) {
-        const filepath = `uploads/${req.file.filename}`;
-        fs.unlink(filepath, (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json({ message: `Error deleting file` });
-          }
-        });
-
         return res
           .status(400)
           .json({ success: false, message: `User already exists` });
       }
 
       // Upload avatar image to Cloudinary
-      const myCloud = await cloudinary.uploader.upload(req.file.path, {
+      const myCloud = await cloudinary.uploader.upload(avatar, {
         upload_preset: "ShopO",
         folder: "avatars",
+        public_id: fileName,
       });
 
       // Create the user object with Cloudinary details
@@ -233,6 +227,7 @@ router.post(
         avatar: {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
+          filename: fileName + ".png",
         },
       };
 

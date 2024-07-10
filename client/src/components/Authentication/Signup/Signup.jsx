@@ -38,9 +38,47 @@ function Signup() {
   };
 
   const handleFileInputChange = (e) => {
+    // const file = e.target.files[0];
+    // setAvatar(file);
     const file = e.target.files[0];
-    setAvatar(file);
+    fileToBase64(file).then((base64Image) => {
+      setAvatar(base64Image);
+    });
   };
+
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   fileToBase64(file).then((base64Image) => {
+  //     setAvatar(base64Image);
+  //   });
+  // };
+  // console.log(avatar);
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // const handleImageChange = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   Promise.all(files.map(fileToBase64)).then((base64Images) => {
+  //     setFormData({ ...formData, pictures: base64Images });
+  //   });
+  // };
+
+  // const fileToBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
+
   // Regular expression for email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
@@ -109,17 +147,16 @@ function Signup() {
       return toast.error("You must agree to our privacy and policies.");
     }
     setLoading(true);
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const newForm = new FormData();
 
-    newForm.append("file", avatar);
-    newForm.append("name", name);
-    newForm.append("email", email);
-    newForm.append("password", password);
-    // newForm.append("phoneNumber", phoneNumber);
+    const form = {
+      avatar,
+      name,
+      email,
+      password,
+    };
 
     axios
-      .post(`${BASE_URL}/user/create-user`, newForm, config)
+      .post(`${BASE_URL}/user/create-user`, form)
       .then((response) => {
         // console.log(response);
         toast.success(response.data.message); // Display success toast
@@ -312,7 +349,7 @@ function Signup() {
                   <span className="inline-block h-8 v-8 rounded-full overflow-hidden">
                     {avatar ? (
                       <img
-                        src={URL.createObjectURL(avatar)}
+                        src={avatar ? avatar : URL.createObjectURL(avatar)}
                         alt="avatar"
                         className="h-8 w-8 object-cover rounded-full"
                       />

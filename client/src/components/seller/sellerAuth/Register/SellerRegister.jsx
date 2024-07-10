@@ -43,9 +43,31 @@ function SellerRegister() {
   // const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const handleFileInputChange = (e) => {
+    // const file = e.target.files[0];
+    // setAvatar(file);
     const file = e.target.files[0];
-    setAvatar(file);
+    fileToBase64(file).then((base64Image) => {
+      setAvatar(base64Image);
+    });
   };
+
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   fileToBase64(file).then((base64Image) => {
+  //     setAvatar(base64Image);
+  //   });
+  // };
+  // console.log(avatar);
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   // Regular expression for email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
@@ -122,20 +144,19 @@ function SellerRegister() {
       return toast.error("You must agree to our privacy and policies.");
     }
 
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const newForm = new FormData();
-
-    newForm.append("file", avatar);
-    newForm.append("name", name);
-    newForm.append("phoneNumber", phoneNumber);
-    newForm.append("email", email);
-    newForm.append("address", address);
-    newForm.append("zipCode", zipCode);
-    newForm.append("password", password);
+    const form = {
+      avatar,
+      name,
+      phoneNumber,
+      email,
+      address,
+      zipCode,
+      password,
+    };
 
     setLoading(true);
     axios
-      .post(`${BASE_URL}/shop/create-shop`, newForm, config)
+      .post(`${BASE_URL}/shop/create-shop`, form)
       .then((response) => {
         toast.success(response.data.message); // Display success toast
         setName("");
@@ -368,7 +389,7 @@ function SellerRegister() {
                   <span className="inline-block h-8 v-8 rounded-full overflow-hidden">
                     {avatar ? (
                       <img
-                        src={URL.createObjectURL(avatar)}
+                        src={avatar ? avatar : URL.createObjectURL(avatar)}
                         alt="avatar"
                         className="h-8 w-8 object-cover rounded-full"
                       />

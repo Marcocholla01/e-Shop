@@ -35,9 +35,15 @@ module.exports = (err, req, res, next) => {
   }
 
   // SMT connection error
-  if (err.syscall === `connect`) {
+  if (err.syscall === "connect") {
     const message = `Mailing system connection error... please try again latter`;
     err = new ErrorHandler(message, 400);
+  }
+
+  // Cloudinary error
+  if (err.type === `entity.too.large`) {
+    const message = `Your file is too large to upload... please try another one`;
+    err = new ErrorHandler(message, 413);
   }
 
   res.status(err.statusCode).json({

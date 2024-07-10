@@ -22,7 +22,7 @@ const { generateUUID } = require("../utils/helperFunctions");
 const accessAsync = promisify(fs.access);
 const unlinkAsync = promisify(fs.unlink);
 
-// // create seller / shop account api
+// create seller / shop account api
 // router.post(
 //   `/create-shop`,
 //   upload.single("file"),
@@ -165,11 +165,13 @@ const unlinkAsync = promisify(fs.unlink);
 
 router.post(
   `/create-shop`,
-  upload.single(`file`),
+  // upload.single(`file`),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, email, password, address, zipCode } = req.body;
+      const { name, email, password, address, zipCode, avatar } = req.body;
+      // return console.log(req.body);
       let { phoneNumber } = req.body;
+      const fileName = generateUUID();
 
       if (phoneNumber.startsWith("0")) {
         phoneNumber = "+254" + phoneNumber.slice(1);
@@ -177,23 +179,16 @@ router.post(
       const shopEmail = await Shop.findOne({ email });
 
       if (shopEmail) {
-        const filepath = `uploads/${req.file.filename}`;
-        fs.unlink(filepath, (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json({ message: `Error deleting file` });
-          }
-        });
-
         return res
           .status(400)
           .json({ success: false, message: `Shop already exists` });
       }
 
       // Upload avatar image to Cloudinary
-      const myCloud = await cloudinary.uploader.upload(req.file.path, {
+      const myCloud = await cloudinary.uploader.upload(avatar, {
         upload_preset: "ShopO",
         folder: "Shop-Avatars",
+        public_id: fileName,
       });
 
       const shop = {
@@ -205,6 +200,7 @@ router.post(
         avatar: {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
+          filename: fileName + ".png",
         },
         password,
       };
