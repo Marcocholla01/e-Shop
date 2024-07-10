@@ -61,10 +61,19 @@ const CreateEvent = () => {
   }, [dispatch, error, isEvent]);
 
   const handleImageChange = (e) => {
-    e.preventDefault();
+    const files = Array.from(e.target.files);
+    Promise.all(files.map(fileToBase64)).then((base64Images) => {
+      setImages(base64Images);
+    });
+  };
 
-    let files = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...files]);
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   const handleSubmit = (e) => {
@@ -87,29 +96,27 @@ const CreateEvent = () => {
       return;
     }
 
-    // Check if images are less than 3
-    if (images.length < 3) {
-      toast.error("Please select at least 3 images");
+    // Check if images are less than 1
+    if (images.length < 1) {
+      toast.error("Please select at least 1 image");
       return;
     }
 
-    const newForm = new FormData();
+    const form = {
+      name: name,
+      description: description,
+      category: category,
+      tags: tags,
+      stock: stock,
+      shopId: seller._id,
+      start_date: startDate,
+      finish_date: endDate,
+      discountPrice: discountPrice,
+      originalPrice: originalPrice,
+      eventImages: images,
+    };
 
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-    newForm.append("start_date", startDate);
-    newForm.append("finish_date", endDate);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("originalPrice", originalPrice);
-
-    dispatch(createEvent(newForm));
+    dispatch(createEvent(form));
   };
 
   function handleImageRemove(index) {
@@ -285,7 +292,7 @@ const CreateEvent = () => {
                   key={index}
                 >
                   <img
-                    src={URL.createObjectURL(image)}
+                    src={image ? image : URL.createObjectURL(image)}
                     alt={`Event image ${index}`}
                     className="w-20 h-20 object-cover rounded-lg"
                   />

@@ -2,17 +2,17 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 
 // create product
-export const createProduct = (newForm) => async (dispatch) => {
+export const createProduct = (form) => async (dispatch) => {
   try {
     dispatch({
       type: "createPrductRequest",
     });
 
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    // const config = { headers: { "Content-Type": "multipart/form-data" } };
     const { data } = await axios.post(
       `${BASE_URL}/product/create-product`,
-      newForm,
-      config,
+      form,
+      // config,
       {
         withCredentials: true,
       }

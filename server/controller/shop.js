@@ -422,8 +422,10 @@ router.get(
 router.put(
   "/update-avatar/:id",
   isSeller,
-  upload.single("image"),
+  // upload.single("image"),
   catchAsyncErrors(async (req, res, next) => {
+    const { avatar } = req.body;
+    const fileName = generateUUID();
     try {
       const existsShop = await Shop.findById(req.params.id);
 
@@ -434,16 +436,11 @@ router.put(
         });
       }
 
-      // Ensure the uploads directory exists
-      const uploadsDir = path.join(__dirname, "../uploads");
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-      }
-
       // Upload new avatar image to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
+      const result = await cloudinary.uploader.upload(avatar, {
         upload_preset: "ShopO",
         folder: "Shop-Avatars",
+        public_id: fileName,
       });
 
       // If there's an existing avatar, delete it from Cloudinary
@@ -454,16 +451,16 @@ router.put(
       // Update avatar URL in the database
       existsShop.avatar = {
         public_id: result.public_id,
-        filename: req.file.filename,
+        filename: fileName + ".png",
         url: result.secure_url,
       };
 
-      console.log(existsShop.avatar);
+      // console.log(existsShop.avatar);
 
       await existsShop.save();
 
       // Delete local file after upload to Cloudinary
-      fs.unlinkSync(req.file.path);
+      // fs.unlinkSync(req.file.path);
 
       res.status(200).json({
         success: true,

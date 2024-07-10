@@ -46,6 +46,9 @@ module.exports = (err, req, res, next) => {
     err = new ErrorHandler(message, 413);
   }
 
+  // syscall: 'getaddrinfo',
+  //   hostname: 'api.cloudinary.com'
+
   res.status(err.statusCode).json({
     success: false,
     message: err.message,

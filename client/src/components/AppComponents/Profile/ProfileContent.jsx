@@ -57,16 +57,29 @@ const ProfileContent = ({ active }) => {
     // use redux instead of api call
     dispatch(updateUserInfomation(email, password, phoneNumber, name));
   };
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const handleImage = async (e) => {
+    // const file = e.target.files[0];
+    // setAvatar(file);
     const file = e.target.files[0];
-    setAvatar(file);
-
-    const formData = new FormData();
-    formData.append(`image`, e.target.files[0]);
+    fileToBase64(file).then((base64Image) => {
+      setAvatar(base64Image);
+    });
+    const form = {
+      avatar,
+    };
+    // console.log(avatar);
 
     axios
-      .put(`${BASE_URL}/user/update-avatar`, formData, {
+      .put(`${BASE_URL}/user/update-avatar`, form, {
         withCredentials: true,
       })
       .then((response) => {

@@ -2,17 +2,17 @@ import axios from "axios";
 import { BASE_URL } from "../../config";
 
 // create Event
-export const createEvent = (newForm) => async (dispatch) => {
+export const createEvent = (form) => async (dispatch) => {
   try {
     dispatch({
       type: "createEventRequest",
     });
 
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    // const config = { headers: { "Content-Type": "multipart/form-data" } };
     const { data } = await axios.post(
       `${BASE_URL}/event/create-event`,
-      newForm,
-      config,
+      form,
+      // config,
       {
         withCredentials: true,
       }
@@ -119,7 +119,6 @@ export const adminGetAllEvents = () => async (dispatch) => {
     });
   }
 };
-
 
 // Action to clear event creation state
 // export const clearProductState = () => (dispatch) => {

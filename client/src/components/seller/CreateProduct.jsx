@@ -17,7 +17,6 @@ const CreateProduct = () => {
   const [name, setName] = useState("");
   const [description, setDescrtiption] = useState("");
   const [category, setCategory] = useState("");
-  // const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
@@ -56,12 +55,29 @@ const CreateProduct = () => {
     // console.log(isProduct);
   }, [dispatch, error, isProduct]);
 
-  const handleImageChange = (e) => {
-    e.preventDefault();
+  // const handleImageChange = (e) => {
+  //   e.preventDefault();
 
-    let files = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...files]);
+  //   let files = Array.from(e.target.files);
+  //   setImages((prevImages) => [...prevImages, ...files]);
+  // };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    Promise.all(files.map(fileToBase64)).then((base64Images) => {
+      setImages(base64Images);
+    });
   };
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+  // console.log(images);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -104,21 +120,34 @@ const CreateProduct = () => {
       return;
     }
 
-    const newForm = new FormData();
+    // const newForm = new FormData();
 
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
+    // images.forEach((image) => {
+    //   newForm.append("images", image);
+    // });
+    // newForm.append("name", name);
+    // newForm.append("description", description);
+    // newForm.append("category", category);
+    // newForm.append("tags", tags);
+    // newForm.append("originalPrice", originalPrice);
+    // newForm.append("discountPrice", discountPrice);
+    // newForm.append("stock", stock);
+    // newForm.append("shopId", seller._id);
 
-    dispatch(createProduct(newForm));
+    const form = {
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      shopId: seller._id,
+      productImages: images,
+    };
+    // console.log(form.productImages);
+
+    dispatch(createProduct(form));
   };
 
   function handleImageRemove(index) {
@@ -304,7 +333,7 @@ const CreateProduct = () => {
                   key={index}
                 >
                   <img
-                    src={URL.createObjectURL(image)}
+                    src={image ? image : URL.createObjectURL(image)}
                     alt={`product image ${index}`}
                     className="w-20 h-20 object-cover rounded-lg"
                   />

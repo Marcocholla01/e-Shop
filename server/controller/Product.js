@@ -9,16 +9,18 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const { upload } = require("../config/multer");
 const { isSeller, isAuthenticated, isAdmin } = require("../middlewares/auth");
 const fs = require(`fs`);
+const { generateUUID } = require("../utils/helperFunctions");
 
 // create product Api
 
 // Route to create a product
 router.post(
   "/create-product",
-  upload.array("images"),
-  async (req, res, next) => {
+  // upload.array("images"),
+  catchAsyncErrors(async (req, res, next) => {
+    const fileName = generateUUID();
     try {
-      const shopId = req.body.shopId;
+      const { productImages, shopId, ...otherProductData } = req.body;
       const shop = await Shop.findById(shopId);
 
       if (!shop) {
@@ -28,12 +30,13 @@ router.post(
       // Handle images array correctly
       let images = [];
 
-      if (req.files && req.files.length > 0) {
+      if (productImages && productImages.length > 0) {
         // Map uploaded files to Cloudinary upload promises
-        const uploadPromises = req.files.map((file) =>
-          cloudinary.uploader.upload(file.path, {
+        const uploadPromises = productImages.map((base64Image, index) =>
+          cloudinary.uploader.upload(base64Image, {
             upload_preset: "ShopO",
             folder: "products",
+            public_id: `${fileName}_${index}`,
           })
         );
 
@@ -41,22 +44,19 @@ router.post(
         const results = await Promise.all(uploadPromises);
 
         // Extract public_id and secure_url from Cloudinary results
-        images = results.map((result) => ({
+        images = results.map((result, index) => ({
           public_id: result.public_id,
           url: result.secure_url,
+          filename: `${fileName}_${index}.png`,
         }));
-
-        // Remove temporary files after upload
-        req.files.forEach((file) => {
-          fs.unlinkSync(file.path);
-        });
       }
 
       // Create new product data with images and shop
       const productData = {
-        ...req.body,
+        ...otherProductData,
         images: images,
         shop: shop,
+        shopId,
       };
 
       // Create the product in the database
@@ -72,7 +72,7 @@ router.post(
       console.error("Error creating product:", error);
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  })
 );
 
 // Get all Products of a shop

@@ -7,29 +7,32 @@ const Shop = require("../models/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAdmin, isAuthenticated } = require("../middlewares/auth");
 const fs = require(`fs`);
+const { generateUUID } = require("../utils/helperFunctions");
 
 const router = express.Router();
 
 // Route to create an event
 router.post(
   "/create-event",
-  upload.array("images"), // Handle multiple files with the name 'images'
-  async (req, res, next) => {
+  // upload.array("images"),
+  catchAsyncErrors(async (req, res, next) => {
+    const { shopId, eventImages, ...otherEventProductsData } = req.body;
     try {
-      const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
+      const fileName = generateUUID();
 
       if (!shop) {
         return next(new ErrorHandler("Shop Id is invalid!", 400));
       }
 
       // Check if files were uploaded
-      if (req.files && req.files.length > 0) {
+      if (eventImages && eventImages.length > 0) {
         // Map uploaded files to Cloudinary upload promises
-        const uploadPromises = req.files.map((file) =>
-          cloudinary.uploader.upload(file.path, {
+        const uploadPromises = eventImages.map((base64Image, index) =>
+          cloudinary.uploader.upload(base64Image, {
             upload_preset: "ShopO",
-            folder: "events", // Folder in Cloudinary to store event images
+            folder: "events",
+            public_id: `${fileName}_${index}`,
           })
         );
 
@@ -37,17 +40,18 @@ router.post(
         const results = await Promise.all(uploadPromises);
 
         // Map results to get image URLs from Cloudinary
-        const imagesLinks = results.map((result) => ({
+        const imagesLinks = results.map((result, index) => ({
           public_id: result.public_id,
           url: result.secure_url,
-          filename: result.original_filename, // Optionally store original filename
+          filename: `${fileName}_${index}.png`,
         }));
 
         // Create event data object with image URLs and shop reference
         const eventData = {
-          ...req.body, // Include other event data from req.body
+          ...otherEventProductsData, // Include other event data from req.body
           images: imagesLinks, // Assign uploaded image URLs
           shop: shop, // Assign shop reference
+          shopId,
         };
 
         // Create the event in the database
@@ -66,7 +70,7 @@ router.post(
       console.error("Error creating event:", error);
       return next(new ErrorHandler(error.message, 400));
     }
-  }
+  })
 );
 
 // Get all events of a shop
