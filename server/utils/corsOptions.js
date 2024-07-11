@@ -1,4 +1,8 @@
-const whitelist = ["https://shop0-bice.vercel.app", process.env.FRONTEND_URL];
+const whitelist = [
+  process.env.FRONTEND_URL,
+  "http://localhost:1001",
+  "https://shop0-bice.vercel.app",
+];
 
 // Add the environment variable to the whitelist
 if (process.env.FRONTEND_URL) {
@@ -6,7 +10,7 @@ if (process.env.FRONTEND_URL) {
 }
 
 const origin = (origin, callback) => {
-  if (whitelist.indexOf(origin)) {
+  if (whitelist.indexOf(origin) !== -1) {
     callback(null, true);
   } else {
     callback(new Error("Not allowed by CORS"));
