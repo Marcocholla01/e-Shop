@@ -1,7 +1,4 @@
-const whitelist = [
-  process.env.FRONTEND_URL,
-  "https://shop0-bice.vercel.app",
-];
+const whitelist = ["https://shop0-bice.vercel.app", process.env.FRONTEND_URL];
 
 // Add the environment variable to the whitelist
 if (process.env.FRONTEND_URL) {
