@@ -22,6 +22,7 @@ const CreateProduct = () => {
   const [originalPrice, setOriginalPrice] = useState("");
   const [discountPrice, setDiscountPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [tags, setTags] = useState([]);
 
@@ -149,7 +150,13 @@ const CreateProduct = () => {
     };
     // console.log(form.productImages);
 
-    dispatch(createProduct(form));
+    try {
+      setLoading(true);
+      dispatch(createProduct(form));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   function handleImageRemove(index) {
@@ -181,16 +188,16 @@ const CreateProduct = () => {
           />
         </div>
         <br />
-        <div className="h-[400px]">
+        <div>
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
           </label>
-          <div className="overflow-auto">
+          <div className="overflow-auto max-h-[400px]">
             <ReactQuill
               value={description}
               onChange={setDescription}
               placeholder="Enter your product's description..."
-              className="appearance-none block w-full h-[350px] border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none block w-full  border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
         </div>
@@ -352,7 +359,9 @@ const CreateProduct = () => {
           type="submit"
           className={`${styles.button} !w-full !-h[42px] !rounded-[5px]`}
         >
-          <span className="text-white">Create Product</span>
+          <span className="text-white">
+            {loading ? `Loading` : `Create Product`}
+          </span>
         </button>
       </form>
     </div>

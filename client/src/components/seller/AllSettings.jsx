@@ -11,10 +11,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { loadSeller } from "../../redux/actions/user";
 import { useParams } from "react-router-dom";
+import ReactQuill from "react-quill";
 
 const AllSettings = () => {
   const { seller } = useSelector((state) => state.seller);
   const [name, setName] = useState(seller && seller.name);
+  const [email, setEmail] = useState(seller && seller.email);
   const [description, setDescription] = useState(seller && seller.description);
   const [phoneNumber, setPhoneNumber] = useState(seller && seller.phoneNumber);
   const [address, setAddress] = useState(seller && seller.address);
@@ -89,7 +91,8 @@ const AllSettings = () => {
       !phoneNumber ||
       !name ||
       !zipCode ||
-      !address
+      !address ||
+      !email
     ) {
       return toast.error(`Please fill all the fields`);
     }
@@ -104,6 +107,7 @@ const AllSettings = () => {
           name,
           zipCode,
           address,
+          email,
         },
 
         {
@@ -170,23 +174,30 @@ const AllSettings = () => {
                     />
                   </div>
                 </div>
-                <div className="w-[100%] sm:w-[50%] mt-3">
-                  <label className="block pb-2">Shop Description</label>
+                <div className="w-[100%] sm:w-[50%] mt-10">
+                  <label className="block pb-2">Shop Email Address</label>
                   <div className={`mt-1 relative`}>
-                    <textarea
-                      type="name"
-                      cols={10}
-                      rows={5}
-                      placeholder={`${
-                        seller.description
-                          ? seller.description
-                          : `Enter your shop description`
-                      }`}
+                    <input
+                      type="email"
+                      placeholder={`${seller.email}`}
                       name=""
                       id=""
                       className={`${styles.input} !w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="w-[100%] sm:w-[50%] mt-3">
+                  <label className="block pb-2">Shop Description</label>
+                  <div className={`mt-1 relative max-h-[400px] overflow-auto`}>
+                    <ReactQuill
                       value={description}
-                      onChange={(e) => setDescription(e.target.value)}
+                      onChange={setDescription}
+                      placeholder={
+                        seller.description || "Enter your shop description"
+                      }
+                      className="!w-[95%] mb-1 sm:mb-0 appearance-none cursor-pointer block px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                   </div>
                 </div>

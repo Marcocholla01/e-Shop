@@ -418,7 +418,7 @@ router.get(
   })
 );
 
-// update seller information
+// update seller avatar
 router.put(
   "/update-avatar/:id",
   isSeller,
@@ -469,6 +469,56 @@ router.put(
       });
     } catch (error) {
       console.error("Error updating avatar:", error);
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// update seller information
+router.put(
+  `/update-shop-info/:id`,
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const {
+        address,
+        email,
+        password,
+        name,
+        phoneNumber,
+        zipCode,
+        description,
+      } = req.body;
+
+      const shop = await Shop.findById(req.params.id).select(`+password`);
+      // console.log(shop);
+      if (!shop) {
+        return res.status(404).json({
+          success: false,
+          message: "Shop not found. Please check your credentials.",
+        });
+      }
+      const isPasswordValid = await shop.comparePassword(password);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid password!!, Kindly input your current password ",
+        });
+      }
+      shop.name = name;
+      shop.email = email;
+      shop.phoneNumber = phoneNumber;
+      shop.address = address;
+      shop.zipCode = zipCode;
+      shop.description = description;
+
+      await shop.save();
+      res.status(201).json({
+        success: true,
+        message: `information updated successfully`,
+        shop,
+      });
+    } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })

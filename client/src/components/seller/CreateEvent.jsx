@@ -24,6 +24,7 @@ const CreateEvent = () => {
   const [endDate, setEndDate] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
   const [originalPrice, setOriginalPrice] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
@@ -116,8 +117,13 @@ const CreateEvent = () => {
       originalPrice: originalPrice,
       eventImages: images,
     };
-
-    dispatch(createEvent(form));
+    try {
+      setLoading(true);
+      dispatch(createEvent(form));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   function handleImageRemove(index) {
@@ -149,16 +155,16 @@ const CreateEvent = () => {
           />
         </div>
         <br />
-        <div className="h-[400px]">
+        <div>
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
           </label>
-          <div className="overflow-auto">
+          <div className="overflow-auto max-h-[400px]">
             <ReactQuill
               value={description}
               onChange={setDescription}
               placeholder="Enter your event's description..."
-              className="appearance-none block w-full h-[350px] border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="appearance-none block w-full  border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
         </div>
@@ -310,7 +316,9 @@ const CreateEvent = () => {
           type="submit"
           className={`${styles.button} !w-full !-h[42px] !rounded-[5px]`}
         >
-          <span className="text-white">Create Event</span>
+          <span className="text-white">
+            {loading ? `Loading` : `Create Event`}
+          </span>
         </button>
       </form>
     </div>
