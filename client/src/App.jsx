@@ -335,9 +335,9 @@ function App() {
                 <Route
                   path="/dashboard-shop-sales"
                   element={
-                    <AdminProtectedRoute>
+                    <SellerProtectedRoute>
                       <SellerSalesPage />
-                    </AdminProtectedRoute>
+                    </SellerProtectedRoute>
                   }
                 />
 

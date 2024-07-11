@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import styles from "../../styles/style";
 import { BASE_URL } from "../../config";
+import ReactQuill from "react-quill";
 
 const EditEvent = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -133,19 +134,18 @@ const EditEvent = () => {
           />
         </div>
         <br />
-        <div>
+        <div className="h-[400px]">
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
           </label>
-          <textarea
-            type="text"
-            name="description"
-            id="description"
-            value={description}
-            placeholder="Enter your event's description..."
-            className="appearance-none block w-full h-[200px] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <div className="overflow-auto">
+            <ReactQuill
+              value={description}
+              onChange={setDescription}
+              placeholder="Enter your event's description..."
+              className="appearance-none block w-full h-[350px] border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
         </div>
         <br />
         <div className="block sm:flex items-center justify-between">
