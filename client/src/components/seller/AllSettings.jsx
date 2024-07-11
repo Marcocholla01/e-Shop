@@ -26,46 +26,60 @@ const AllSettings = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleImage = async (e) => {
     const file = e.target.files[0];
-    setAvatar(file);
 
-    const formData = new FormData();
-    formData.append(`image`, e.target.files[0]);
+    try {
+      const base64Image = await fileToBase64(file);
+      setAvatar(base64Image);
 
-    axios
-      .put(`${BASE_URL}/shop/update-avatar/${id}`, formData, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        if (response.data.success === true) {
-          toast.success(response.data.message);
-          dispatch(loadSeller);
-          window.location.reload(true);
-        } else {
-          toast.error(res.data.message);
+      const form = {
+        avatar: base64Image,
+      };
+
+      const response = await axios.put(
+        `${BASE_URL}/shop/update-avatar/${id}`,
+        form,
+        {
+          withCredentials: true,
         }
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a non-2xx status code
-          if (error.response.status === 404) {
-            toast.error(error.response.data.message);
-          } else if (error.response.status === 401) {
-            toast.error(error.response.data.message);
-          } else if (error.response.status === 400) {
-            toast.error(error.response.data.message);
-          } else {
-            toast.error(`Server error: ${error.response.data.message}`);
-          }
-        } else if (error.request) {
-          // The request was made but no response was received
-          toast.error("Network error. Please check your internet connection.");
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        window.location.reload(true);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a non-2xx status code
+        if (error.response.status === 404) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 400) {
+          toast.error(error.response.data.message);
         } else {
-          // Something happened in setting up the request that triggered an error
-          toast.error("Request failed. Please try again later.");
+          toast.error(`Server error: ${error.response.data.message}`);
         }
-      });
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast.error("Network error. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an error
+        toast.error("Request failed. Please try again later.");
+      }
+    }
   };
   const updateShopHandler = async (e) => {
     e.preventDefault();
@@ -117,11 +131,7 @@ const AllSettings = () => {
             <div className="w-full flex flex-col items-center justify-center">
               <div className="relative">
                 <img
-                  src={
-                    avatar
-                      ? URL.createObjectURL(avatar)
-                      : `${seller.avatar.url}`
-                  }
+                  src={avatar ? avatar : `${seller.avatar.url}`}
                   className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
                   alt=""
                 />

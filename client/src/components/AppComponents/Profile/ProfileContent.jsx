@@ -57,6 +57,7 @@ const ProfileContent = ({ active }) => {
     // use redux instead of api call
     dispatch(updateUserInfomation(email, password, phoneNumber, name));
   };
+
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -67,49 +68,46 @@ const ProfileContent = ({ active }) => {
   };
 
   const handleImage = async (e) => {
-    // const file = e.target.files[0];
-    // setAvatar(file);
     const file = e.target.files[0];
-    fileToBase64(file).then((base64Image) => {
-      setAvatar(base64Image);
-    });
-    const form = {
-      avatar,
-    };
-    // console.log(avatar);
 
-    axios
-      .put(`${BASE_URL}/user/update-avatar`, form, {
+    try {
+      const base64Image = await fileToBase64(file);
+      setAvatar(base64Image);
+
+      const form = {
+        avatar: base64Image,
+      };
+
+      const response = await axios.put(`${BASE_URL}/user/update-avatar`, form, {
         withCredentials: true,
-      })
-      .then((response) => {
-        if (response.data.success === true) {
-          toast.success(response.data.message);
-          window.location.reload(true);
-        } else {
-          toast.error(res.data.message);
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a non-2xx status code
-          if (error.response.status === 404) {
-            toast.error(error.response.data.message);
-          } else if (error.response.status === 401) {
-            toast.error(error.response.data.message);
-          } else if (error.response.status === 400) {
-            toast.error(error.response.data.message);
-          } else {
-            toast.error(`Server error: ${error.response.data.message}`);
-          }
-        } else if (error.request) {
-          // The request was made but no response was received
-          toast.error("Network error. Please check your internet connection.");
-        } else {
-          // Something happened in setting up the request that triggered an error
-          toast.error("Request failed. Please try again later.");
-        }
       });
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        window.location.reload(true);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a non-2xx status code
+        if (error.response.status === 404) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 400) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error(`Server error: ${error.response.data.message}`);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast.error("Network error. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an error
+        toast.error("Request failed. Please try again later.");
+      }
+    }
   };
 
   return (
@@ -120,7 +118,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${user.avatar.url}`}
+                src={`${avatar ? avatar : user.avatar.url}`}
                 alt=""
                 className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
               />
