@@ -217,7 +217,11 @@ const ProductDetails = ({ data }) => {
                   <h1 className={`${styles.productTitle}`}>
                     {data?.product?.name}
                   </h1>
-                  <divv>{data?.product?.description}</divv>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data?.product?.description.slice(0, 1000),
+                    }}
+                  ></div>
                   <div className="flex pt-3">
                     <h4
                       className={`${styles.productDiscountPrice} text-[23px]`}
@@ -391,7 +395,12 @@ const ProductDetailsInfo = ({ data, totalReviewsLength }) => {
           </h1>
 
           <div className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line ">
-            <p>{data?.product?.description}</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: data?.product?.description,
+              }}
+            ></p>
+            {/* <p>{data?.product?.description}</p> */}
           </div>
         </>
       ) : null}

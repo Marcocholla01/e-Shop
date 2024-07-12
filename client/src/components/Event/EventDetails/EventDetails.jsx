@@ -192,7 +192,11 @@ const EventDetails = ({ data }) => {
                   <h1 className={`${styles.productTitle}`}>
                     {data?.event?.name}
                   </h1>
-                  <div>{data?.event?.description}</div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data?.event?.description,
+                    }}
+                  ></div>
                   <div className="flex pt-3">
                     <h4
                       className={`${styles.productDiscountPrice} text-[23px]`}
