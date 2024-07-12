@@ -37,7 +37,6 @@ const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
-  
 
   useEffect(() => {
     dispatch(getAllProductsShop(id));
@@ -218,7 +217,7 @@ const ProductDetails = ({ data }) => {
                   <h1 className={`${styles.productTitle}`}>
                     {data?.product?.name}
                   </h1>
-                  <p>{data?.product?.description}</p>
+                  <divv>{data?.product?.description}</divv>
                   <div className="flex pt-3">
                     <h4
                       className={`${styles.productDiscountPrice} text-[23px]`}
@@ -234,7 +233,6 @@ const ProductDetails = ({ data }) => {
                   <div className="flex items-center mt-12 justify-between pr-3">
                     {data?.product?.tags ? (
                       <>
-                  
                         {" "}
                         <p className="text-lg font-semibold">
                           Tags
