@@ -591,7 +591,7 @@ const PaymentInfo = ({
               <input
                 type="text"
                 value={user.phoneNumber}
-                readOnly
+{/*                 readOnly */}
                 className="w-full mb-3 p-2 border rounded"
               />
               <input
